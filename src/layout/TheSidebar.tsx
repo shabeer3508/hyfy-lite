@@ -8,14 +8,20 @@ import _nav from "./_nav";
 // 	NavItemDropdown,
 // } from "./SidebarNavItems/NavItems";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { getUserComapanies } from "../redux/actions/NetworkActions";
 // import { getUserProfile } from "../redux/actions/NetworkActions";
 // import { getAction, setCurrency } from "../redux/actions/AppActions";
 // import { onShotKeyDown } from "../utils/ShortKeyManager";
 // import Urls from "../redux/actions/Urls";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+	NavItem,
+	NavItemDivider,
+	NavItemDropdown,
+	NavItemTitle,
+} from "./SidebarNavItems/NavItems";
 // import logo from "../assets/logo.svg";
 // import SidebarReducer from "../redux/reducers/SidebarReducer";
 
@@ -25,31 +31,19 @@ interface TheSidebarProps {
 
 const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 	const dispatch = useDispatch();
-	const sidebar = useSelector((state: any) => state.SidebarReducer);
-	const comapanies = useSelector((state: any) => state?.GetUserCompanies);
-	const minimize = sidebar.minimize;
-	const [index, setIndex] = useState(3);
 	const navigate = useNavigate();
-	const profile = useSelector((state: any) => state.GetProfile);
 
-	//   useEffect(() => {
-	//     // dispatch(getAction({ profile: Urls.profile }));
-	//   }, []);
+	const [index, setIndex] = useState(3);
 
-	//   const user = profile?.data?.items?.[0];
-	//   const currentOganization = user?.expand?.currentOganization;
-
-	//   const logUrl = `${Urls.cdnUrl}/${currentOganization?.collectionId}/${currentOganization?.id}/${currentOganization?.logo}`;
+	const sidebar = useSelector((state: any) => state.SidebarReducer);
+	const minimize = sidebar.minimize;
 
 	let navItems = _nav;
 
-	//   if (user?.role === "driver") {
-	//     const driverpaths = ["/vehicles", "/requests", "/profile", "/odometer-readings", "/photo-docs", "/notifications"];
-	//     navItems = _nav.filter((item: any) => driverpaths.includes(item.path));
-	//   }
-
 	return (
-		<div className={`flex h-screen flex-col ltr:border-r-1 rtl:border-l-1`}>
+		<div
+			className={`flex h-screen flex-col ltr:border-r-1 rtl:border-l-1 bg-[#16181D]`}
+		>
 			<div
 				className={`flex h-12 flex-shrink-0 relative  border-b border-r flex-col  items-center justify-center  dark:text-white`}
 			>
@@ -87,38 +81,38 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
             )}
           </div>
         )} */}
-				<div className=" mx-2 -mt-[1px] border-b-1 dark:border-line_dark"></div>
+				<div className=" mx-2 -mt-[1px] border-b-1"></div>
 				<div
 					className={`${
-						minimize ? "items-center p-0 px-0 pt-4" : "p-4 px-3"
+						minimize ? "items-center p-0 px-0 pt-4" : ""
 					} flex flex-col gap-2 `}
 				>
-					{/* {navItems.map((item, idx) => {
-						if (item._tag === "NavItemDropdown") {
-							return (
-								<NavItemDropdown
-									show={idx === index}
-									onClick={() => {
-										setIndex(index == idx ? -1 : idx);
-									}}
-									key={`ni_${idx}`}
-									item={item}
-									minimize={minimize}
-								/>
-							);
-						}
-						if (item._tag === "NavDivider") {
-							return <NavItemDivider key={`ni_${idx}`} />;
-						}
-						if (item?._tag === "NavTitle") {
-							return (
-								<NavItemTitle
-									key={`nit_${idx}`}
-									item={item}
-									minimize={minimize}
-								/>
-							);
-						}
+					{navItems.map((item, idx) => {
+						// if (item._tag === "NavItemDropdown") {
+						// 	return (
+						// 		<NavItemDropdown
+						// 			show={idx === index}
+						// 			onClick={() => {
+						// 				setIndex(index == idx ? -1 : idx);
+						// 			}}
+						// 			key={`ni_${idx}`}
+						// 			item={item}
+						// 			minimize={minimize}
+						// 		/>
+						// 	);
+						// }
+						// if (item._tag === "NavDivider") {
+						// 	return <NavItemDivider key={`ni_${idx}`} />;
+						// }
+						// if (item?._tag === "NavTitle") {
+						// 	return (
+						// 		<NavItemTitle
+						// 			key={`nit_${idx}`}
+						// 			item={item}
+						// 			minimize={minimize}
+						// 		/>
+						// 	);
+						// }
 						return (
 							<NavItem
 								onClick={() => setIndex(idx)}
@@ -127,28 +121,28 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 								minimize={minimize}
 							/>
 						);
-					})} */}
+					})}
 				</div>
 			</div>
 			<div className="relative border-r border-t flex h-11 flex-shrink-0 items-center justify-center border-t-1 p-5 dark:border-line_dark">
-				{!minimize && (
+				{/* {!minimize && (
 					<div className="text-slate-80 rounded-full bg-slate-400/10 px-3 py-1 text-[10px] md:text-xs font-semibold dark:text-slate-400">
-						v1.0.0
+						v1.0.0 - beta
 					</div>
-				)}
+				)} */}
 				<div
 					onClick={() =>
 						dispatch({ type: "minimize", minimize: !minimize })
 					}
 					className={`${
 						!minimize && "right-2"
-					} dark:text-white absolute cursor-pointer rounded-lg  p-1`}
+					} dark:text-foreground  cursor-pointer text-xs rounded-lg  p-1`}
 				>
-					{/* {minimize ? (
+					{minimize ? (
 						<ChevronRightIcon className="h-4 w-4" />
 					) : (
 						<ChevronLeftIcon className="h-4 w-4" />
-					)} */}
+					)}
 				</div>
 			</div>
 		</div>

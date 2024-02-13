@@ -5,7 +5,7 @@ import { Toaster } from "./components/ui/toaster";
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 const Login = lazy(() => import("./pages/auth/login/index"));
 const SignUp = lazy(() => import("./pages/auth/signup/index"));
-const TheLayout = lazy(() => import("./layout/index"));
+const TheLayout = lazy(() => import("./layout/TheLayout"));
 
 const loading = () => {
 	return (
@@ -19,7 +19,7 @@ function App() {
 	const isAuthenticated = () => {
 		// const token = localStorage.getItem("token");
 		// return !!token;
-		return false;
+		return true;
 	};
 
 	return (
