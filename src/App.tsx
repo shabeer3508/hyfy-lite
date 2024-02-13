@@ -1,19 +1,54 @@
-import { useState } from "react";
-import { Button } from "./components/ui/button";
+import { lazy } from "react";
+import {
+	createBrowserRouter,
+	createRoutesFromElements,
+	Route,
+	RouterProvider,
+	Navigate,
+} from "react-router-dom";
 
-import "./App.css";
+const NotFound = lazy(() => import("./pages/not-found/NotFound"));
+const Login = lazy(() => import("./pages/auth/login/index"));
+const SignUp = lazy(() => import("./pages/auth/signup/index"));
+const TheLayout = lazy(() => import("./layout/index"));
 
 function App() {
-	const [count, setCount] = useState(0);
+	const isAuthenticated = () => {
+		// const token = localStorage.getItem("token");
+		// return !!token;
+		return false;
+	};
+
+	const router = createBrowserRouter(
+		createRoutesFromElements(
+			<>
+				<Route path="login" element={<Login />} />
+				<Route path="signup" element={<SignUp />}>
+					<Route path="admin" element={<SignUp />} />
+				</Route>
+
+				{/* Private routes */}
+				<Route
+					path="/"
+					element={
+						isAuthenticated() ? (
+							<TheLayout />
+						) : (
+							<Navigate to="/login" replace />
+						)
+					}
+				/>
+
+				{/* Not found route */}
+				<Route path="*" element={<NotFound />} />
+			</>
+		)
+	);
 
 	return (
-		<>
-			<div className="card text-3xl font-bold underline">
-				<Button onClick={() => setCount((count) => count + 1)}>
-					Clicked {count} times
-				</Button>
-			</div>
-		</>
+		<div className="dark">
+			<RouterProvider router={router} />
+		</div>
 	);
 }
 
