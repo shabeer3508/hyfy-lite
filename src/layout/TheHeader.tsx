@@ -13,13 +13,13 @@ interface TheHeaderProps {
 const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 	return (
 		<div className="w-full transition-all duration-200 ease-in ">
-			<div className="flex h-20 items-center border-b  pl-2 pr-6 ">
-				<Button
+			<div className="flex h-20 items-center px-6">
+				{/* <Button
 					variant="link"
 					onClick={onClickMenu}
 					className=" cursor-pointer"
-				></Button>
-				<div className=" flex items-center text-sm dark:text-foreground">
+				></Button> */}
+				<div className="font-semibold  flex items-center  dark:text-foreground">
 					Project Name
 				</div>
 				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
