@@ -9,7 +9,7 @@ const TheLayout = lazy(() => import("./layout/TheLayout"));
 
 const loading = () => {
 	return (
-		<div className="w-screen h-screen bg-transparent flex items-center justify-center">
+		<div className="w-screen h-screen bg-transparent dark:bg-background flex items-center justify-center">
 			<div className="h-6 w-6 rounded-full bg-blue-700 animate-ping"></div>
 		</div>
 	);
