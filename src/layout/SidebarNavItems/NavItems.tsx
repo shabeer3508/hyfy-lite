@@ -115,18 +115,14 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 		prop?.item?.path?.substring(prop?.item?.path?.lastIndexOf("/") + 1);
 
 	const title = name?.replaceAll("-", " ") || "";
-	const Icon = prop?.item?.icon;
 
-	// const iconUrl = prop?.item?.icon_url;
-	const iconUrl = `../../assets/NavIcons/nav_board.svg`;
 	return (
 		<div
-			//   title={t(name) || ""}
 			onClick={() => {
 				navigate(prop?.item?.path || "/");
 				onClick();
 			}}
-			className={` no-select group relative flex h-12 cursor-pointer items-center gap-2  px-4 ${
+			className={` no-select group relative flex h-12 cursor-pointer items-center gap-2 pl-6 pr-4 ${
 				isActive && "bg-[#222428]  border-primary border-r-2"
 			}   dark:text-white/90`}
 		>
@@ -134,9 +130,9 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 				<div
 					className={` ${
 						isActive ? "text-primary" : "group-hover:text-primary"
-					} aspect-square w-6  transform-gpu  rounded-[4px]  transition-all ease-in group-hover:w-6  `}
+					} aspect-square  transform-gpu  rounded-[4px]  transition-all ease-in`}
 				>
-					<Icon className=" p-1 md:p-0 " />
+					{prop?.item?.icon}
 				</div>
 			)}
 
@@ -151,7 +147,6 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 					{title}
 				</a>
 			)}
-			{/* <div className=" rounded-r-[3px] w-[4px] h-4 group-hover:bg-accent absolute left-0"></div> */}
 		</div>
 	);
 };
@@ -174,8 +169,6 @@ export const NavItemDivider = (prop: any) => {
 		return null;
 	}
 	return (
-		<div className="mx-2 flex h-1 cursor-pointer items-center border-b-1 dark:border-line_dark">
-			{/* <a className="uppercase text-slate-500 text-xs">{prop?.item?.name}</a> */}
-		</div>
+		<div className="mx-2 flex h-1 cursor-pointer items-center border-b-1 dark:border-line_dark"></div>
 	);
 };

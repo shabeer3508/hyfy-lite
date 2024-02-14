@@ -1,50 +1,48 @@
 import {
-	PieChartIcon,
-	CircleDot,
-	CheckSquare,
-	KanbanSquare,
-} from "lucide-react";
+	HiOutlineLightBulb,
+	HiOutlineHashtag,
+	HiUserGroup,
+	HiClipboardList,
+	HiViewBoards,
+} from "react-icons/hi";
+import { HiArrowPathRoundedSquare } from "react-icons/hi2";
+import { TbSettingsFilled } from "react-icons/tb";
 
 const _nav = [
 	{
 		path: "/board",
 		icon_name: "nav_board",
-		icon: PieChartIcon,
+		icon: <HiViewBoards className="w-5 h-5" />,
 	},
 	{
 		path: "/backlog",
 		icon_name: "nav_backlog",
-		icon: CircleDot,
+		icon: <HiClipboardList className="w-5 h-5" />,
 	},
 	{
 		path: "/sprints",
 		icon_name: "nav_sprints",
-		icon: CheckSquare,
+		icon: <HiArrowPathRoundedSquare className="w-5 h-5" />,
 	},
-	// {
-	// 	path: "/standup",
-	// 	icon_name: "nav_sprints.svg",
-	// 	icon: KanbanSquare,
-	// },
 	{
 		path: "/releases",
 		icon_name: "nav_releases",
-		icon: CircleDot,
+		icon: <HiOutlineHashtag className="w-5 h-5" />,
 	},
 	{
 		path: "/projects",
 		icon_name: "nav_projects",
-		icon: CheckSquare,
+		icon: <HiOutlineLightBulb className="w-5 h-5" />,
 	},
 	{
 		path: "/team",
 		icon_name: "nav_teams",
-		icon: KanbanSquare,
+		icon: <HiUserGroup className="w-5 h-5" />,
 	},
 	{
 		path: "/settings",
 		icon_name: "nav_settings",
-		icon: KanbanSquare,
+		icon: <TbSettingsFilled className="w-5 h-5" />,
 	},
 ];
 

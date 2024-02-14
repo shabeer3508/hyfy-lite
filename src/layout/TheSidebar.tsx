@@ -22,7 +22,7 @@ import {
 	NavItemDropdown,
 	NavItemTitle,
 } from "./SidebarNavItems/NavItems";
-// import logo from "../assets/logo.svg";
+import logo from "../assets/hyfy_logo.svg";
 // import SidebarReducer from "../redux/reducers/SidebarReducer";
 
 interface TheSidebarProps {
@@ -45,19 +45,19 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 			className={`flex h-screen flex-col ltr:border-r-1 rtl:border-l-1 bg-[#16181D]`}
 		>
 			<div
-				className={`flex h-12 flex-shrink-0 relative  border-b border-r flex-col  items-center justify-center  dark:text-white`}
+				className={`flex h-20 flex-shrink-0 relative  border-r flex-col  items-center justify-center  dark:text-white`}
 			>
-				<div className="h-7 relative">
-					{/* {minimize ? (
-						<img className=" h-7 w-7 ml-2" src={logo} alt="logo" />
+				<div className="h-7 relative mb-1 flex">
+					{minimize ? (
+						<img className=" h-9 w-10 " src={logo} alt="logo" />
 					) : (
-						<img className=" h-7 w-7" src={logo} alt="logo" />
-					)} */}
+						<img className=" h-9 w-20 " src={logo} alt="logo" />
+					)}
 				</div>
-				<div className=" visible md:invisible  absolute right-3 ">
+				<div className="visible md:invisible absolute  ">
 					<Button
 						variant="outline"
-						className=" w-8 h-8 p-0 rounded-full "
+						className=" w-5 h-5 p-0 rounded-full "
 						onClick={onClickClose}
 					>
 						<ChevronLeft />
@@ -81,7 +81,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
             )}
           </div>
         )} */}
-				<div className=" mx-2 -mt-[1px] border-b-1"></div>
+				<div className=" mx-2 -mt-[1px]"></div>
 				<div
 					className={`${
 						minimize ? "items-center p-0 px-0 pt-4" : ""
@@ -124,7 +124,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 					})}
 				</div>
 			</div>
-			<div className="relative border-r border-t flex h-11 flex-shrink-0 items-center justify-center border-t-1 p-5 dark:border-line_dark">
+			<div className="relative border-r  flex h-11 flex-shrink-0 items-center justify-center  p-5 dark:border-line_dark">
 				{/* {!minimize && (
 					<div className="text-slate-80 rounded-full bg-slate-400/10 px-3 py-1 text-[10px] md:text-xs font-semibold dark:text-slate-400">
 						v1.0.0 - beta
