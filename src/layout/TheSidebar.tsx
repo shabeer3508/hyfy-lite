@@ -1,27 +1,10 @@
-// import { ChevronLeftIcon, ChevronRightIcon, CogIcon } from "@heroicons/react/24/outline";
 import { memo, useEffect, useState } from "react";
 import _nav from "./_nav";
-// import {
-// 	NavItem,
-// 	NavItemTitle,
-// 	NavItemDivider,
-// 	NavItemDropdown,
-// } from "./SidebarNavItems/NavItems";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { getUserComapanies } from "../redux/actions/NetworkActions";
-// import { getUserProfile } from "../redux/actions/NetworkActions";
-// import { getAction, setCurrency } from "../redux/actions/AppActions";
-// import { onShotKeyDown } from "../utils/ShortKeyManager";
-// import Urls from "../redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import {
-	NavItem,
-	NavItemDivider,
-	NavItemDropdown,
-	NavItemTitle,
-} from "./SidebarNavItems/NavItems";
+import { NavItem, NavItemDivider, NavItemDropdown, NavItemTitle } from "./SidebarNavItems/NavItems";
 import logo from "../assets/hyfy_logo.svg";
 // import SidebarReducer from "../redux/reducers/SidebarReducer";
 
@@ -41,9 +24,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 	let navItems = _nav;
 
 	return (
-		<div
-			className={`flex h-screen flex-col ltr:border-r-1 rtl:border-l-1 bg-[#16181D]`}
-		>
+		<div className={`flex h-screen flex-col ltr:border-r-1 rtl:border-l-1 bg-[#16181D]`}>
 			<div
 				className={`flex h-20 flex-shrink-0 relative  border-r flex-col  items-center justify-center  dark:text-white`}
 			>
@@ -55,11 +36,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 					)}
 				</div>
 				<div className="visible md:invisible absolute  ">
-					<Button
-						variant="outline"
-						className=" w-5 h-5 p-0 rounded-full "
-						onClick={onClickClose}
-					>
+					<Button variant="outline" className=" w-5 h-5 p-0 rounded-full " onClick={onClickClose}>
 						<ChevronLeft />
 					</Button>
 				</div>
@@ -82,11 +59,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
           </div>
         )} */}
 				<div className=" mx-2 -mt-[1px]"></div>
-				<div
-					className={`${
-						minimize ? "items-center p-0 px-0 pt-4" : ""
-					} flex flex-col gap-2 `}
-				>
+				<div className={`${minimize ? "items-center p-0 px-0 pt-4" : ""} flex flex-col gap-2 `}>
 					{navItems.map((item, idx) => {
 						// if (item._tag === "NavItemDropdown") {
 						// 	return (
@@ -114,12 +87,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 						// 	);
 						// }
 						return (
-							<NavItem
-								onClick={() => setIndex(idx)}
-								key={`ni_${idx}`}
-								item={item}
-								minimize={minimize}
-							/>
+							<NavItem onClick={() => setIndex(idx)} key={`ni_${idx}`} item={item} minimize={minimize} />
 						);
 					})}
 				</div>
@@ -131,18 +99,10 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 					</div>
 				)} */}
 				<div
-					onClick={() =>
-						dispatch({ type: "minimize", minimize: !minimize })
-					}
-					className={`${
-						!minimize && "right-2"
-					} dark:text-foreground  cursor-pointer text-xs rounded-lg  p-1`}
+					onClick={() => dispatch({ type: "minimize", minimize: !minimize })}
+					className={`${!minimize && "right-2"} dark:text-foreground  cursor-pointer text-xs rounded-lg  p-1`}
 				>
-					{minimize ? (
-						<ChevronRightIcon className="h-4 w-4" />
-					) : (
-						<ChevronLeftIcon className="h-4 w-4" />
-					)}
+					{minimize ? <ChevronRightIcon className="h-4 w-4" /> : <ChevronLeftIcon className="h-4 w-4" />}
 				</div>
 			</div>
 		</div>
