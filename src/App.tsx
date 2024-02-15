@@ -1,6 +1,7 @@
 import { Suspense, lazy } from "react";
 import { Route, Navigate, Routes } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 const Login = lazy(() => import("./pages/auth/login/index"));
@@ -23,26 +24,19 @@ function App() {
 	};
 
 	return (
-		<div className="dark">
+		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+			{/* <div className="dark"> */}
 			<Suspense fallback={loading()}>
 				<Routes>
 					<Route path="login" element={<Login />} />
 					<Route path="signup" element={<SignUp />} />
-					<Route
-						path="/*"
-						element={
-							isAuthenticated() ? (
-								<TheLayout />
-							) : (
-								<Navigate to="/login" replace />
-							)
-						}
-					/>
+					<Route path="/*" element={isAuthenticated() ? <TheLayout /> : <Navigate to="/login" replace />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Suspense>
 			<Toaster />
-		</div>
+			{/* </div> */}
+		</ThemeProvider>
 	);
 }
 
