@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
-import exp from "constants";
 import { MoreVertical } from "lucide-react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,17 +19,17 @@ const Index = () => {
 		loadAction();
 	}, []);
 
-	function loadAction() {
-		dispatch(getAction({ project: Urls.project + "?expand=owner" }));
+	function loadAction(prams?: string) {
+		let query = "?expand=owner";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ project: Urls.project + query }));
 	}
 
-	console.log(" itemsRes ", itemsRes?.data?.items);
-	const items = itemsRes?.data?.items?.map((val: any) => ({
-		...val,
-		...val?.expand,
-	}));
+	const items = itemsRes?.data?.items?.map((val: any) => ({ ...val, ...val?.expand }));
 
-	console.log(" itemsRes items ", items);
+	console.log(`index,  : items`, items);
 
 	return (
 		<div className=" flex flex-col h-full">
@@ -42,30 +41,21 @@ const Index = () => {
 				<div className="flex gap-2">
 					<HYSearch />
 					<div className="">
-						<HYSelect
-							label="Options"
-							options={["Option 1", "Option 2", "Option 3"]}
-						/>
+						<HYSelect label="Status" options={["done", "in-progress", "pending", "open"]} />
 					</div>
 				</div>
 			</div>
 			<div className=" overflow-auto px-8 ">
 				<div className="flex flex-col gap-4 mt-4">
 					{items?.map((item: any, index: number) => (
-						<Card
-							key={`pi_${index}`}
-							className="flex justify-between items-center h-16 px-3 rounded-lg"
-						>
+						<Card key={`pi_${index}`} className="flex justify-between items-center h-16 px-3 rounded-lg">
 							<div className="flex gap-3 items-center">
 								<img src="/folder_icon.svg" alt="Project" />
 								<div className="capitalize ">{item?.title}</div>
 							</div>
 							<div className="flex gap-4">
 								<div className="flex items-center gap-4">
-									<HYAvatar
-										url="https://github.com/shadcn.png"
-										name={item?.owner?.name}
-									/>
+									<HYAvatar url="https://github.com/shadcn.png" name={item?.owner?.name} />
 									<a>{item?.owner?.name}</a>
 								</div>
 								<HYStatusBadge status={item?.status} />
