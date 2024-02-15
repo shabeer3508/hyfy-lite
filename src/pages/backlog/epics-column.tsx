@@ -2,28 +2,15 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@radix-ui/react-select";
 
-import {
-	HiPlus,
-	HiFilter,
-	HiBookOpen,
-	HiOutlineDotsVertical,
-} from "react-icons/hi";
+import { HiPlus, HiFilter, HiBookOpen, HiOutlineDotsVertical } from "react-icons/hi";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { IoIosSearch } from "react-icons/io";
 
 const EpicsColumn = () => {
-	const tags = Array.from({ length: 10 }).map(
-		(_, i, a) => `Epic - ${a.length - i}`
-	);
+	const tags = Array.from({ length: 10 }).map((_, i, a) => `Epic - ${a.length - i}`);
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -63,9 +50,7 @@ const EpicsColumn = () => {
 				<div className="">
 					<Select>
 						<SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-							<div className="whitespace-nowrap text-[#9499A5]">
-								Release
-							</div>
+							<div className="whitespace-nowrap text-[#9499A5]">Release</div>
 							<SelectValue placeholder="" />
 						</SelectTrigger>
 						<SelectContent>
@@ -96,20 +81,12 @@ const EpicsColumn = () => {
 										className="flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded hover:border-primary cursor-pointer"
 									>
 										<div className="flex items-center gap-2">
-											<HiBookOpen
-												className={`w-5 ${
-													logoColors[i % 6]
-												}`}
-											/>
+											<HiBookOpen className={`w-5 ${logoColors[i % 6]}`} />
 											<div>{tag}</div>
 										</div>
-										<div className="text-[#737377]">
-											Release {i + 1}
-										</div>
+										<div className="text-[#737377]">Release {i + 1}</div>
 										<div className=" text-[#737377]">|</div>
-										<div className="text-[#737377]">
-											{i + 1} Stories
-										</div>
+										<div className="text-[#737377]">{i + 1} Stories</div>
 										<HiOutlineDotsVertical className="text-[#737377]" />
 									</div>
 									<Separator className="my-2" />
@@ -124,12 +101,9 @@ const EpicsColumn = () => {
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
 								1
 							</div>
-							<div className="text-primary font-bold text-xl">
-								Add epics here
-							</div>
+							<div className="text-primary font-bold text-xl">Add epics here</div>
 							<div className="w-2/3 text-center text-[#F8F8F8]">
-								Epics will be milestones that help you manage
-								your project
+								Epics will be milestones that help you manage your project
 							</div>
 							<Button
 								variant="outline"

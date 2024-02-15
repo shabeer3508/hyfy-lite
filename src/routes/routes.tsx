@@ -1,17 +1,23 @@
-import Backlog from "@/pages/backlog";
+import { lazy } from "react";
 
 const Apple = ({ title }: { title?: string }) => {
-	return (
-		<div className="dark:text-foreground flex justify-center h-screen items-center">
-			{title ?? "Apple"}
-		</div>
-	);
+	return <div className="dark:text-foreground flex justify-center h-screen items-center">{title ?? "Apple"}</div>;
 };
+
+const Board = lazy(() => import("@/pages/board"));
+const Backlog = lazy(() => import("@/pages/backlog"));
+const Projects = lazy(() => import("@/pages/projects"));
+const Sprints = lazy(() => import("@/pages/sprints"));
+const Releases = lazy(() => import("@/pages/releases"));
+const Team = lazy(() => import("@/pages/team"));
+const Settings = lazy(() => import("@/pages/settings"));
+
+export { Backlog, Projects, Apple };
 
 const defultRoutes = [
 	{
 		path: "/board",
-		component: <Apple title="board" />,
+		component: <Board />,
 	},
 	{
 		path: "/backlog",
@@ -19,23 +25,23 @@ const defultRoutes = [
 	},
 	{
 		path: "/sprints",
-		component: <Apple title="sprints" />,
+		component: <Sprints />,
 	},
 	{
 		path: "/releases",
-		component: <Apple title="releases" />,
+		component: <Releases />,
 	},
 	{
 		path: "/projects",
-		component: <Apple title="projects" />,
+		component: <Projects />,
 	},
 	{
 		path: "/team",
-		component: <Apple title="team" />,
+		component: <Team />,
 	},
 	{
 		path: "/settings",
-		component: <Apple title="settings" />,
+		component: <Settings />,
 	},
 ];
 

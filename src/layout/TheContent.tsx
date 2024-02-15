@@ -1,4 +1,4 @@
-import { Suspense, memo, lazy } from "react";
+import { Suspense, memo } from "react";
 import { Route, Routes } from "react-router-dom";
 import routes from "../routes/routes";
 
@@ -15,13 +15,7 @@ const TheContent = () => {
 				<Routes>
 					{routes.map((route, idx) => {
 						if (route.path) {
-							return (
-								<Route
-									key={idx}
-									path={route.path}
-									element={route.component}
-								/>
-							);
+							return <Route key={idx} path={route.path} element={route.component} />;
 						}
 					})}
 				</Routes>
@@ -30,4 +24,5 @@ const TheContent = () => {
 	);
 };
 
-export default memo(TheContent);
+const MemoizedTheContent = memo(TheContent);
+export default MemoizedTheContent;
