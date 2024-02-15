@@ -1,39 +1,27 @@
 import Actions from "./ActionTypes";
 import { AppInitialState } from "../reducers/AppReducer";
-import { camelize, capitalizeFirstLetter } from "../../utils/utils";
+import { capitalizeFirstLetter } from "../../utils/utils";
 
 const AppActions = {};
 
 type actionType = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
-export const reducerNameFromUrl = (
-	url: string,
-	method: actionType,
-	isDeatil = false
-) => {
+export const reducerNameFromUrl = (url: string, method: actionType, isDeatil = false) => {
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let name = `${method.toLowerCase()}${url}`
-		.replace(lastPath, "")
-		?.replace(match, " ");
-	name = capitalizeFirstLetter(camelize(name));
+	let name = `${method.toLowerCase()}${url}`.replace(lastPath, "")?.replaceAll(match, " ");
+	name = capitalizeFirstLetter(name);
+	// name = camelize(name);
 	if (isDeatil) {
 		name = name + "Detail";
 	}
 	return name;
 };
 
-export const actionTypeFromUrl = (
-	url: string,
-	method: actionType,
-	isDeatil = false
-) => {
+export const actionTypeFromUrl = (url: string, method: actionType, isDeatil = false) => {
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let ActionType = `${method}${url}`
-		.replace(lastPath, "")
-		?.replace(match, "_")
-		.toUpperCase();
+	let ActionType = `${method}${url}`.replace(lastPath, "")?.replace(match, "_").toUpperCase();
 	if (isDeatil) {
 		ActionType = ActionType + "_DETAIL";
 	}
@@ -46,21 +34,30 @@ export const actionTypeFromUrl = (
  * @param params oprtinal query params
  * @returns redux action
  */
-export function getAction(apiUrl: string, params: any = "") {
+export function getAction(apiUrl: string | object, params?: any) {
 	const method = "GET";
-	let url = apiUrl;
+	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
 	url = params ? url + `?${params}` : url;
-	const type = actionTypeFromUrl(apiUrl, method);
+	const typeName = typeof apiUrl === "string" ? apiUrl : Object.keys(apiUrl)[0];
+	const type = actionTypeFromUrl(typeName, method);
 	return {
 		type,
 		payload: { request: { url, method } },
 	};
 }
 
-export function getDetailAction(apiUrl: string, id: any) {
+export function getDetailAction(apiurl: string | object, id: any, params?: any) {
 	const method = "GET";
-	const url = apiUrl + `${id}/`;
-	const type = actionTypeFromUrl(apiUrl, method, true);
+	let url = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
+	const apiUrl = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
+	if (id && apiUrl?.includes("?")) {
+		url = apiUrl.split("?")[0] + `/${id}/?${apiUrl.split("?")[1]}`;
+	}
+	if (id && !apiUrl?.includes("?")) {
+		url = apiUrl + `/${id}/`;
+	}
+	const typeName = typeof apiurl === "object" ? Object.keys(apiurl)?.[0] : apiUrl;
+	const type = actionTypeFromUrl(typeName, method, true);
 	return {
 		type,
 		payload: { request: { url } },
@@ -85,12 +82,7 @@ export function postAction(apiUrl: string, data: any, params = "") {
 	};
 }
 
-export function patchAction(
-	apiUrl: string,
-	data: any,
-	id: string,
-	lastPath?: string
-) {
+export function patchAction(apiUrl: string, data: any, id: string, lastPath?: string) {
 	const method = "PATCH";
 	const url = apiUrl + `${id}/${lastPath ? lastPath : ""}`;
 	const type = actionTypeFromUrl(apiUrl, method);
