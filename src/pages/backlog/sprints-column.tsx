@@ -130,12 +130,12 @@ const SprintsColumn = () => {
 																badgeColor[
 																	i % 3
 																]
-															}  text-white px-3 rounded-full `}
+															}  text-white px-3 py-0.5 rounded-full text-xs`}
 														>
 															Ongoing
 														</div>
 													</div>
-													<div className="flex gap-6 items-center text-[#737377]">
+													<div className="flex gap-2 items-center text-[#737377]">
 														<div className="text-xs">
 															4 Apr - 12 Apr
 														</div>

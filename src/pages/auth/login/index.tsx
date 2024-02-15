@@ -1,44 +1,47 @@
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import {
 	Card,
 	CardHeader,
 	CardTitle,
 	CardDescription,
 	CardContent,
-	CardFooter,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+
+import EmailSubmitForm from "./email-submit-form";
+import SubmitPasswordForm from "./password-submit-form";
 
 const index = () => {
+	const { register, handleSubmit } = useForm();
+	const [showPasswordOption, setShowPswOption] = useState(false);
+
 	return (
-		<div className="flex justify-center h-screen items-center dark:bg-background">
+		<div className="flex flex-col justify-center h-screen items-center dark:bg-background">
 			<Card className="w-[500px] dark:bg-[#23252A]">
 				<CardHeader>
 					<CardTitle className="text-primary">Hyfy</CardTitle>
-					<CardDescription>Login</CardDescription>
+					<CardDescription className="text-foreground text-sm font-semibold pt-3">
+						{showPasswordOption ? "Secure Password" : "Login"}
+					</CardDescription>
 					<CardDescription>
-						Enter your email to start working with Hyfy
+						{showPasswordOption
+							? "Enter the password that has been sent to "
+							: "Enter your email to start working with Hyfy"}
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="">
-					<form>
-						<div className="grid w-full items-center gap-4">
-							<div className="flex flex-col space-y-1.5">
-								<Input
-									className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-									type="email"
-									id="email"
-									placeholder="email"
-								/>
-							</div>
-						</div>
-					</form>
+					<EmailSubmitForm
+						register={register}
+						show={showPasswordOption}
+						setShowPswOption={setShowPswOption}
+					/>
+					<SubmitPasswordForm
+						register={register}
+						show={showPasswordOption}
+						handleSubmit={handleSubmit}
+						setShowPswOption={setShowPswOption}
+					/>
 				</CardContent>
-				<CardFooter className="flex ">
-					<Button className="w-full hover:bg-primary">
-						Continue
-					</Button>
-				</CardFooter>
 			</Card>
 		</div>
 	);

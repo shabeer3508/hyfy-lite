@@ -1,12 +1,14 @@
 import dayjs from "dayjs";
-import SBToast from "@/components/SBComponents/SBToast";
+import { toast } from "sonner";
 
 export function capitalizeFirstLetter(text: string) {
 	return text.charAt(0)?.toUpperCase() + text.slice(1);
 }
 
 export function camelize(str: string) {
-	return str.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+	return str
+		.toLowerCase()
+		.replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
 }
 
 export const Decode = (token: string) => {
@@ -55,11 +57,15 @@ export const NumberConverter = (number: number) => {
 	}
 	if (digitCount === 6) {
 		let output = number / 100000;
-		return `${Math.round((output + Number.EPSILON) * 100) / 100}${" "}Lakhs`;
+		return `${
+			Math.round((output + Number.EPSILON) * 100) / 100
+		}${" "}Lakhs`;
 	}
 	if (digitCount === 7) {
 		let output = number / 100000;
-		return `${Math.round((output + Number.EPSILON) * 100) / 100}${" "}Lakhs`;
+		return `${
+			Math.round((output + Number.EPSILON) * 100) / 100
+		}${" "}Lakhs`;
 	}
 };
 
@@ -109,5 +115,5 @@ export const print = () => {
 
 // Warning Message
 export const warning = () => {
-	SBToast.showWith("Sorry! This feature is not ready to use. Please try later", "warning");
+	toast.warning("Sorry! This feature is not ready to use. Please try later");
 };

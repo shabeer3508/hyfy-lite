@@ -1,11 +1,11 @@
-import SBToast from "../components/SBComponents/SBToast";
+import { toast } from "sonner";
 import HttpCodeMessages from "./HttpCodeMessages";
 
 const ErrorManager = {
 	handle(error: any) {
 		console.log(`ErrorManager,  : error?.response `, error?.response);
 		if (error.toJSON().message === "Network Error") {
-			SBToast.show("Network Error, No Internet Connection", "error");
+			toast.error("Network Error, No Internet Connection");
 			return;
 		}
 
@@ -19,7 +19,7 @@ const ErrorManager = {
 				const msg =
 					error?.response?.data?.message ||
 					`${codeMsg}: Something went wrong, Please try again later`;
-				SBToast.show(msg, "error");
+				toast.error(msg);
 				return;
 			}
 
@@ -39,12 +39,12 @@ const ErrorManager = {
 								? msgData
 								: (msgData?.[0] as string);
 						msg?.toLowerCase()?.includes(key?.toLowerCase())
-							? SBToast.show(msg, "error")
-							: SBToast.show(`${key} : ${msg}`, "error");
+							? toast.error(`${msg}`)
+							: toast.error(`${key} : ${msg}`);
 					});
 					return;
 				}
-				SBToast.show(msg, "error");
+				toast.error(`${msg}`);
 				return;
 			}
 
@@ -60,13 +60,14 @@ const ErrorManager = {
 					message = "Invalid Username or Password";
 					message = error?.response?.data?.detail || message;
 				}
-				SBToast.show(message, "error");
+
+				toast.error(`${message}`);
 				localStorage.removeItem("token");
 				return;
 			}
 
 			if (error?.response?.status === 404) {
-				SBToast.show(`Requested url not found`, "error");
+				toast.error("Requested url not found");
 				return;
 			}
 
@@ -85,17 +86,17 @@ const ErrorManager = {
 					msgKeys.forEach((key) => {
 						const msg = error?.response?.data?.[key];
 						msg.includes(key)
-							? SBToast.show(msg, "error")
-							: SBToast.show(`${key} : ${msg}`, "error");
+							? toast.error(`${msg}`)
+							: toast.error(`${key} : ${msg}`);
 					});
 					return;
 				}
-				SBToast.show(msg, "error");
+				toast.error(`${msg}`);
 				return;
 			}
 
 			const message = error?.response?.data?.message;
-			message && SBToast.show(message, "error");
+			message && toast.error(`${message}`);
 
 			if (error?.response?.status >= 300) {
 				const codeMsg =
@@ -103,7 +104,7 @@ const ErrorManager = {
 				const msg =
 					error?.response?.statusText ||
 					`${codeMsg}: Something went wrong, Please try again later`;
-				SBToast.show(msg, "error");
+				toast.error(`${msg}`);
 			}
 		} else if (error.request) {
 			// The request was made but no response was received
@@ -111,10 +112,10 @@ const ErrorManager = {
 			// Something happened in setting up the request that triggered an Error
 			const message = error?.message;
 			if (error.toJSON().message === "Network Error") {
-				SBToast.show("Network Error, Something went wrong", "error");
+				toast.error("Network Error, Something went wrong");
 				return;
 			}
-			SBToast.show(message, "error");
+			toast.error(`${message}`);
 			return;
 		}
 	},

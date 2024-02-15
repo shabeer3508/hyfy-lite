@@ -123,7 +123,7 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 				onClick();
 			}}
 			className={` no-select group relative flex h-12 cursor-pointer items-center gap-2 pl-6 pr-4 ${
-				isActive && "bg-[#222428]  border-primary border-r-2"
+				isActive && "dark:bg-[#222428]  border-primary border-r-2"
 			}   dark:text-white/90`}
 		>
 			{prop?.item?.icon && (
