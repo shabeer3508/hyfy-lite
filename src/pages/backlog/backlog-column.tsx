@@ -1,3 +1,5 @@
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +11,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { getAction } from "@/redux/actions/AppActions";
+import Urls from "@/redux/actions/Urls";
 import { Separator } from "@radix-ui/react-select";
+import { useEffect } from "react";
 
 import {
 	HiPlus,
@@ -26,11 +31,30 @@ import {
 	IoLogoFreebsdDevil,
 } from "react-icons/io";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+
+import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 
 const BacklogColumn = () => {
-	const tags = Array.from({ length: 30 }).map(
-		(_, i, a) => `Story - ${a.length - i}`
-	);
+	const [searchParams, setSearchParams] = useSearchParams();
+	const backlogListData = useSelector((state: any) => state?.GetIssues);
+
+	const backlogItems = backlogListData?.data?.items;
+
+	const dispatch = useDispatch();
+
+	const getIssues = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
+
+	useEffect(() => {
+		getIssues();
+	}, []);
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -45,16 +69,12 @@ const BacklogColumn = () => {
 			<div className="flex items-center justify-between w-full">
 				<div className="mr-3">Backlog</div>
 				<div className="flex gap-3">
-					<div className="flex items-center bg-background pr-3 rounded border">
-						<Input
-							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-							placeholder="Search"
-						/>
-						<IoIosSearch />
-					</div>
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-						<HiPlus className="h-8 w-8 " />
-					</div>
+					<HYSearch />
+					<EpicCreationForm>
+						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
+							<HiPlus className="h-8 w-8 " />
+						</div>
+					</EpicCreationForm>
 				</div>
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
@@ -67,20 +87,11 @@ const BacklogColumn = () => {
 					</div>
 				</div>
 				<div className="">
-					<Select>
-						<SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-							<div className="whitespace-nowrap text-[#9499A5]">
-								Assigned to
-							</div>
-							<SelectValue placeholder="" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="zahid">Zahid</SelectItem>
-							<SelectItem value="saranya">Saranya</SelectItem>
-							<SelectItem value="roshan">Roshan</SelectItem>
-						</SelectContent>
-					</Select>
+					<HYSelect
+						id=""
+						label="Assigned to"
+						options={["all", "zahid", "saranya", "roshan"]}
+					/>
 				</div>
 			</div>
 			<div className="flex items-center border-b h-14 w-full">
@@ -109,13 +120,13 @@ const BacklogColumn = () => {
 			</div>
 
 			<div className="">
-				{tags?.length > 0 && (
+				{backlogItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4">
-							{tags.map((tag, i) => (
+							{backlogItems.map((issue, i) => (
 								<>
 									<div
-										key={tag}
+										key={issue.id}
 										className="flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded border-[#696B70] hover:border-primary cursor-pointer"
 									>
 										<div className="flex gap-1 items-center">
@@ -125,7 +136,7 @@ const BacklogColumn = () => {
 												}`}
 											/>
 											<div className="text-[#737377]">
-												{tag}
+												{issue.name}
 											</div>
 										</div>
 										<div className="flex gap-4 items-center text-[#737377]">
@@ -146,7 +157,7 @@ const BacklogColumn = () => {
 											<PiLinkSimpleHorizontalBold />
 											<div className="flex gap-1 items-center">
 												<HiDatabase className="" />{" "}
-												{i % 6}
+												{issue?.points}
 											</div>
 										</div>
 									</div>
@@ -157,7 +168,7 @@ const BacklogColumn = () => {
 					</ScrollArea>
 				)}
 
-				{tags?.length === 0 && (
+				{backlogItems?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">

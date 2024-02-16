@@ -1,4 +1,4 @@
-import HYAvatar from "@/components/SBComponents/HYAvatar";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -35,10 +35,20 @@ const Profile = () => {
 	return (
 		<div className="dark:text-foreground flex flex-col h-full items-center p-10">
 			<Card className=" w-2/3 flex-1 flex flex-col items-center justify-center p-14">
-				<HYAvatar className=" size-32 " url="https://github.com/shadcn.png" name={"John Doe"} />
+				<HYAvatar
+					className=" size-32 "
+					url="https://github.com/shadcn.png"
+					name={"John Doe"}
+				/>
 				<h1 className="text-2xl font-bold mt-6">John Doe</h1>
-				<p className="text-sm text-gray-500 mt-1">Full Stack Developer</p>
-				<Button onClick={logoutUser} variant="ghost" className="text-xl text-red-500 mt-10">
+				<p className="text-sm text-gray-500 mt-1">
+					Full Stack Developer
+				</p>
+				<Button
+					onClick={logoutUser}
+					variant="ghost"
+					className="text-xl text-red-500 mt-10"
+				>
 					Logout
 				</Button>
 			</Card>

@@ -1,3 +1,6 @@
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
+import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 import {
 	Accordion,
 	AccordionContent,
@@ -15,7 +18,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { getAction } from "@/redux/actions/AppActions";
+import Urls from "@/redux/actions/Urls";
 import { Separator } from "@radix-ui/react-select";
+import { useEffect, useState } from "react";
 
 import {
 	HiPlus,
@@ -31,6 +37,8 @@ import {
 	IoLogoFreebsdDevil,
 } from "react-icons/io";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 const SprintsColumn = () => {
 	const tags = Array.from({ length: 5 }).map(
@@ -44,6 +52,26 @@ const SprintsColumn = () => {
 		assignees: [],
 		points: 25,
 	}));
+
+	const [searchParams, setSearchParams] = useSearchParams();
+	const sprintListData = useSelector((state: any) => state?.GetSprints);
+
+	const sprintItems = sprintListData?.data?.items;
+	console.log("🚀 ~ SprintsColumn ~ sprintItems:", sprintItems);
+
+	const dispatch = useDispatch();
+
+	const getSprints = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ sprints: Urls.sprints + query }));
+	};
+
+	useEffect(() => {
+		getSprints();
+	}, []);
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -61,16 +89,12 @@ const SprintsColumn = () => {
 			<div className="flex items-center justify-between w-full">
 				<div className="mr-3">Sprints</div>
 				<div className="flex gap-3">
-					<div className="flex items-center bg-background pr-3 rounded border">
-						<Input
-							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-							placeholder="Search"
-						/>
-						<IoIosSearch />
-					</div>
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-						<HiPlus className="h-8 w-8 " />
-					</div>
+					<HYSearch />
+					<EpicCreationForm>
+						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
+							<HiPlus className="h-8 w-8 " />
+						</div>
+					</EpicCreationForm>
 				</div>
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
@@ -80,30 +104,21 @@ const SprintsColumn = () => {
 					</div>
 				</div>
 				<div className="">
-					<Select>
-						<SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-							<div className="whitespace-nowrap text-[#9499A5]">
-								Status
-							</div>
-							<SelectValue placeholder="" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="ongoing">Ongoing</SelectItem>
-							<SelectItem value="retro">Retro</SelectItem>
-							<SelectItem value="backlog">Backlog</SelectItem>
-						</SelectContent>
-					</Select>
+					<HYSelect
+						id=""
+						label="Status"
+						options={["all", "ongoing", "retro", "backlog"]}
+					/>
 				</div>
 			</div>
 			<div>
-				{tags?.length > 0 && (
+				{sprintItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full">
 						<div className="py-4 pr-4">
-							{tags.map((tag, i) => (
+							{sprintItems.map((sprint, i) => (
 								<>
 									<div
-										key={tag}
+										key={sprint.id}
 										className="flex gap-3 justify-between items-center text-sm border  px-3 rounded hover:border-primary cursor-pointer"
 									>
 										<Accordion
@@ -121,7 +136,7 @@ const SprintsColumn = () => {
 															className={`w-5 text-[#707173]`}
 														/>
 														<div className="">
-															{tag}
+															{sprint.name}
 														</div>
 													</div>
 													<div>
@@ -150,11 +165,11 @@ const SprintsColumn = () => {
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
-													{subTasks?.map(
+													{sprint.issues?.map(
 														(itm, i2) => {
 															return (
 																<div
-																	key={tag}
+																	key={itm}
 																	className="flex gap-3 justify-between items-center text-sm border border-[#696B70] hover:border-[#696B70]/50 px-3 py-3 rounded cursor-pointer"
 																>
 																	<div className="flex gap-1 items-center">
@@ -168,7 +183,7 @@ const SprintsColumn = () => {
 																		/>
 																		<div className="text-[#737377]">
 																			{
-																				tag
+																				sprint.name
 																			}
 																		</div>
 																	</div>
@@ -234,7 +249,7 @@ const SprintsColumn = () => {
 						</div>
 					</ScrollArea>
 				)}
-				{tags?.length === 0 && (
+				{sprintItems?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-200px)] items-center mt-[30px]">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">

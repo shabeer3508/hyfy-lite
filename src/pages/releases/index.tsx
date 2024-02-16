@@ -1,8 +1,12 @@
-import HYSearch from "@/components/SBComponents/HYSearch";
-import HYSelect from "@/components/SBComponents/HYSelect";
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
 
 import { Button } from "@/components/ui/button";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import {
+	getAction,
+	patchAction,
+	reducerNameFromUrl,
+} from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,17 +30,28 @@ const Releases = () => {
 	}
 
 	async function updateItemStage(id: string, stage: string) {
-		const resp = (await dispatch(patchAction({ release: Urls.release }, { status: stage }, id))) as any;
+		const resp = (await dispatch(
+			patchAction({ release: Urls.release }, { status: stage }, id)
+		)) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
 			loadAction();
 		}
 	}
 
-	const items = itemsRes?.data?.items?.map((val: any) => ({ ...val, ...val?.expand }));
-	const PlaningItems = items?.filter((item: any) => item?.status === "planning");
-	const OngoingItems = items?.filter((item: any) => item?.status === "ongoing");
-	const ReleasedItems = items?.filter((item: any) => item?.status === "released");
+	const items = itemsRes?.data?.items?.map((val: any) => ({
+		...val,
+		...val?.expand,
+	}));
+	const PlaningItems = items?.filter(
+		(item: any) => item?.status === "planning"
+	);
+	const OngoingItems = items?.filter(
+		(item: any) => item?.status === "ongoing"
+	);
+	const ReleasedItems = items?.filter(
+		(item: any) => item?.status === "released"
+	);
 
 	return (
 		<div className=" flex flex-col h-full">
@@ -48,7 +63,11 @@ const Releases = () => {
 				<div className="flex gap-2">
 					<HYSearch />
 					<div className="">
-						<HYSelect label="Status" options={["done", "in-progress", "pending", "open"]} />
+						<HYSelect
+							id=""
+							label="Status"
+							options={["done", "in-progress", "pending", "open"]}
+						/>
 					</div>
 				</div>
 			</div>
@@ -58,7 +77,10 @@ const Releases = () => {
 						onDragOver={(e) => e.preventDefault()}
 						onDrop={(e) => {
 							e.preventDefault();
-							updateItemStage(e?.dataTransfer?.getData("id"), "planning");
+							updateItemStage(
+								e?.dataTransfer?.getData("id"),
+								"planning"
+							);
 						}}
 						className="space-y-2"
 					>
@@ -71,7 +93,10 @@ const Releases = () => {
 						onDragOver={(e) => e.preventDefault()}
 						onDrop={(e) => {
 							e.preventDefault();
-							updateItemStage(e?.dataTransfer?.getData("id"), "ongoing");
+							updateItemStage(
+								e?.dataTransfer?.getData("id"),
+								"ongoing"
+							);
 						}}
 						className="space-y-2"
 					>
@@ -84,7 +109,10 @@ const Releases = () => {
 						onDragOver={(e) => e.preventDefault()}
 						onDrop={(e) => {
 							e.preventDefault();
-							updateItemStage(e?.dataTransfer?.getData("id"), "released");
+							updateItemStage(
+								e?.dataTransfer?.getData("id"),
+								"released"
+							);
 						}}
 						className="space-y-2"
 					>
