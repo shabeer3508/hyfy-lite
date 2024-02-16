@@ -22,22 +22,18 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 				<div className="capitalize ">{item?.name}</div>
 			</div>
 			<Separator className=" w-full" />
-			<div className="p-4 space-y-1">
+			<div className="p-4 space-y-2">
 				<div className="text-base">{item?.description}</div>
 				<div className="text-base">
 					<span className=" text-xs text-[#737377]">From</span>{" "}
-					<span className="">
-						{formatter.format(new Date(item?.from))}
-					</span>
+					<span className="">{formatter.format(new Date(item?.from))}</span>
 					{"  "}
 					<span className=" text-xs text-[#737377]">To</span>{" "}
-					<span className="">
-						{formatter.format(new Date(item?.to))}
-					</span>
+					<span className="">{formatter.format(new Date(item?.to))}</span>
 				</div>
 			</div>
 			<Separator className=" w-full" />
-			<div className="flex items-center gap-3 p-4">
+			<div className="flex items-center gap-3 px-4 py-[10px]">
 				<div className="flex gap-1">
 					<img src="/story_icon.svg" alt="Project" />
 					<span>12</span>
@@ -54,30 +50,10 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 			<Separator className=" w-full" />
 			<div className="flex items-center p-4">
 				<div className="flex items-center">
-					<HYAvatar
-						className=""
-						url=""
-						name="Shad D"
-						color="bg-purple-400"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Apple Seed"
-						color="bg-amber-500"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Jone ave"
-						color="bg-fuchsia-700"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Fazil Ali"
-						color="bg-green-400"
-					/>
+					<HYAvatar className="" url="" name="Shad D" color="bg-purple-400" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Apple Seed" color="bg-amber-500" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Jone ave" color="bg-fuchsia-700" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Fazil Ali" color="bg-green-400" />
 				</div>
 			</div>
 		</Card>
