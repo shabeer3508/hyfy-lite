@@ -3,7 +3,7 @@ import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction } from "@/redux/actions/AppActions";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/HYComponents/HYDialog";
@@ -21,13 +21,19 @@ import {
 	HiOutlineArrowNarrowUp,
 	HiDatabase,
 } from "react-icons/hi";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 
 const BacklogColumn = () => {
-	const backlogListData = useSelector((state: any) => state?.GetIssues);
-
-	const backlogItems = backlogListData?.data?.items;
-
 	const dispatch = useDispatch();
+	const issuesListData = useSelector((state: any) => state?.GetIssues);
+	const issueItems = issuesListData?.data?.items;
+
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
 		let query = "";
@@ -37,9 +43,56 @@ const BacklogColumn = () => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
+	const getUsers = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ users: Urls.users + query }));
+	};
+
+	const backlogIssues =
+		issueItems?.filter((issue) => issue?.status === "backlog") ?? [];
+
+	const usersOptions =
+		usersList?.data?.items?.map((user) => ({
+			value: user?.id,
+			label: user?.name,
+		})) ?? [];
+
+	/*  ######################################################################################## */
+
+	const sortoptions = [
+		{
+			label: "New",
+			action: () => {},
+		},
+		{
+			label: "Oldest",
+			action: () => {},
+		},
+		{
+			label: "Recently Edited",
+			action: () => {},
+		},
+		{
+			label: "A-Z",
+			action: () => {},
+		},
+		{
+			label: "Z-A",
+			action: () => {},
+		},
+	];
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
 		getIssues();
+		getUsers();
 	}, []);
+
+	/*  ######################################################################################## */
 
 	return (
 		<div className="flex flex-col h-full  px-6 border-r">
@@ -56,18 +109,32 @@ const BacklogColumn = () => {
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
 				<div className="flex gap-3">
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 cursor-pointer">
-						<HiOutlineArrowsUpDown className="h-8 w-8 text-[#707173]" />
-					</div>
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10  cursor-pointer">
-						<HiFilter className="h-5 w-5 text-[#707173]" />
-					</div>
+					<HYDropDown options={sortoptions}>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
+							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+						</Button>
+					</HYDropDown>
+					<HYDropdownMenuCheckbox>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
+							<HiFilter className="h-5 w-5 text-[#707173]" />
+						</Button>
+					</HYDropdownMenuCheckbox>
 				</div>
 				<div className="">
-					<HYSelect
-						id=""
-						label="Assigned to"
-						options={["all", "zahid", "saranya", "roshan"]}
+					<HYCombobox
+						label="Assigned to "
+						options={[
+							{ label: "All", value: "all" },
+							...usersOptions,
+						]}
 					/>
 				</div>
 			</div>
@@ -76,10 +143,10 @@ const BacklogColumn = () => {
 			</div>
 
 			<div className="">
-				{backlogItems?.length > 0 && (
+				{backlogIssues?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
-							{backlogItems.map((issue, i) => (
+							{backlogIssues.map((issue, i) => (
 								<IssueCard
 									index={i}
 									issue={issue}
@@ -90,7 +157,7 @@ const BacklogColumn = () => {
 					</ScrollArea>
 				)}
 
-				{backlogItems?.length === 0 && (
+				{backlogIssues?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
@@ -103,13 +170,15 @@ const BacklogColumn = () => {
 								You can add stories here and then drag ‘n’ drop
 								them to epics or stories.
 							</div>
-							<Button
-								variant="outline"
-								className="flex gap-3 border-primary text-primary hover:text-primary"
-							>
-								<HiPlus />
-								Add
-							</Button>
+							<IssueCreationForm>
+								<Button
+									variant="outline"
+									className="flex gap-3 border-primary text-primary hover:text-primary"
+								>
+									<HiPlus />
+									Add
+								</Button>
+							</IssueCreationForm>
 						</div>
 					</div>
 				)}

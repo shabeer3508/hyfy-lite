@@ -61,6 +61,7 @@ const TheHeader = () => {
 								setSearchParams(searchParams);
 							}
 						}}
+						defaultValue={projectOptions?.[0]?.value}
 						options={projectOptions}
 						buttonClassName="border-0"
 					/>

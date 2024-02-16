@@ -1,53 +1,46 @@
-import React, { useState } from "react";
-
+import { z } from "zod";
+import { useState } from "react";
+import HYSelect from "../HYSelect";
+import Urls from "@/redux/actions/Urls";
+import HYInputDate from "../HYInputDate";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { HYCombobox } from "../HYCombobox";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { getAction, postAction } from "@/redux/actions/AppActions";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-import HYSelect from "../HYSelect";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
 import {
 	Form,
-	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { getAction, postAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { Checkbox } from "@/components/ui/checkbox";
-
-const formSchema = z.object({
-	name: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
-	status: z.string(),
-	to_date: z.string().optional().nullable(),
-	priority: z.string().optional().nullable(),
-	description: z.string().optional().nullable(),
-});
 
 const ReleaseCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
-
 	const [openForm, setOpenForm] = useState(false);
+
+	/*  ######################################################################################## */
+
+	const formSchema = z.object({
+		name: z.string().min(2, {
+			message: "Username must be at least 2 characters.",
+		}),
+		status: z.string(),
+		to_date: z.date().optional().nullable(),
+		priority: z.string().optional().nullable(),
+		description: z.string().optional().nullable(),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -56,6 +49,8 @@ const ReleaseCreationForm = ({ children }: any) => {
 			status: "planning",
 		},
 	});
+
+	/*  ######################################################################################## */
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getReleases = (prams?: string) => {
@@ -73,6 +68,8 @@ const ReleaseCreationForm = ({ children }: any) => {
 		}
 	};
 
+	/*  ######################################################################################## */
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -88,7 +85,11 @@ const ReleaseCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem className="col-span-2">
 									<FormLabel>Release Title</FormLabel>
-									<Input placeholder="title" {...field} />
+									<Input
+										placeholder="title"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -99,16 +100,29 @@ const ReleaseCreationForm = ({ children }: any) => {
 								control={form.control}
 								name="status"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Status</FormLabel>
-										<HYSelect
-											field={field}
+									<FormItem className="flex flex-col justify-center">
+										<FormLabel className="my-1">
+											Status
+										</FormLabel>
+
+										<HYCombobox
 											id="status"
-											className="w-full"
+											buttonClassName="w-full"
+											// name="Status"
+											form={form}
 											options={[
-												"planning",
-												"ongoing",
-												"released",
+												{
+													label: "Panning",
+													value: "planning",
+												},
+												{
+													label: "Ongoing",
+													value: "ongoing",
+												},
+												{
+													label: "Released",
+													value: "released",
+												},
 											]}
 										/>
 										<FormMessage />
@@ -121,7 +135,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Release Date</FormLabel>
-										<Input type="date" {...field} />
+										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
 								)}
@@ -153,9 +167,13 @@ const ReleaseCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="description"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-1">
 									<FormLabel>Description</FormLabel>
-									<Input type="text" {...field} />
+									<Input
+										type="text"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}

@@ -9,19 +9,10 @@ import {
 } from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { getAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
-import { Separator } from "@radix-ui/react-select";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import {
 	HiPlus,
@@ -30,24 +21,25 @@ import {
 	HiOutlineArrowNarrowUp,
 } from "react-icons/hi";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
-import {
-	IoIosSearch,
-	IoIosFlash,
-	IoMdListBox,
-	IoLogoFreebsdDevil,
-} from "react-icons/io";
+import { IoIosFlash } from "react-icons/io";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 
 const SprintsColumn = () => {
+	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
-	const sprintListData = useSelector((state: any) => state?.GetSprints);
 
+	const sprintListData = useSelector((state: any) => state?.GetSprints);
 	const sprintItems = sprintListData?.data?.items;
 
-	const dispatch = useDispatch();
+	const issuesListData = useSelector((state: any) => state?.GetIssues);
+	const issuesItems = issuesListData?.data?.items;
+
+	/*  ######################################################################################## */
 
 	const getSprints = (prams?: string) => {
 		let query = "";
@@ -57,20 +49,38 @@ const SprintsColumn = () => {
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
+	/*  ######################################################################################## */
+
+	const sortoptions = [
+		{
+			label: "New",
+			action: () => {},
+		},
+		{
+			label: "Oldest",
+			action: () => {},
+		},
+		{
+			label: "Recently Edited",
+			action: () => {},
+		},
+		{
+			label: "A-Z",
+			action: () => {},
+		},
+		{
+			label: "Z-A",
+			action: () => {},
+		},
+	];
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
 		getSprints();
 	}, []);
 
-	const logoColors = [
-		"text-[#71A4FF]",
-		"text-[#4C4878]",
-		"text-[#A4599A]",
-		"text-[#E2A766]",
-		"text-[#389C98]",
-		"text-[#FF6481]",
-	];
-
-	const badgeColor = ["bg-[#56972E]", "bg-[#DF8430]", "bg-[#5F5F5F]"];
+	/*  ######################################################################################## */
 
 	return (
 		<div className="flex flex-col h-full px-6">
@@ -87,24 +97,38 @@ const SprintsColumn = () => {
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
 				<div className="flex gap-3">
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 cursor-pointer">
-						<HiOutlineArrowsUpDown className="h-8 w-8 text-[#707173]" />
-					</div>
+					<HYDropDown options={sortoptions}>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
+							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+						</Button>
+					</HYDropDown>
 				</div>
 				<div className="">
-					<HYSelect
-						id=""
-						label="Status"
-						options={["all", "ongoing", "retro", "backlog"]}
+					<HYCombobox
+						label="Status "
+						options={[
+							{ label: "All", value: "all" },
+							{ label: "Backlog", value: "backlog" },
+							{ label: "In Progress", value: "in-progress" },
+							{ label: "Retro", value: "retro" },
+						]}
 					/>
 				</div>
 			</div>
 			<div>
 				{sprintItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full">
-						<div className="py-4 pr-4">
-							{sprintItems.map((sprint, i) => (
-								<>
+						<div className="py-4 pr-4 space-y-2">
+							{sprintItems.map((sprint, i) => {
+								const sprintIssues = issuesItems?.filter(
+									(issue) => issue?.sprint === sprint?.id
+								);
+
+								return (
 									<div
 										key={sprint.id}
 										className="flex gap-3 justify-between items-center text-sm border  px-3 rounded hover:border-primary cursor-pointer"
@@ -161,7 +185,7 @@ const SprintsColumn = () => {
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
-													{sprint.issues?.map(
+													{sprintIssues?.map(
 														(itm, i2) => {
 															return (
 																<div
@@ -170,17 +194,32 @@ const SprintsColumn = () => {
 																	className="flex gap-3 justify-between items-center text-sm border border-[#696B70] hover:border-[#696B70]/50 px-3 py-3 rounded cursor-pointer"
 																>
 																	<div className="flex gap-1 items-center">
-																		<HiBookOpen
-																			className={`w-5 ${
-																				logoColors[
-																					i2 %
-																						6
-																				]
-																			}`}
-																		/>
+																		{itm.type ===
+																			"story" && (
+																			<img
+																				src="/story_icon.svg"
+																				alt="Project"
+																			/>
+																		)}
+
+																		{itm.type ===
+																			"task" && (
+																			<img
+																				src="/task_icon.svg"
+																				alt="Project"
+																			/>
+																		)}
+
+																		{itm.type ===
+																			"bug" && (
+																			<img
+																				src="/bug_icon.svg"
+																				alt="Project"
+																			/>
+																		)}
 																		<div className="text-[#737377]">
 																			{
-																				sprint.name
+																				itm?.name
 																			}
 																		</div>
 																	</div>
@@ -214,14 +253,15 @@ const SprintsColumn = () => {
 														}
 													)}
 
-													<IssueCreationCardMini />
+													<IssueCreationCardMini
+														sprintId={sprint?.id}
+													/>
 												</AccordionContent>
 											</AccordionItem>
 										</Accordion>
 									</div>
-									<Separator className="my-2" />
-								</>
-							))}
+								);
+							})}
 						</div>
 					</ScrollArea>
 				)}
@@ -237,14 +277,16 @@ const SprintsColumn = () => {
 							<div className="w-2/3 text-center text-[#F8F8F8]">
 								Sprints are week long and help you get things
 								done
-							</div>
-							<Button
-								variant="outline"
-								className="flex gap-3 border-primary text-primary hover:text-primary"
-							>
-								<HiPlus />
-								Add
-							</Button>
+							</div>{" "}
+							<SprintCreationForm>
+								<Button
+									variant="outline"
+									className="flex gap-3 border-primary text-primary hover:text-primary"
+								>
+									<HiPlus />
+									Add
+								</Button>
+							</SprintCreationForm>
 						</div>
 					</div>
 				)}

@@ -1,31 +1,40 @@
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction } from "@/redux/actions/AppActions";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import HYSelect from "@/components/HYComponents/HYSelect";
+import HYDialog from "@/components/HYComponents/HYDialog";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
+import EpicDetailView from "@/components/HYComponents/DetailViews/Epic-detail-view";
 import {
 	HiPlus,
 	HiFilter,
 	HiBookOpen,
 	HiOutlineDotsVertical,
 } from "react-icons/hi";
-import { Card } from "@/components/ui/card";
-import HYDialog from "@/components/HYComponents/HYDialog";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 
 const EpicsColumn = () => {
+	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
-	const epicsListData = useSelector((state: any) => state?.GetEpics);
 
+	const epicsListData = useSelector((state: any) => state?.GetEpics);
 	const epicItems = epicsListData?.data?.items;
 
-	const dispatch = useDispatch();
+	const releaseReducerName = reducerNameFromUrl("release", "GET");
+	const releaseList = useSelector(
+		(state: any) => state?.[releaseReducerName]
+	);
+
+	/*  ######################################################################################## */
 
 	const getEpics = (prams?: string) => {
 		let query = "?expand=releases,project_id";
@@ -35,9 +44,53 @@ const EpicsColumn = () => {
 		dispatch(getAction({ epics: Urls.epics + query }));
 	};
 
+	const getReleases = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ release: Urls.release + query }));
+	};
+
+	/*  ######################################################################################## */
+
+	const releaseOptions =
+		releaseList?.data?.items?.map((relse) => ({
+			value: relse?.id,
+			label: relse?.name,
+		})) ?? [];
+
+	const sortoptions = [
+		{
+			label: "New",
+			action: () => {},
+		},
+		{
+			label: "Oldest",
+			action: () => {},
+		},
+		{
+			label: "Recently Edited",
+			action: () => {},
+		},
+		{
+			label: "A-Z",
+			action: () => {},
+		},
+		{
+			label: "Z-A",
+			action: () => {},
+		},
+	];
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
+		getReleases();
 		getEpics();
 	}, []);
+
+	/*  ######################################################################################## */
 
 	return (
 		<div className="flex flex-col h-full px-6 border-r">
@@ -54,18 +107,33 @@ const EpicsColumn = () => {
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
 				<div className="flex gap-3">
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 cursor-pointer">
-						<HiOutlineArrowsUpDown className="h-8 w-8 text-[#707173]" />
-					</div>
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10  cursor-pointer">
-						<HiFilter className="h-5 w-5 text-[#707173]" />
-					</div>
+					<HYDropDown options={sortoptions}>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
+							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+						</Button>
+					</HYDropDown>
+					<HYDropdownMenuCheckbox>
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
+							<HiFilter className="h-5 w-5 text-[#707173]" />
+						</Button>
+					</HYDropdownMenuCheckbox>
 				</div>
 				<div className="">
-					<HYSelect
-						id=""
-						label="Release"
-						options={["release-1", "release-2", "release-3"]}
+					<HYCombobox
+						label="Release "
+						options={[
+							{ label: "All", value: "all" },
+							...releaseOptions,
+						]}
+						buttonClassName="max-w-[200px]"
 					/>
 				</div>
 			</div>
@@ -157,8 +225,7 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 		>
 			<HYDialog
 				className="max-w-6xl"
-				title={"Epic"}
-				// content={<IssueDetailView data={data} />}
+				content={<EpicDetailView data={epic} />}
 			>
 				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
 					<div className="flex items-center gap-2">

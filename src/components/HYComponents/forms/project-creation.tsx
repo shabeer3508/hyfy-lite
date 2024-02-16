@@ -1,63 +1,71 @@
-import React, { useState } from "react";
-
+import { z } from "zod";
+import Urls from "@/redux/actions/Urls";
+import HYInputDate from "../HYInputDate";
+import { useForm } from "react-hook-form";
+import { HYCombobox } from "../HYCombobox";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-import HYSelect from "../HYSelect";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
 import {
 	Form,
-	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { getAction, postAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { Checkbox } from "@/components/ui/checkbox";
+import {
+	getAction,
+	postAction,
+	reducerNameFromUrl,
+} from "@/redux/actions/AppActions";
 
-const formSchema = z.object({
-	title: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
-	owner: z.string().optional(),
-	end_date: z.string().optional().nullable(),
-	start_date: z.string().optional().nullable(),
-	description: z.string().optional().nullable(),
-	status: z.string(),
-});
-
-const ProjectCreationForm = ({ children }: any) => {
+const ProjectCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
-
 	const [openForm, setOpenForm] = useState(false);
+
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	/*  ######################################################################################## */
+
+	const formSchema = z.object({
+		title: z.string().min(2, {
+			message: "Username must be at least 2 characters.",
+		}),
+		owner: z.string(),
+		end_date: z.date().optional().nullable(),
+		start_date: z.date().optional().nullable(),
+		description: z.string().optional().nullable(),
+		status: z.string(),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			title: "",
 			status: "open",
-			owner: "y9ynibdq68npy34",
 		},
 	});
+
+	/*  ######################################################################################## */
+
+	const getUsers = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ users: Urls.users + query }));
+	};
 
 	const handleProjectCreation = async (
 		values: z.infer<typeof formSchema>
@@ -77,6 +85,22 @@ const ProjectCreationForm = ({ children }: any) => {
 		}
 	};
 
+	/*  ######################################################################################## */
+
+	const usersOptions =
+		usersList?.data?.items?.map((user) => ({
+			value: user?.id,
+			label: user?.name,
+		})) ?? [];
+
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getUsers();
+	}, []);
+
+	/*  ######################################################################################## */
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -90,9 +114,13 @@ const ProjectCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="title"
 							render={({ field }) => (
-								<FormItem className="col-span-2">
+								<FormItem className="">
 									<FormLabel>Project Title</FormLabel>
-									<Input placeholder="title" {...field} />
+									<Input
+										placeholder="title"
+										className="w-full outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -102,9 +130,13 @@ const ProjectCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="description"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="mt-2">
 									<FormLabel>Description</FormLabel>
-									<Input type="text" {...field} />
+									<Input
+										type="text"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -115,9 +147,9 @@ const ProjectCreationForm = ({ children }: any) => {
 								control={form.control}
 								name="start_date"
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className="flex flex-col w-full">
 										<FormLabel>Start Date</FormLabel>
-										<Input type="date" {...field} />
+										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
 								)}
@@ -126,9 +158,9 @@ const ProjectCreationForm = ({ children }: any) => {
 								control={form.control}
 								name="end_date"
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className="flex flex-col">
 										<FormLabel>End Date</FormLabel>
-										<Input type="date" {...field} />
+										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
 								)}
@@ -139,13 +171,14 @@ const ProjectCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="owner"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="flex flex-col w-full">
 									<FormLabel>Owner</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
 										id="owner"
-										className="w-full"
-										options={[]}
+										name="Owner"
+										form={form}
+										options={usersOptions}
+										buttonClassName="w-full"
 									/>
 									<FormMessage />
 								</FormItem>

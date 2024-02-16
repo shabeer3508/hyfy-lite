@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 
-const IssueCreationCardMini = () => {
+const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	const dispatch = useDispatch();
 	const [postData, setPostData] = useState({
 		name: "",
@@ -19,6 +19,8 @@ const IssueCreationCardMini = () => {
 		type: "task",
 		points: "5",
 	});
+
+	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
 		let query = "";
@@ -29,6 +31,14 @@ const IssueCreationCardMini = () => {
 	};
 
 	const handleIssueCreation = async (event) => {
+		if (sprintId) {
+			setPostData((prevData) => ({
+				...prevData,
+				sprint: sprintId,
+				status: "todo",
+			}));
+		}
+
 		if (event.key === "Enter") {
 			(dispatch(postAction(Urls.issues, postData)) as any).then((res) => {
 				const success = res.payload.status == 200;
@@ -38,6 +48,7 @@ const IssueCreationCardMini = () => {
 			});
 		}
 	};
+	/*  ######################################################################################## */
 
 	return (
 		<div className="flex items-center bg-background pr-3 w-full rounded border">

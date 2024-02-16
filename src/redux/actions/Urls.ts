@@ -11,7 +11,7 @@ const Urls = {
 
 	authenticate: "/users/auth-with-password",
 
-	user: "/users/records",
+	users: "/users/records",
 	profile: "/profile/records",
 
 	project: "/project/records",

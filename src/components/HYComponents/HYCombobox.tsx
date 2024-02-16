@@ -15,25 +15,41 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Value } from "@radix-ui/react-select";
+import { UseFormReturn } from "react-hook-form";
 
 export function HYCombobox({
+	id,
 	options,
 	name,
 	buttonClassName,
 	optionsClassName,
 	onValueChange,
 	showSearch = false,
+	label,
+	defaultValue,
+	form,
 }: {
+	id?: string;
+	label?: string;
 	options: any;
 	name?: string;
 	buttonClassName?: string;
 	optionsClassName?: string;
 	onValueChange?: any;
 	showSearch?: boolean;
+	defaultValue?: string;
+	form?: UseFormReturn<any>;
 }) {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
+
+	useEffect(() => {
+		if (defaultValue) {
+			setValue(defaultValue);
+		}
+	}, [defaultValue]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -42,11 +58,18 @@ export function HYCombobox({
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className={`w-[200px] justify-between ${buttonClassName} `}
+					className={`w-[200px] px-3 justify-between ${buttonClassName} `}
 				>
-					{value
-						? options.find((opt) => opt.value === value)?.label
-						: `Select ${name ?? ""}..`}
+					{label && (
+						<span className="whitespace-nowrap text-[#9499A5]">
+							{label}
+						</span>
+					)}
+					<span className="w-1/2 truncate">
+						{value
+							? options.find((opt) => opt.value === value)?.label
+							: `Select ${name ?? ""}..`}
+					</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -72,6 +95,7 @@ export function HYCombobox({
 											? ""
 											: currentValue
 									);
+									form?.setValue(id, currentValue);
 									setOpen(false);
 								}}
 							>
