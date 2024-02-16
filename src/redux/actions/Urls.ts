@@ -9,8 +9,8 @@ const Urls = {
 	host: `${domain}/`,
 	baseUrl: `${domain}/api/collections`,
 
-	user: "/users",
-	profile: "/profile",
+	user: "/users/records",
+	profile: "/profile/records",
 	project: "/project/records",
 	release: "/release/records",
 };

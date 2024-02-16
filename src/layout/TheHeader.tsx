@@ -1,11 +1,8 @@
-import userIcon from "../assets/icons/header-icons/icon_user.svg";
 import helpIcon from "../assets/icons/header-icons/icon_help.svg";
 import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
 import ModeToggle from "@/components/mode-toggle";
-import HYSearch from "@/components/SBComponents/HYSearch";
 import { IoIosSearch } from "react-icons/io";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import {
 	DropdownMenu,
@@ -21,15 +18,18 @@ import {
 import { LogOut, Settings, User } from "lucide-react";
 import pb from "@/lib/pocketbase";
 import { useNavigate } from "react-router-dom";
+import HYAvatar from "@/components/SBComponents/HYAvatar";
+import { Button } from "@/components/ui/button";
 
-interface TheHeaderProps {
-	onClickMenu?: () => void;
-}
+// interface TheHeaderProps {
+// 	onClickMenu?: () => void;
+// }
 
-const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
+const TheHeader = () => {
 	const navigate = useNavigate();
 	const logoutUser = () => {
 		pb.authStore.clear();
+		localStorage.removeItem("token");
 		navigate("/login");
 	};
 
@@ -42,9 +42,7 @@ const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 					className=" cursor-pointer"
 				></Button> */}
 
-				<div className="font-semibold  flex items-center  dark:text-foreground">
-					Project Name
-				</div>
+				<div className="font-semibold  flex items-center  dark:text-foreground">Project Name</div>
 				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
 					{/* <HYSearch /> */}
 					<div className="flex items-center bg-background pr-3 rounded border">
@@ -55,25 +53,14 @@ const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 						<IoIosSearch />
 					</div>
 					<ModeToggle />
-					<img
-						src={notiIcon}
-						alt="notification icon"
-						className="h-5 cursor-pointer"
-					/>
-					<img
-						src={helpIcon}
-						alt="help icon"
-						className="h-5 cursor-pointer"
-					/>
+					<img src={notiIcon} alt="notification icon" className="h-5 cursor-pointer" />
+					<img src={helpIcon} alt="help icon" className="h-5 cursor-pointer" />
+					<Button onClick={() => navigate("/profile")} variant="ghost">
+						<HYAvatar className=" size-8 " url="https://github.com/shadcn.png" name={"John Doe"} />
+					</Button>
 
 					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<img
-								src={userIcon}
-								alt="user icon"
-								className="h-5 cursor-pointer"
-							/>
-						</DropdownMenuTrigger>
+						<DropdownMenuTrigger asChild></DropdownMenuTrigger>
 						<DropdownMenuContent className="w-56">
 							<DropdownMenuLabel>My Account</DropdownMenuLabel>
 							<DropdownMenuSeparator />
@@ -81,17 +68,13 @@ const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 								<DropdownMenuItem>
 									<User className="mr-2 h-4 w-4" />
 									<span>Profile</span>
-									<DropdownMenuShortcut>
-										⇧⌘P
-									</DropdownMenuShortcut>
+									<DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
 								</DropdownMenuItem>
 
 								<DropdownMenuItem>
 									<Settings className="mr-2 h-4 w-4" />
 									<span>Settings</span>
-									<DropdownMenuShortcut>
-										⌘S
-									</DropdownMenuShortcut>
+									<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
 								</DropdownMenuItem>
 							</DropdownMenuGroup>
 							<DropdownMenuSeparator />

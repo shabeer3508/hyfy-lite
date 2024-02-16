@@ -1,6 +1,6 @@
 import { Suspense, memo } from "react";
 import { Route, Routes } from "react-router-dom";
-import routes from "../routes/routes";
+import routes from "../routes";
 
 const loading = (
 	<div className="w-full h-full bg-transparent flex items-center justify-center">
