@@ -1,17 +1,14 @@
-import HYAvatar from "@/components/SBComponents/HYAvatar";
 import HYSearch from "@/components/SBComponents/HYSearch";
 import HYSelect from "@/components/SBComponents/HYSelect";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ReleaseCard from "./release-card";
+import ReleaseCard from "./ReleaseCard";
 
-const Index = () => {
+const Releases = () => {
 	const dispatch = useDispatch();
 	const reducerName = reducerNameFromUrl("release", "GET");
 	const itemsRes = useSelector((state: any) => state?.[reducerName]);
@@ -28,8 +25,15 @@ const Index = () => {
 		dispatch(getAction({ release: Urls.release + query }));
 	}
 
-	const items = itemsRes?.data?.items?.map((val: any) => ({ ...val, ...val?.expand }));
+	async function updateItemStage(id: string, stage: string) {
+		const resp = (await dispatch(patchAction({ release: Urls.release }, { status: stage }, id))) as any;
+		const success = resp.payload.status == 200;
+		if (success) {
+			loadAction();
+		}
+	}
 
+	const items = itemsRes?.data?.items?.map((val: any) => ({ ...val, ...val?.expand }));
 	const PlaningItems = items?.filter((item: any) => item?.status === "planning");
 	const OngoingItems = items?.filter((item: any) => item?.status === "ongoing");
 	const ReleasedItems = items?.filter((item: any) => item?.status === "released");
@@ -50,17 +54,44 @@ const Index = () => {
 			</div>
 			<div className="h-full overflow-auto px-8 ">
 				<div className="grid grid-cols-3 gap-8 mt-4">
-					<div className="space-y-2">
+					<div
+						onDragOver={(e) => e.preventDefault()}
+						onDrop={(e) => {
+							e.preventDefault();
+							updateItemStage(e?.dataTransfer?.getData("id"), "planning");
+						}}
+						className="space-y-2"
+					>
 						<p className="text-lg">Planing</p>
-						{PlaningItems?.map((item: any) => ReleaseCard({ item }))}
+						{PlaningItems?.map((item: any) => (
+							<ReleaseCard key={`${item?.id}`} item={item} />
+						))}
 					</div>
-					<div className="space-y-2">
+					<div
+						onDragOver={(e) => e.preventDefault()}
+						onDrop={(e) => {
+							e.preventDefault();
+							updateItemStage(e?.dataTransfer?.getData("id"), "ongoing");
+						}}
+						className="space-y-2"
+					>
 						<p className="text-lg">Ongoing</p>
-						{OngoingItems?.map((item: any) => ReleaseCard({ item }))}
+						{OngoingItems?.map((item: any) => (
+							<ReleaseCard key={`${item?.id}`} item={item} />
+						))}
 					</div>
-					<div className="space-y-2">
+					<div
+						onDragOver={(e) => e.preventDefault()}
+						onDrop={(e) => {
+							e.preventDefault();
+							updateItemStage(e?.dataTransfer?.getData("id"), "released");
+						}}
+						className="space-y-2"
+					>
 						<p className="text-lg">Released</p>
-						{ReleasedItems?.map((item: any) => ReleaseCard({ item }))}
+						{ReleasedItems?.map((item: any) => (
+							<ReleaseCard key={`${item?.id}`} item={item} />
+						))}
 					</div>
 				</div>
 			</div>
@@ -68,4 +99,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default Releases;

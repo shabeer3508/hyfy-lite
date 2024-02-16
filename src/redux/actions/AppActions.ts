@@ -48,7 +48,7 @@ export function getAction(apiUrl: string | object, params?: any) {
 	};
 }
 
-export function getDetailAction(apiurl: string | object, id: any, params?: any) {
+export function getDetailAction(apiurl: string | object, id: any) {
 	const method = "GET";
 	let url = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
 	const apiUrl = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
@@ -84,10 +84,11 @@ export function postAction(apiUrl: string, data: any, params = "") {
 	};
 }
 
-export function patchAction(apiUrl: string, data: any, id: string, lastPath?: string) {
+export function patchAction(apiUrl: string | object, data: any, id: string, lastPath?: string) {
 	const method = "PATCH";
-	const url = apiUrl + `${id}/${lastPath ? lastPath : ""}`;
-	const type = actionTypeFromUrl(apiUrl, method);
+	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
+	url = url + `/${id}/${lastPath ? lastPath : ""}`;
+	const type = actionTypeFromUrl(url, method);
 	return {
 		type,
 		payload: { request: { url, data, method } },

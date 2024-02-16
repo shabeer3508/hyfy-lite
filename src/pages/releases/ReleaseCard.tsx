@@ -10,7 +10,13 @@ interface ReleaseCardProps {
 const ReleaseCard = ({ item }: ReleaseCardProps) => {
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 	return (
-		<Card className="flex flex-col justify-between rounded-lg">
+		<Card
+			onDragStart={(e) => {
+				e.dataTransfer.setData("id", item?.id);
+			}}
+			draggable={true}
+			className="flex flex-col justify-between rounded-lg hover:cursor-grab "
+		>
 			<div className="flex gap-3 items-center h-16 px-4">
 				<img src="/release_icon.svg" alt="Project" />
 				<div className="capitalize ">{item?.name}</div>
@@ -43,10 +49,12 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 			</div>
 			<Separator className=" w-full" />
 			<div className="flex items-center p-4">
-				<HYAvatar className="" url="" name="Shad D" color="bg-purple-400" />
-				<HYAvatar className="-ml-2 shadow-md" url="" name="Apple Seed" color="bg-amber-500" />
-				<HYAvatar className="-ml-2 shadow-md" url="" name="Jone ave" color="bg-fuchsia-700" />
-				<HYAvatar className="-ml-2 shadow-md" url="" name="Fazil Ali" color="bg-green-400" />
+				<div className="flex items-center">
+					<HYAvatar className="" url="" name="Shad D" color="bg-purple-400" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Apple Seed" color="bg-amber-500" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Jone ave" color="bg-fuchsia-700" />
+					<HYAvatar className="-ml-2 shadow-md" url="" name="Fazil Ali" color="bg-green-400" />
+				</div>
 			</div>
 		</Card>
 	);

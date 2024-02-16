@@ -1,13 +1,12 @@
 import ApiConfig from "../config/ApiConfig";
 
-import { capitalizeFirstLetter } from "../utils/utils";
 import { actionTypeFromUrl, reducerNameFromUrl } from "./actions/AppActions";
 import NetworkReducer from "./reducers/NetworkReducer";
 
 const ReducerModuleManger: any = {
 	/// Crud Module
 	ApiConfigReducers: () => {
-		return Object.keys(ApiConfig)?.reduce((prv: any, apiName: string, idx: number) => {
+		return Object.keys(ApiConfig)?.reduce((prv: any, apiName: string) => {
 			// const apiNameCap = capitalizeFirstLetter(apiName);
 			const GetType = actionTypeFromUrl(apiName, "GET");
 			const GetName = reducerNameFromUrl(apiName, "GET");
