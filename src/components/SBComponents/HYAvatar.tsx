@@ -2,8 +2,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 interface HYAvatarProps {
 	// TODO
+	className?: string;
 	url?: string;
 	name?: string;
+	color?: string;
 }
 
 function getInitials(name) {
@@ -14,12 +16,12 @@ function getInitials(name) {
 	return initials.length > 1 ? initials.substring(0, 2) : initials;
 }
 
-const HYAvatar = ({ url, name }: HYAvatarProps) => {
+const HYAvatar = ({ url, name, className, color }: HYAvatarProps) => {
 	const initials = getInitials(name);
 	return (
-		<Avatar className="size-8">
+		<Avatar className={`size-8 ${className}`}>
 			<AvatarImage src={url} alt="@shadcn" />
-			<AvatarFallback>{initials}</AvatarFallback>
+			<AvatarFallback className={`text-xs uppercase ${color}`}>{initials}</AvatarFallback>
 		</Avatar>
 	);
 };

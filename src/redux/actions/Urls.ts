@@ -12,6 +12,7 @@ const Urls = {
 	user: "/users",
 	profile: "/profile",
 	project: "/project/records",
+	release: "/release/records",
 };
 
 export default Urls;

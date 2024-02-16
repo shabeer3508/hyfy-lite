@@ -5,7 +5,7 @@ import HYStatusBadge from "@/components/SBComponents/HYStatusBadge";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { getAction } from "@/redux/actions/AppActions";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { MoreVertical } from "lucide-react";
 import React, { useEffect } from "react";
@@ -13,7 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Index = () => {
 	const dispatch = useDispatch();
-	const itemsRes = useSelector((state: any) => state?.GetProject);
+	const reducerName = reducerNameFromUrl("project", "GET");
+	const itemsRes = useSelector((state: any) => state?.[reducerName]);
 
 	useEffect(() => {
 		loadAction();
@@ -29,7 +30,10 @@ const Index = () => {
 
 	const items = itemsRes?.data?.items?.map((val: any) => ({ ...val, ...val?.expand }));
 
+	// const priorities = ["low", "medium", "high", "urgent"];
+
 	console.log(`index,  : items`, items);
+	console.log(`index,  : reducerName`, reducerName);
 
 	return (
 		<div className=" flex flex-col h-full">
@@ -46,7 +50,7 @@ const Index = () => {
 				</div>
 			</div>
 			<div className=" overflow-auto px-8 ">
-				<div className="flex flex-col gap-4 mt-4">
+				<div className="flex flex-col gap-3 mt-4">
 					{items?.map((item: any, index: number) => (
 						<Card key={`pi_${index}`} className="flex justify-between items-center h-16 px-3 rounded-lg">
 							<div className="flex gap-3 items-center">

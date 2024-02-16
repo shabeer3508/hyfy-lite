@@ -7,9 +7,10 @@ const AppActions = {};
 type actionType = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
 export const reducerNameFromUrl = (url: string, method: actionType, isDeatil = false) => {
+	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let name = `${method.toLowerCase()}${url}`.replace(lastPath, "")?.replaceAll(match, " ");
+	let name = `${method.toLowerCase()}${apiNameCap}`.replace(lastPath, "")?.replaceAll(match, " ");
 	name = capitalizeFirstLetter(name);
 	// name = camelize(name);
 	if (isDeatil) {
@@ -19,9 +20,10 @@ export const reducerNameFromUrl = (url: string, method: actionType, isDeatil = f
 };
 
 export const actionTypeFromUrl = (url: string, method: actionType, isDeatil = false) => {
+	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let ActionType = `${method}${url}`.replace(lastPath, "")?.replace(match, "_").toUpperCase();
+	let ActionType = `${method}${apiNameCap}`.replace(lastPath, "")?.replace(match, "_").toUpperCase();
 	if (isDeatil) {
 		ActionType = ActionType + "_DETAIL";
 	}
