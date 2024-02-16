@@ -7,6 +7,7 @@ const Sprints = lazy(() => import("@/pages/sprints"));
 const Releases = lazy(() => import("@/pages/releases"));
 const Team = lazy(() => import("@/pages/team"));
 const Settings = lazy(() => import("@/pages/settings"));
+const Profile = lazy(() => import("@/pages/profile"));
 
 export { Backlog, Projects };
 
@@ -38,6 +39,10 @@ const defultRoutes = [
 	{
 		path: "/settings",
 		component: <Settings />,
+	},
+	{
+		path: "/profile",
+		component: <Profile />,
 	},
 ];
 

@@ -1,11 +1,9 @@
-import userIcon from "../assets/icons/header-icons/icon_user.svg";
 import helpIcon from "../assets/icons/header-icons/icon_help.svg";
 import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
 import ModeToggle from "@/components/mode-toggle";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import { IoIosSearch } from "react-icons/io";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import {
 	DropdownMenu,
@@ -21,15 +19,18 @@ import {
 import { LogOut, Settings, User } from "lucide-react";
 import pb from "@/lib/pocketbase";
 import { useNavigate } from "react-router-dom";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
+import { Button } from "@/components/ui/button";
 
-interface TheHeaderProps {
-	onClickMenu?: () => void;
-}
+// interface TheHeaderProps {
+// 	onClickMenu?: () => void;
+// }
 
-const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
+const TheHeader = () => {
 	const navigate = useNavigate();
 	const logoutUser = () => {
 		pb.authStore.clear();
+		localStorage.removeItem("token");
 		navigate("/login");
 	};
 
@@ -64,15 +65,19 @@ const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 						alt="help icon"
 						className="h-5 cursor-pointer"
 					/>
+					<Button
+						onClick={() => navigate("/profile")}
+						variant="ghost"
+					>
+						<HYAvatar
+							className=" size-8 "
+							url="https://github.com/shadcn.png"
+							name={"John Doe"}
+						/>
+					</Button>
 
 					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<img
-								src={userIcon}
-								alt="user icon"
-								className="h-5 cursor-pointer"
-							/>
-						</DropdownMenuTrigger>
+						<DropdownMenuTrigger asChild></DropdownMenuTrigger>
 						<DropdownMenuContent className="w-56">
 							<DropdownMenuLabel>My Account</DropdownMenuLabel>
 							<DropdownMenuSeparator />
