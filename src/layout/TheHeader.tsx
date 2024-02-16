@@ -18,6 +18,7 @@ import {
 	DropdownMenuShortcut,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import HYSearch from "@/components/HYComponents/HYSearch";
 
 const TheHeader = () => {
 	const navigate = useNavigate();
@@ -34,13 +35,7 @@ const TheHeader = () => {
 					Project Name
 				</div>
 				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
-					<div className="flex items-center bg-background pr-3 rounded border">
-						<Input
-							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-							placeholder="Search"
-						/>
-						<IoIosSearch />
-					</div>
+					<HYSearch />
 					<ModeToggle />
 					<img
 						src={notiIcon}

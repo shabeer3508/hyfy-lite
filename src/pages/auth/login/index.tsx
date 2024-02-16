@@ -29,7 +29,6 @@ const Login = () => {
 		try {
 			(dispatch(postAction(Urls.authenticate, data)) as any).then(
 				(res: any) => {
-					console.log("🚀 ~ login ~ res:", res);
 					const success = res.payload.status == 200;
 
 					if (success) {

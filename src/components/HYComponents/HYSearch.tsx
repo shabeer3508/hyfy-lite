@@ -8,7 +8,7 @@ const HYSearch = () => {
 				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
 				placeholder="Search"
 			/>
-			<IoIosSearch />
+			<IoIosSearch className="h-5" />
 		</div>
 	);
 };

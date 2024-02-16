@@ -18,7 +18,7 @@ const Backlog = () => {
 				<ResizablePanel defaultSize={30} maxSize={30} minSize={20}>
 					<EpicsColumn />
 				</ResizablePanel>
-				<ResizableHandle />
+				{/* <ResizableHandle /> */}
 				<ResizablePanel defaultSize={70}>
 					<ResizablePanelGroup
 						direction="horizontal"

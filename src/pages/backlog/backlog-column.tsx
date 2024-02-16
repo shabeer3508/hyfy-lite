@@ -126,6 +126,7 @@ const BacklogColumn = () => {
 							{backlogItems.map((issue, i) => (
 								<>
 									<div
+										draggable
 										key={issue.id}
 										className="flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded border-[#696B70] hover:border-primary cursor-pointer"
 									>
