@@ -15,6 +15,7 @@ const Urls = {
 	project: "/project/records",
 	epics: "/epic/records",
 	issues: "/issues/records",
+	release: "/release/records",
 };
 
 export default Urls;

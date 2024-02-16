@@ -11,11 +11,12 @@ export const reducerNameFromUrl = (
 	method: actionType,
 	isDeatil = false
 ) => {
+	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let name = `${method.toLowerCase()}${url}`
+	let name = `${method.toLowerCase()}${apiNameCap}`
 		.replace(lastPath, "")
-		?.replace(match, " ");
+		?.replaceAll(match, " ");
 	name = capitalizeFirstLetter(name);
 	// name = camelize(name);
 	if (isDeatil) {
@@ -29,9 +30,10 @@ export const actionTypeFromUrl = (
 	method: actionType,
 	isDeatil = false
 ) => {
+	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let ActionType = `${method}${url}`
+	let ActionType = `${method}${apiNameCap}`
 		.replace(lastPath, "")
 		?.replace(match, "_")
 		.toUpperCase();
@@ -60,11 +62,7 @@ export function getAction(apiUrl: string | object, params?: any) {
 	};
 }
 
-export function getDetailAction(
-	apiurl: string | object,
-	id: any,
-	params?: any
-) {
+export function getDetailAction(apiurl: string | object, id: any) {
 	const method = "GET";
 	let url = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
 	const apiUrl =
@@ -103,14 +101,15 @@ export function postAction(apiUrl: string, data: any, params = "") {
 }
 
 export function patchAction(
-	apiUrl: string,
+	apiUrl: string | object,
 	data: any,
 	id: string,
 	lastPath?: string
 ) {
 	const method = "PATCH";
-	const url = apiUrl + `${id}/${lastPath ? lastPath : ""}`;
-	const type = actionTypeFromUrl(apiUrl, method);
+	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
+	url = url + `/${id}/${lastPath ? lastPath : ""}`;
+	const type = actionTypeFromUrl(url, method);
 	return {
 		type,
 		payload: { request: { url, data, method } },
