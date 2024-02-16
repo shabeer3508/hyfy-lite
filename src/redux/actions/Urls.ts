@@ -16,6 +16,7 @@ const Urls = {
 	epics: "/epic/records",
 	issues: "/issues/records",
 	release: "/release/records",
+	sprints: "/sprints/records",
 };
 
 export default Urls;

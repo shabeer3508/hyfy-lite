@@ -34,28 +34,26 @@ import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
 
-const BacklogColumn = () => {
-	const tags = Array.from({ length: 30 }).map(
-		(_, i, a) => `Story - ${a.length - i}`
-	);
+import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 
+const BacklogColumn = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
-	const backlogListData = useSelector((state: any) => state?.GetEpics);
+	const backlogListData = useSelector((state: any) => state?.GetIssues);
 
 	const backlogItems = backlogListData?.data?.items;
 
 	const dispatch = useDispatch();
 
-	const getEpics = (prams?: string) => {
-		let query = "?expand=releases,project_id";
+	const getIssues = (prams?: string) => {
+		let query = "";
 		if (prams) {
 			query = query + prams;
 		}
-		dispatch(getAction({ backlogs: Urls.issues + query }));
+		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
 	useEffect(() => {
-		getEpics();
+		getIssues();
 	}, []);
 
 	const logoColors = [
@@ -72,9 +70,11 @@ const BacklogColumn = () => {
 				<div className="mr-3">Backlog</div>
 				<div className="flex gap-3">
 					<HYSearch />
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-						<HiPlus className="h-8 w-8 " />
-					</div>
+					<EpicCreationForm>
+						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
+							<HiPlus className="h-8 w-8 " />
+						</div>
+					</EpicCreationForm>
 				</div>
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
@@ -88,6 +88,7 @@ const BacklogColumn = () => {
 				</div>
 				<div className="">
 					<HYSelect
+						id=""
 						label="Assigned to"
 						options={["all", "zahid", "saranya", "roshan"]}
 					/>
@@ -119,13 +120,13 @@ const BacklogColumn = () => {
 			</div>
 
 			<div className="">
-				{tags?.length > 0 && (
+				{backlogItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4">
-							{tags.map((tag, i) => (
+							{backlogItems.map((issue, i) => (
 								<>
 									<div
-										key={tag}
+										key={issue.id}
 										className="flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded border-[#696B70] hover:border-primary cursor-pointer"
 									>
 										<div className="flex gap-1 items-center">
@@ -135,7 +136,7 @@ const BacklogColumn = () => {
 												}`}
 											/>
 											<div className="text-[#737377]">
-												{tag}
+												{issue.name}
 											</div>
 										</div>
 										<div className="flex gap-4 items-center text-[#737377]">
@@ -156,7 +157,7 @@ const BacklogColumn = () => {
 											<PiLinkSimpleHorizontalBold />
 											<div className="flex gap-1 items-center">
 												<HiDatabase className="" />{" "}
-												{i % 6}
+												{issue?.points}
 											</div>
 										</div>
 									</div>
@@ -167,7 +168,7 @@ const BacklogColumn = () => {
 					</ScrollArea>
 				)}
 
-				{tags?.length === 0 && (
+				{backlogItems?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">

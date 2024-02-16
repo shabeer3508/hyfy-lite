@@ -1,5 +1,6 @@
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
+import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -33,8 +34,6 @@ const EpicsColumn = () => {
 
 	const epicItems = epicsListData?.data?.items;
 
-	console.log("🚀 ~ EpicsColumn ~ epicsList:", epicItems, searchParams);
-
 	const dispatch = useDispatch();
 
 	const getEpics = (prams?: string) => {
@@ -64,9 +63,11 @@ const EpicsColumn = () => {
 				<div className="mr-3">Epics</div>
 				<div className="flex gap-3">
 					<HYSearch />
-					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-						<HiPlus className="h-8 w-8 " />
-					</div>
+					<EpicCreationForm>
+						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
+							<HiPlus className="h-8 w-8 " />
+						</div>
+					</EpicCreationForm>
 				</div>
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
@@ -80,6 +81,7 @@ const EpicsColumn = () => {
 				</div>
 				<div className="">
 					<HYSelect
+						id=""
 						label="Release"
 						options={["release-1", "release-2", "release-3"]}
 					/>
