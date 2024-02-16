@@ -2,7 +2,7 @@ import userIcon from "../assets/icons/header-icons/icon_user.svg";
 import helpIcon from "../assets/icons/header-icons/icon_help.svg";
 import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
 import ModeToggle from "@/components/mode-toggle";
-import HYSearch from "@/components/SBComponents/HYSearch";
+import HYSearch from "@/components/HYComponents/HYSearch";
 import { IoIosSearch } from "react-icons/io";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -46,7 +46,6 @@ const TheHeader = ({ onClickMenu }: TheHeaderProps) => {
 					Project Name
 				</div>
 				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
-					{/* <HYSearch /> */}
 					<div className="flex items-center bg-background pr-3 rounded border">
 						<Input
 							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"

@@ -1,3 +1,5 @@
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +11,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { getAction } from "@/redux/actions/AppActions";
+import Urls from "@/redux/actions/Urls";
 import { Separator } from "@radix-ui/react-select";
+import { useEffect } from "react";
 
 import {
 	HiPlus,
@@ -26,11 +31,32 @@ import {
 	IoLogoFreebsdDevil,
 } from "react-icons/io";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 
 const BacklogColumn = () => {
 	const tags = Array.from({ length: 30 }).map(
 		(_, i, a) => `Story - ${a.length - i}`
 	);
+
+	const [searchParams, setSearchParams] = useSearchParams();
+	const backlogListData = useSelector((state: any) => state?.GetEpics);
+
+	const backlogItems = backlogListData?.data?.items;
+
+	const dispatch = useDispatch();
+
+	const getEpics = (prams?: string) => {
+		let query = "?expand=releases,project_id";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ backlogs: Urls.issues + query }));
+	};
+
+	useEffect(() => {
+		getEpics();
+	}, []);
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -45,13 +71,7 @@ const BacklogColumn = () => {
 			<div className="flex items-center justify-between w-full">
 				<div className="mr-3">Backlog</div>
 				<div className="flex gap-3">
-					<div className="flex items-center bg-background pr-3 rounded border">
-						<Input
-							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-							placeholder="Search"
-						/>
-						<IoIosSearch />
-					</div>
+					<HYSearch />
 					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
 						<HiPlus className="h-8 w-8 " />
 					</div>
@@ -67,20 +87,10 @@ const BacklogColumn = () => {
 					</div>
 				</div>
 				<div className="">
-					<Select>
-						<SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-							<div className="whitespace-nowrap text-[#9499A5]">
-								Assigned to
-							</div>
-							<SelectValue placeholder="" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="zahid">Zahid</SelectItem>
-							<SelectItem value="saranya">Saranya</SelectItem>
-							<SelectItem value="roshan">Roshan</SelectItem>
-						</SelectContent>
-					</Select>
+					<HYSelect
+						label="Assigned to"
+						options={["all", "zahid", "saranya", "roshan"]}
+					/>
 				</div>
 			</div>
 			<div className="flex items-center border-b h-14 w-full">

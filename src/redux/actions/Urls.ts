@@ -11,7 +11,10 @@ const Urls = {
 
 	user: "/users",
 	profile: "/profile",
+
 	project: "/project/records",
+	epics: "/epic/records",
+	issues: "/issues/records",
 };
 
 export default Urls;

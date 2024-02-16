@@ -1,3 +1,5 @@
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
 import {
 	Accordion,
 	AccordionContent,
@@ -61,13 +63,7 @@ const SprintsColumn = () => {
 			<div className="flex items-center justify-between w-full">
 				<div className="mr-3">Sprints</div>
 				<div className="flex gap-3">
-					<div className="flex items-center bg-background pr-3 rounded border">
-						<Input
-							className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-							placeholder="Search"
-						/>
-						<IoIosSearch />
-					</div>
+					<HYSearch />
 					<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
 						<HiPlus className="h-8 w-8 " />
 					</div>
@@ -80,20 +76,10 @@ const SprintsColumn = () => {
 					</div>
 				</div>
 				<div className="">
-					<Select>
-						<SelectTrigger className="w-[180px] focus:ring-0 focus:ring-offset-0">
-							<div className="whitespace-nowrap text-[#9499A5]">
-								Status
-							</div>
-							<SelectValue placeholder="" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="ongoing">Ongoing</SelectItem>
-							<SelectItem value="retro">Retro</SelectItem>
-							<SelectItem value="backlog">Backlog</SelectItem>
-						</SelectContent>
-					</Select>
+					<HYSelect
+						label="Status"
+						options={["all", "ongoing", "retro", "backlog"]}
+					/>
 				</div>
 			</div>
 			<div>
