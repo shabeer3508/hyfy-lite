@@ -13,26 +13,37 @@ const ErrorManager = {
 			// Request made and server responded
 			const url = error?.config?.url;
 			if (error?.response?.status >= 500) {
-				const codeMsg = HttpCodeMessages[error?.response?.status] || "Servre Error";
+				const codeMsg =
+					HttpCodeMessages[error?.response?.status] || "Servre Error";
 				const msg =
-					error?.response?.data?.message || `${codeMsg}: Something went wrong, Please try again later`;
+					error?.response?.data?.message ||
+					`${codeMsg}: Something went wrong, Please try again later`;
 				toast.error(msg);
 				return;
 			}
 
 			if (error?.response?.status == 400) {
-				const codeMsg = HttpCodeMessages[error?.response?.status] || "Bad Request";
+				const codeMsg =
+					HttpCodeMessages[error?.response?.status] || "Bad Request";
 				const msg =
-					error?.response?.data?.message || `${codeMsg}: Something went wrong, Please try again later`;
+					error?.response?.data?.message ||
+					`${codeMsg}: Something went wrong, Please try again later`;
 				const msgKeys = Object.keys(error?.response?.data);
 				console.log(`ErrorManager,  :  msgKeys `, msgKeys);
 				if (msgKeys?.length > 0) {
 					msgKeys.forEach((key) => {
 						const msgData = error?.response?.data?.[key];
-						const msg = typeof msgData === "string" ? msgData : (msgData?.[0] as string);
-						msg?.toLowerCase()?.includes(key?.toLowerCase())
-							? toast.error(`${msg}`)
-							: toast.error(`${key} : ${msg}`);
+
+						if (key === "message") {
+							toast.error(`${msgData}`);
+						}
+						// const msg =
+						// 	typeof msgData === "string"
+						// 		? msgData
+						// 		: (msgData?.[0] as string);
+						// msg?.toLowerCase()?.includes(key?.toLowerCase())
+						// 	? toast.error(`${msg}`)
+						// 	: toast.error(`${key} : ${msg}`);
 					});
 					return;
 				}
@@ -41,16 +52,20 @@ const ErrorManager = {
 			}
 
 			if (error?.response?.status === 401) {
-				let message = "You are not authorized to perform this action.\nPlease login again";
+				let message =
+					"You are not authorized to perform this action.\nPlease login again";
 				console.log(`ErrorManager,  : url `, url);
-				console.log(`ErrorManager,  : error?.response?.data `, error?.response?.data?.detail);
+				console.log(
+					`ErrorManager,  : error?.response?.data `,
+					error?.response?.data?.detail
+				);
 				if (url === "/token/") {
 					message = "Invalid Username or Password";
 					message = error?.response?.data?.detail || message;
 				}
 
 				toast.error(`${message}`);
-				localStorage.removeItem("token");
+				localStorage.removeItem("hyfy_auth_token");
 				return;
 			}
 
@@ -59,14 +74,23 @@ const ErrorManager = {
 				return;
 			}
 
-			if (error?.response?.status > 404 || error?.response?.status === 403 || error?.response?.status === 402) {
-				const codeMsg = HttpCodeMessages[error?.response?.status] || "Bad Request";
-				const msg = error?.response?.statusText || `${codeMsg}: Something went wrong, Please try again later`;
+			if (
+				error?.response?.status > 404 ||
+				error?.response?.status === 403 ||
+				error?.response?.status === 402
+			) {
+				const codeMsg =
+					HttpCodeMessages[error?.response?.status] || "Bad Request";
+				const msg =
+					error?.response?.statusText ||
+					`${codeMsg}: Something went wrong, Please try again later`;
 				const msgKeys = Object.keys(error?.response?.data);
 				if (msgKeys?.length > 0) {
 					msgKeys.forEach((key) => {
 						const msg = error?.response?.data?.[key];
-						msg.includes(key) ? toast.error(`${msg}`) : toast.error(`${key} : ${msg}`);
+						msg.includes(key)
+							? toast.error(`${msg}`)
+							: toast.error(`${key} : ${msg}`);
 					});
 					return;
 				}
@@ -78,8 +102,11 @@ const ErrorManager = {
 			message && toast.error(`${message}`);
 
 			if (error?.response?.status >= 300) {
-				const codeMsg = HttpCodeMessages[error?.response?.status] || "Bad Request";
-				const msg = error?.response?.statusText || `${codeMsg}: Something went wrong, Please try again later`;
+				const codeMsg =
+					HttpCodeMessages[error?.response?.status] || "Bad Request";
+				const msg =
+					error?.response?.statusText ||
+					`${codeMsg}: Something went wrong, Please try again later`;
 				toast.error(`${msg}`);
 			}
 		} else if (error.request) {
@@ -96,7 +123,7 @@ const ErrorManager = {
 		}
 	},
 	logOut() {
-		localStorage.removeItem("token");
+		localStorage.removeItem("hyfy_auth_token");
 	},
 };
 

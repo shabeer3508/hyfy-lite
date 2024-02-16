@@ -26,7 +26,7 @@ const Profile = () => {
 	}
 
 	const logoutUser = () => {
-		localStorage.removeItem("token");
+		localStorage.removeItem("hyfy_auth_token");
 		navigate("/login");
 	};
 

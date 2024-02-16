@@ -88,7 +88,13 @@ const EpicsColumn = () => {
 				</div>
 			</div>
 			<div className="flex items-center border-b h-14 w-full">
-				<Checkbox id="terms" />
+				<Checkbox
+					id="terms"
+					checked={!searchParams.get("selected_epic")}
+					onCheckedChange={() => {
+						setSearchParams({});
+					}}
+				/>
 				<label
 					htmlFor="terms"
 					className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mx-2 cursor-pointer select-none"

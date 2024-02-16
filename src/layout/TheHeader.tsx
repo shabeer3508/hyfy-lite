@@ -1,9 +1,12 @@
-import helpIcon from "../assets/icons/header-icons/icon_help.svg";
-import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
-import ModeToggle from "@/components/mode-toggle";
-import HYSearch from "@/components/HYComponents/HYSearch";
 import { IoIosSearch } from "react-icons/io";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import ModeToggle from "@/components/mode-toggle";
+import { LogOut, Settings, User } from "lucide-react";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
+import helpIcon from "../assets/icons/header-icons/icon_help.svg";
+import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
 
 import {
 	DropdownMenu,
@@ -16,33 +19,17 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { LogOut, Settings, User } from "lucide-react";
-import pb from "@/lib/pocketbase";
-import { useNavigate } from "react-router-dom";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
-import { Button } from "@/components/ui/button";
-
-// interface TheHeaderProps {
-// 	onClickMenu?: () => void;
-// }
-
 const TheHeader = () => {
 	const navigate = useNavigate();
+
 	const logoutUser = () => {
-		pb.authStore.clear();
-		localStorage.removeItem("token");
+		localStorage.removeItem("hyfy_auth_token");
 		navigate("/login");
 	};
 
 	return (
 		<div className="w-full transition-all duration-200 ease-in ">
 			<div className="flex h-20 items-center px-6">
-				{/* <Button
-					variant="link"
-					onClick={onClickMenu}
-					className=" cursor-pointer"
-				></Button> */}
-
 				<div className="font-semibold  flex items-center  dark:text-foreground">
 					Project Name
 				</div>

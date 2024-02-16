@@ -36,7 +36,7 @@ const middleware = axiosMiddleware(client, {
 				success: async function (items: any, req: any) {
 					// let token = items?.getState().UserReducer?.token;
 					// if (!token) {
-					const token = localStorage.getItem("token");
+					const token = localStorage.getItem("hyfy_auth_token");
 					// }
 					if (token) {
 						req.headers["Authorization"] = `Bearer ${token}`;
@@ -53,11 +53,17 @@ const middleware = axiosMiddleware(client, {
 		response: [
 			{
 				success: function (item: any, res: any) {
-					console.log(`store,  : interceptors response: res ${res?.config?.url}`, res); //contains information about request object
+					console.log(
+						`store,  : interceptors response: res ${res?.config?.url}`,
+						res
+					); //contains information about request object
 					return Promise.resolve(res);
 				},
 				error: function (actions: any, error: any) {
-					console.log(`ErrorManager,  : error?.response `, error?.response);
+					console.log(
+						`ErrorManager,  : error?.response `,
+						error?.response
+					);
 					ErrorManager.handle(error);
 					return Promise.reject(error);
 				},
@@ -67,8 +73,12 @@ const middleware = axiosMiddleware(client, {
 });
 
 const pReducer = persistReducer(persistConfig, RootReducer);
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const store = createStore(pReducer, composeEnhancers(applyMiddleware(middleware)));
+const composeEnhancers =
+	(window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(
+	pReducer,
+	composeEnhancers(applyMiddleware(middleware))
+);
 const persistor = persistStore(store);
 
 export { persistor, store, client };
