@@ -29,6 +29,8 @@ const Login = () => {
 		try {
 			(dispatch(postAction(Urls.authenticate, data)) as any).then(
 				(res: any) => {
+					setIsLoading(false);
+
 					const success = res.payload.status == 200;
 
 					if (success) {
@@ -45,8 +47,6 @@ const Login = () => {
 		} catch (e) {
 			toast.error(e.message);
 		}
-
-		setIsLoading(false);
 	};
 
 	return (

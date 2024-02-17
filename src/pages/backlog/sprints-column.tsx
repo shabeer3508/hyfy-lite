@@ -39,6 +39,7 @@ import {
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { useSearchParams } from "react-router-dom";
+import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
 
 const SprintsColumn = () => {
 	const tags = Array.from({ length: 5 }).map(
@@ -57,7 +58,6 @@ const SprintsColumn = () => {
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
 
 	const sprintItems = sprintListData?.data?.items;
-	console.log("🚀 ~ SprintsColumn ~ sprintItems:", sprintItems);
 
 	const dispatch = useDispatch();
 
@@ -169,6 +169,7 @@ const SprintsColumn = () => {
 														(itm, i2) => {
 															return (
 																<div
+																	draggable
 																	key={itm}
 																	className="flex gap-3 justify-between items-center text-sm border border-[#696B70] hover:border-[#696B70]/50 px-3 py-3 rounded cursor-pointer"
 																>
@@ -217,28 +218,7 @@ const SprintsColumn = () => {
 														}
 													)}
 
-													<div className="flex items-center bg-background pr-3 w-full rounded border">
-														<Input
-															className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
-															placeholder="Add Story"
-														/>
-														<Select defaultValue="story">
-															<SelectTrigger className="w-[80px] focus:ring-0 focus:ring-offset-0 border-0 text-primary">
-																<SelectValue placeholder="" />
-															</SelectTrigger>
-															<SelectContent className="w-1 ">
-																<SelectItem value="story">
-																	<IoIosFlash />
-																</SelectItem>
-																<SelectItem value="task">
-																	<IoMdListBox />
-																</SelectItem>
-																<SelectItem value="bug">
-																	<IoLogoFreebsdDevil />
-																</SelectItem>
-															</SelectContent>
-														</Select>
-													</div>
+													<IssueCreationCardMini />
 												</AccordionContent>
 											</AccordionItem>
 										</Accordion>

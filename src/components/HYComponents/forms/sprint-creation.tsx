@@ -37,15 +37,20 @@ const formSchema = z.object({
 	name: z.string().min(2, {
 		message: "Username must be at least 2 characters.",
 	}),
-	status: z.string(),
-	release: z.string().optional().nullable(),
+	type: z.string(),
+	epic: z.string().optional().nullable(),
+	points: z.string().optional().nullable(),
+	status: z.string().optional().nullable(),
+	assign_to: z.string().optional().nullable(),
 	dependency: z.string().optional().nullable(),
 	dependency_type: z.string().optional().nullable(),
 	priority: z.string().optional().nullable(),
+	estimated_hours: z.string().optional().nullable(),
 	description: z.string().optional().nullable(),
+	sub_tasks: z.string().optional().nullable(),
 });
 
-const EpicCreationForm = ({ children }: any) => {
+const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
 
 	const [openForm, setOpenForm] = useState(false);
@@ -54,31 +59,28 @@ const EpicCreationForm = ({ children }: any) => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
-			status: "blocking",
-			release: null,
-			dependency: null,
-			dependency_type: null,
-			priority: null,
-			description: null,
+			// status: "blocking",
+			// dependency: null,
+			// dependency_type: null,
+			// priority: null,
+			// description: null,
 		},
 	});
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-		const getEpics = (prams?: string) => {
+		console.log("🚀 ~ handleEpicCreation ~ values:", values);
+		const getIssues = (prams?: string) => {
 			let query = "?expand=releases,project_id";
 			if (prams) {
 				query = query + prams;
 			}
-			dispatch(getAction({ epics: Urls.epics + query }));
+			dispatch(getAction({ epics: Urls.sprints + query }));
 		};
-
-		const resp = (await dispatch(postAction(Urls.epics, values))) as any;
-
+		const resp = (await dispatch(postAction(Urls.sprints, values))) as any;
 		const success = resp.payload.status == 200;
-
 		if (success) {
 			setOpenForm(false);
-			getEpics();
+			getIssues();
 		}
 	};
 
@@ -87,65 +89,56 @@ const EpicCreationForm = ({ children }: any) => {
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px] ">
 				<DialogHeader>
-					<DialogTitle>Add Epic</DialogTitle>
+					<DialogTitle>Add Sprint</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(handleEpicCreation)}>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Epic Title</FormLabel>
-									<Input placeholder="title" {...field} />
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="status"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Status</FormLabel>
-									<HYSelect
-										field={field}
-										id="status"
-										className="w-full"
-										options={["blocking"]}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							control={form.control}
-							name="release"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Release</FormLabel>
-									<HYSelect
-										field={field}
-										id="release"
-										className="w-full"
-										options={["backlog", "todo", "ongoing"]}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						<div className="grid grid-cols-3 gap-3">
+							<FormField
+								control={form.control}
+								name="name"
+								render={({ field }) => (
+									<FormItem className="col-span-2">
+										<FormLabel>Story Title</FormLabel>
+										<Input placeholder="title" {...field} />
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="type"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Type</FormLabel>
+										<HYSelect
+											field={field}
+											id="status"
+											className="w-full"
+											options={["blocking"]}
+										/>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
 						<div className="grid grid-cols-2 gap-4 py-4 ">
 							<FormField
 								control={form.control}
-								name="dependency"
+								name="epic"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Dependency</FormLabel>
+										<FormLabel>Epic</FormLabel>
 										<HYSelect
 											field={field}
-											id="dependency"
+											id="release"
 											className="w-full"
-											options={[]}
+											options={[
+												"backlog",
+												"todo",
+												"ongoing",
+											]}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -153,10 +146,10 @@ const EpicCreationForm = ({ children }: any) => {
 							/>
 							<FormField
 								control={form.control}
-								name="dependency_type"
+								name="points"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Dependency Type</FormLabel>
+										<FormLabel>Points</FormLabel>
 										<HYSelect
 											field={field}
 											id="dependency"
@@ -168,6 +161,73 @@ const EpicCreationForm = ({ children }: any) => {
 								)}
 							/>
 						</div>
+						<FormField
+							control={form.control}
+							name="status"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Status</FormLabel>
+									<HYSelect
+										field={field}
+										id="dependency"
+										className="w-full"
+										options={[]}
+									/>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="assign_to"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Assign To</FormLabel>
+									<HYSelect
+										field={field}
+										id="priority"
+										className="w-full"
+										options={["backlog"]}
+									/>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<div className="grid grid-cols-2 gap-3">
+							<FormField
+								control={form.control}
+								name="dependency"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Dependency</FormLabel>
+										<HYSelect
+											field={field}
+											id="dependency"
+											className="w-full"
+											options={["backlog"]}
+										/>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							<FormField
+								control={form.control}
+								name="dependency_type"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Depedency Type</FormLabel>
+										<HYSelect
+											field={field}
+											id="dependency_type"
+											className="w-full"
+											options={["backlog"]}
+										/>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+						</div>
+
 						<FormField
 							control={form.control}
 							name="priority"
@@ -184,12 +244,44 @@ const EpicCreationForm = ({ children }: any) => {
 								</FormItem>
 							)}
 						/>
+
+						<FormField
+							control={form.control}
+							name="estimated_hours"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Estimated Hours</FormLabel>
+									<HYSelect
+										field={field}
+										id="estimated_hours"
+										className="w-full"
+										options={["1", "2", "3", "4", "5", "6"]}
+									/>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
 						<FormField
 							control={form.control}
 							name="description"
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Description</FormLabel>
+									<FormControl>
+										<Input placeholder="" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="sub_tasks"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Sub Tasks</FormLabel>
 									<FormControl>
 										<Input placeholder="" {...field} />
 									</FormControl>
@@ -215,4 +307,4 @@ const EpicCreationForm = ({ children }: any) => {
 	);
 };
 
-export default EpicCreationForm;
+export default IssueCreationForm;

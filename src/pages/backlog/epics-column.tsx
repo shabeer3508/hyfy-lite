@@ -3,15 +3,7 @@ import HYSelect from "@/components/HYComponents/HYSelect";
 import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { getAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { Separator } from "@radix-ui/react-select";
@@ -159,13 +151,15 @@ const EpicsColumn = () => {
 								Epics will be milestones that help you manage
 								your project
 							</div>
-							<Button
-								variant="outline"
-								className="flex gap-3 border-primary text-primary hover:text-primary"
-							>
-								<HiPlus />
-								Add
-							</Button>
+							<EpicCreationForm>
+								<Button
+									variant="outline"
+									className="flex gap-3 border-primary text-primary hover:text-primary"
+								>
+									<HiPlus />
+									Add
+								</Button>
+							</EpicCreationForm>
 						</div>
 					</div>
 				)}
