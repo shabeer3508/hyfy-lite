@@ -1,6 +1,6 @@
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
-import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
+import SprintCreationForm from "@/components/HYComponents/forms/sprint-creation";
 import {
 	Accordion,
 	AccordionContent,
@@ -42,18 +42,6 @@ import { useSearchParams } from "react-router-dom";
 import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
 
 const SprintsColumn = () => {
-	const tags = Array.from({ length: 5 }).map(
-		(_, i, a) => `Sprint - ${a.length - i}`
-	);
-
-	const subTasks = Array.from({ length: 3 }).map((_, i, a) => ({
-		id: i + 100,
-		name: `Task - ${i + 1}`,
-		type: "bug",
-		assignees: [],
-		points: 25,
-	}));
-
 	const [searchParams, setSearchParams] = useSearchParams();
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
 
@@ -90,11 +78,11 @@ const SprintsColumn = () => {
 				<div className="mr-3">Sprints</div>
 				<div className="flex gap-3">
 					<HYSearch />
-					<EpicCreationForm>
+					<SprintCreationForm>
 						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
 							<HiPlus className="h-8 w-8 " />
 						</div>
-					</EpicCreationForm>
+					</SprintCreationForm>
 				</div>
 			</div>
 			<div className="flex border-b w-full justify-between py-3">
@@ -135,19 +123,27 @@ const SprintsColumn = () => {
 														<IoIosFlash
 															className={`w-5 text-[#707173]`}
 														/>
-														<div className="">
+														<div className="w-[100px] truncate">
 															{sprint.name}
 														</div>
 													</div>
 													<div>
 														<div
 															className={`${
-																badgeColor[
-																	i % 3
-																]
-															}  text-white px-3 py-0.5 rounded-full text-xs`}
+																sprint?.status ===
+																	"in-progress" &&
+																"bg-[#56972E]"
+															} ${
+																sprint?.status ===
+																	"backlog" &&
+																"bg-[#5F5F5F]"
+															} ${
+																sprint?.status ===
+																	"retro" &&
+																"bg-[#DF8430]"
+															}  text-white px-3 py-0.5 rounded-full text-xs `}
 														>
-															Ongoing
+															{sprint?.status}
 														</div>
 													</div>
 													<div className="flex gap-2 items-center text-[#737377]">

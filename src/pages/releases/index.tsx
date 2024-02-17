@@ -11,6 +11,7 @@ import Urls from "@/redux/actions/Urls";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReleaseCard from "./ReleaseCard";
+import ReleaseCreationForm from "@/components/HYComponents/forms/release-creation";
 
 const Releases = () => {
 	const dispatch = useDispatch();
@@ -58,7 +59,9 @@ const Releases = () => {
 			<div className=" flex justify-between items-end mx-8">
 				<div className="flex flex-col gap-4">
 					<p className=" text-xl ">Releases</p>
-					<Button size="sm">Create Release</Button>
+					<ReleaseCreationForm>
+						<Button size="sm">Create Release</Button>
+					</ReleaseCreationForm>
 				</div>
 				<div className="flex gap-2">
 					<HYSearch />

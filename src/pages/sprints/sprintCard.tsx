@@ -6,8 +6,18 @@ const SprintCard = ({ data }: any) => {
 		<Card>
 			<CardContent className="px-0 py-1 grid grid-cols-5 gap-3">
 				<div className="px-3 flex items-center gap-3">
-					<img src="/task_icon.svg" alt="Project" />
-					bug fix - {data?.id}
+					{data?.type === "task" && (
+						<img src="/task_icon.svg" alt="Project" />
+					)}
+
+					{data?.type === "story" && (
+						<img src="/story_icon.svg" alt="Project" />
+					)}
+
+					{data?.type === "bug" && (
+						<img src="/bug_icon.svg" alt="Project" />
+					)}
+					{data?.name}
 				</div>
 				<div className="">
 					<HYSelect id="" options={["options"]} className="w-full" />

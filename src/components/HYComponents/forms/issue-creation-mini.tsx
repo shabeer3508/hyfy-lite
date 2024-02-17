@@ -15,6 +15,7 @@ const IssueCreationCardMini = () => {
 	const dispatch = useDispatch();
 	const [postData, setPostData] = useState({
 		name: "",
+		status: "backlog",
 		type: "task",
 		points: "5",
 	});
@@ -30,7 +31,6 @@ const IssueCreationCardMini = () => {
 	const handleIssueCreation = async (event) => {
 		if (event.key === "Enter") {
 			(dispatch(postAction(Urls.issues, postData)) as any).then((res) => {
-				// setPostData({ name: "", type: "task", points: "5" });
 				const success = res.payload.status == 200;
 				if (success) {
 					getIssues();

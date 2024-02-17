@@ -2,16 +2,22 @@ import HYAvatar from "@/components/HYComponents/HYAvatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { HiDatabase } from "react-icons/hi";
 
-const BoardCard = () => {
+const BoardCard = ({ data }: any) => {
 	return (
-		<Card draggable className="cursor-grab">
+		<Card
+			draggable
+			onDragStart={(e) => {
+				e.dataTransfer.setData("id", data?.id);
+			}}
+			className="cursor-grab"
+		>
 			<CardContent className="p-3 gap-2 flex flex-col">
 				<div className="text-left flex gap-2">
 					<img src="/story_icon.svg" alt="Project" />
-					Add Drag ‘n’ Drop
+					{data?.name}
 				</div>
 				<div className="text-left pb-3 truncate max-w-[200px]">
-					Drag n drop function in fav screen Drag n drop function in
+					{data?.description}
 				</div>
 				<div className="flex items-center justify-between">
 					<div className="flex items-center">
@@ -29,7 +35,7 @@ const BoardCard = () => {
 						/>
 					</div>
 					<div className="flex items-center gap-2">
-						<HiDatabase /> 100
+						<HiDatabase /> {data?.points}
 					</div>
 				</div>
 			</CardContent>

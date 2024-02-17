@@ -1,32 +1,102 @@
+import { useEffect } from "react";
 import SprintCard from "./sprintCard";
+import Urls from "@/redux/actions/Urls";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "@/redux/actions/AppActions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { HYCombobox } from "../../components/HYComponents/HYCombobox";
+import { useSearchParams } from "react-router-dom";
 
 const Sprints = () => {
-	const sampleData = Array.from({ length: 6 }).map((_, i, a) => ({
-		id: i + 1,
-		name: `Sprint-${i}`,
-	}));
+	const dispatch = useDispatch();
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const issueListData = useSelector((state: any) => state?.GetIssues);
+	const sprintListData = useSelector((state: any) => state?.GetSprints);
+
+	/*  ######################################################################################## */
+
+	const getIssues = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
+
+	const getSprints = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ sprints: Urls.sprints + query }));
+	};
+
+	/*  ######################################################################################## */
+
+	const sprintOptions =
+		sprintListData?.data?.items?.map((sprnt) => ({
+			value: sprnt?.id,
+			label: sprnt?.name,
+		})) ?? [];
+
+	const filteredIssues = issueListData?.data?.items?.filter(
+		(sprnt) => sprnt?.sprint === searchParams.get("selectedSprint")
+	);
+
+	const bugsCount = filteredIssues?.filter(
+		(issue) => issue.type === "bug"
+	).length;
+
+	const storyCount = filteredIssues?.filter(
+		(issue) => issue.type === "story"
+	).length;
+
+	const taskCount = filteredIssues?.filter(
+		(issue) => issue.type === "task"
+	).length;
+
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getIssues();
+		getSprints();
+	}, []);
+
+	/*  ####################################################################################### */
 
 	return (
 		<div className="text-xs">
 			<div className="flex justify-between px-5 items-center">
 				<div className="text-base flex gap-5">
-					<div>Sprint Name</div>
-					<div className="flex gap-3">
+					<div>
+						<HYCombobox
+							showSearch={false}
+							onValueChange={(value) => {
+								value
+									? setSearchParams({ selectedSprint: value })
+									: setSearchParams({});
+							}}
+							options={sprintOptions}
+							name="sprint"
+							buttonClassName="border-0"
+						/>
+					</div>
+					<div className="flex gap-3 text-xs items-center">
 						(
 						<div className="flex gap-1">
 							<img src="/story_icon.svg" alt="Project" />
-							<span>12</span>
+							<span>{storyCount}</span>
 						</div>
 						<div className="flex gap-1">
 							<img src="/task_icon.svg" alt="Project" />
-							<span>12</span>
+							<span>{taskCount}</span>
 						</div>
 						<div className="flex gap-1">
 							<img src="/bug_icon.svg" alt="Project" />
-							<span>12</span>
+							<span>{bugsCount}</span>
 						</div>
 						)
 					</div>
@@ -47,7 +117,7 @@ const Sprints = () => {
 			</div>
 			<ScrollArea className="h-[calc(100vh-200px)] w-full">
 				<div className="px-5 space-y-2">
-					{sampleData?.map((sprint) => {
+					{filteredIssues?.map((sprint) => {
 						return <SprintCard data={sprint} />;
 					})}
 				</div>

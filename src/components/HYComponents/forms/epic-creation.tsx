@@ -85,7 +85,7 @@ const EpicCreationForm = ({ children }: any) => {
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px] ">
+			<DialogContent className="max-w-2xl">
 				<DialogHeader>
 					<DialogTitle>Add Epic</DialogTitle>
 				</DialogHeader>
@@ -128,7 +128,7 @@ const EpicCreationForm = ({ children }: any) => {
 										field={field}
 										id="release"
 										className="w-full"
-										options={["backlog", "todo", "ongoing"]}
+										options={[]}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -161,7 +161,7 @@ const EpicCreationForm = ({ children }: any) => {
 											field={field}
 											id="dependency"
 											className="w-full"
-											options={[]}
+											options={["blocking"]}
 										/>
 										<FormMessage />
 									</FormItem>

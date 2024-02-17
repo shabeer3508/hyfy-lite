@@ -38,9 +38,9 @@ const formSchema = z.object({
 		message: "Username must be at least 2 characters.",
 	}),
 	type: z.string(),
+	status: z.string(),
 	epic: z.string().optional().nullable(),
 	points: z.string().optional().nullable(),
-	status: z.string().optional().nullable(),
 	assign_to: z.string().optional().nullable(),
 	dependency: z.string().optional().nullable(),
 	dependency_type: z.string().optional().nullable(),
@@ -59,7 +59,8 @@ const IssueCreationForm = ({ children }: any) => {
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
-			// status: "blocking",
+			dependency: null,
+			status: "backlog",
 			// dependency: null,
 			// dependency_type: null,
 			// priority: null,
@@ -68,26 +69,25 @@ const IssueCreationForm = ({ children }: any) => {
 	});
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-		console.log("🚀 ~ handleEpicCreation ~ values:", values);
-		// const getIssues = (prams?: string) => {
-		// 	let query = "?expand=releases,project_id";
-		// 	if (prams) {
-		// 		query = query + prams;
-		// 	}
-		// 	dispatch(getAction({ epics: Urls.issues + query }));
-		// };
-		// const resp = (await dispatch(postAction(Urls.issues, values))) as any;
-		// const success = resp.payload.status == 200;
-		// if (success) {
-		// 	setOpenForm(false);
-		// 	getIssues();
-		// }
+		const getIssues = (prams?: string) => {
+			let query = "?expand=releases,project_id";
+			if (prams) {
+				query = query + prams;
+			}
+			dispatch(getAction({ issues: Urls.issues + query }));
+		};
+		const resp = (await dispatch(postAction(Urls.issues, values))) as any;
+		const success = resp.payload.status == 200;
+		if (success) {
+			setOpenForm(false);
+			getIssues();
+		}
 	};
 
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="sm:max-w-[425px] ">
+			<DialogContent className="max-w-2xl">
 				<DialogHeader>
 					<DialogTitle>Add Story</DialogTitle>
 				</DialogHeader>
@@ -115,7 +115,7 @@ const IssueCreationForm = ({ children }: any) => {
 											field={field}
 											id="status"
 											className="w-full"
-											options={["blocking"]}
+											options={["task", "bug", "story"]}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -152,7 +152,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<FormLabel>Points</FormLabel>
 										<HYSelect
 											field={field}
-											id="dependency"
+											id="points"
 											className="w-full"
 											options={[]}
 										/>
@@ -169,9 +169,15 @@ const IssueCreationForm = ({ children }: any) => {
 									<FormLabel>Status</FormLabel>
 									<HYSelect
 										field={field}
-										id="dependency"
+										id="status"
 										className="w-full"
-										options={[]}
+										options={[
+											"backlog",
+											"todo",
+											"ongoing",
+											"pending",
+											"done",
+										]}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -204,8 +210,9 @@ const IssueCreationForm = ({ children }: any) => {
 											field={field}
 											id="dependency"
 											className="w-full"
-											options={["backlog"]}
+											options={[]}
 										/>
+
 										<FormMessage />
 									</FormItem>
 								)}

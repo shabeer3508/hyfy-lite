@@ -9,10 +9,11 @@ interface HYAvatarProps {
 }
 
 function getInitials(name) {
-	const initials = name
-		.split(" ")
-		.map((word) => word[0])
-		.join("");
+	const initials =
+		name
+			?.split(" ")
+			?.map((word) => word[0])
+			?.join("") ?? " ";
 	return initials.length > 1 ? initials.substring(0, 2) : initials;
 }
 
@@ -21,7 +22,9 @@ const HYAvatar = ({ url, name, className, color }: HYAvatarProps) => {
 	return (
 		<Avatar className={`size-8 ${className}`}>
 			<AvatarImage src={url} alt="@shadcn" />
-			<AvatarFallback className={`text-xs uppercase ${color}`}>{initials}</AvatarFallback>
+			<AvatarFallback className={`text-xs uppercase ${color}`}>
+				{initials}
+			</AvatarFallback>
 		</Avatar>
 	);
 };

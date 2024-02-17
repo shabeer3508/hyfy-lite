@@ -2,6 +2,7 @@ import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
 import HYStatusBadge from "@/components/HYComponents/HYStatusBadge";
+import ProjectCreationForm from "@/components/HYComponents/forms/project-creation";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -11,7 +12,7 @@ import { MoreVertical } from "lucide-react";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-const Index = () => {
+const Project = () => {
 	const dispatch = useDispatch();
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const itemsRes = useSelector((state: any) => state?.[reducerName]);
@@ -33,17 +34,14 @@ const Index = () => {
 		...val?.expand,
 	}));
 
-	// const priorities = ["low", "medium", "high", "urgent"];
-
-	console.log(`index,  : items`, items);
-	console.log(`index,  : reducerName`, reducerName);
-
 	return (
 		<div className=" flex flex-col h-full">
 			<div className=" flex justify-between items-end mx-8">
 				<div className="flex flex-col gap-4">
 					<p className=" text-xl ">Projects</p>
-					<Button size="sm">Create Project</Button>
+					<ProjectCreationForm>
+						<Button size="sm">Create Project</Button>
+					</ProjectCreationForm>
 				</div>
 				<div className="flex gap-2">
 					<HYSearch />
@@ -73,7 +71,7 @@ const Index = () => {
 										url="https://github.com/shadcn.png"
 										name={item?.owner?.name}
 									/>
-									<a>{item?.owner?.name}</a>
+									<a>{item?.expand?.owner?.name}</a>
 								</div>
 								<HYStatusBadge status={item?.status} />
 								<Button variant="ghost" size="sm">
@@ -88,4 +86,4 @@ const Index = () => {
 	);
 };
 
-export default Index;
+export default Project;
