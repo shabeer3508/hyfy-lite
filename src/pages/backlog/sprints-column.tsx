@@ -141,7 +141,7 @@ const SprintsColumn = () => {
 																sprint?.status ===
 																	"retro" &&
 																"bg-[#DF8430]"
-															}  text-white px-3 py-0.5 rounded-full text-xs `}
+															}  text-white px-3 py-0.5 whitespace-nowrap mx-2 rounded-full text-xs `}
 														>
 															{sprint?.status}
 														</div>

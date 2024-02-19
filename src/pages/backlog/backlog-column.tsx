@@ -1,30 +1,28 @@
-import HYSearch from "@/components/HYComponents/HYSearch";
-import HYSelect from "@/components/HYComponents/HYSelect";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { Separator } from "@radix-ui/react-select";
 import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "@/redux/actions/AppActions";
+import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import HYDialog from "@/components/HYComponents/HYDialog";
+import HYSelect from "@/components/HYComponents/HYSelect";
+import HYSearch from "@/components/HYComponents/HYSearch";
+import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import IssueCreationForm from "@/components/HYComponents/forms/issue-creation";
+import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-view";
+import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
 
 import {
 	HiPlus,
 	HiFilter,
-	HiBookOpen,
 	HiOutlineArrowNarrowUp,
 	HiDatabase,
 } from "react-icons/hi";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
-import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
-import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
-
-import IssueCreationForm from "@/components/HYComponents/forms/issue-creation";
-import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
 
 const BacklogColumn = () => {
-	const [searchParams, setSearchParams] = useSearchParams();
 	const backlogListData = useSelector((state: any) => state?.GetIssues);
 
 	const backlogItems = backlogListData?.data?.items;
@@ -43,14 +41,6 @@ const BacklogColumn = () => {
 		getIssues();
 	}, []);
 
-	const logoColors = [
-		"text-[#71A4FF]",
-		"text-[#4C4878]",
-		"text-[#A4599A]",
-		"text-[#E2A766]",
-		"text-[#389C98]",
-		"text-[#FF6481]",
-	];
 	return (
 		<div className="flex flex-col h-full  px-6 border-r">
 			<div className="flex items-center justify-between w-full">
@@ -88,64 +78,13 @@ const BacklogColumn = () => {
 			<div className="">
 				{backlogItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
-						<div className="py-4 pr-4">
+						<div className="py-4 pr-4 space-y-2">
 							{backlogItems.map((issue, i) => (
-								<>
-									<div
-										draggable
-										key={issue.id}
-										className="flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded border-[#696B70] hover:border-primary cursor-pointer"
-									>
-										<div className="flex gap-1 items-center">
-											{issue.type === "story" && (
-												<img
-													src="/story_icon.svg"
-													alt="Project"
-												/>
-											)}
-
-											{issue.type === "task" && (
-												<img
-													src="/task_icon.svg"
-													alt="Project"
-												/>
-											)}
-
-											{issue.type === "bug" && (
-												<img
-													src="/bug_icon.svg"
-													alt="Project"
-												/>
-											)}
-
-											<div className="text-[#737377]">
-												{issue.name}
-											</div>
-										</div>
-										<div className="flex gap-4 items-center text-[#737377]">
-											<div className="">
-												<Avatar className="h-5 w-5">
-													<AvatarImage
-														src="https://github.com/shadcn.png"
-														alt="@shadcn"
-													/>
-													<AvatarFallback>
-														user
-													</AvatarFallback>
-												</Avatar>
-											</div>
-											{i % 2 === 0 && (
-												<HiOutlineArrowNarrowUp className="text-red-500" />
-											)}
-											<PiLinkSimpleHorizontalBold />
-											<div className="flex gap-1 items-center">
-												<HiDatabase className="" />{" "}
-												{issue?.points}
-											</div>
-										</div>
-									</div>
-									<Separator className="my-2" />
-								</>
+								<IssueCard
+									index={i}
+									issue={issue}
+									key={issue?.id}
+								/>
 							))}
 						</div>
 					</ScrollArea>
@@ -180,3 +119,54 @@ const BacklogColumn = () => {
 };
 
 export default BacklogColumn;
+
+const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
+	return (
+		<Card
+			draggable
+			key={issue.id}
+			className=" border rounded border-[#696B70] hover:border-primary cursor-pointer"
+		>
+			<HYDialog
+				className="max-w-6xl"
+				content={<IssueDetailView data={issue} />}
+			>
+				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
+					<div className="flex gap-1 items-center">
+						{issue.type === "story" && (
+							<img src="/story_icon.svg" alt="Project" />
+						)}
+
+						{issue.type === "task" && (
+							<img src="/task_icon.svg" alt="Project" />
+						)}
+
+						{issue.type === "bug" && (
+							<img src="/bug_icon.svg" alt="Project" />
+						)}
+
+						<div className="text-[#737377]">{issue.name}</div>
+					</div>
+					<div className="flex gap-4 items-center text-[#737377]">
+						<div className="">
+							<Avatar className="h-5 w-5">
+								<AvatarImage
+									src="https://github.com/shadcn.png"
+									alt="@shadcn"
+								/>
+								<AvatarFallback>user</AvatarFallback>
+							</Avatar>
+						</div>
+						{index % 2 === 0 && (
+							<HiOutlineArrowNarrowUp className="text-red-500" />
+						)}
+						<PiLinkSimpleHorizontalBold />
+						<div className="flex gap-1 items-center">
+							<HiDatabase className="" /> {issue?.points}
+						</div>
+					</div>
+				</div>
+			</HYDialog>
+		</Card>
+	);
+};

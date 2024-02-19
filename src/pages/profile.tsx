@@ -30,8 +30,6 @@ const Profile = () => {
 		navigate("/login");
 	};
 
-	console.log(`profile,  : profileRep`, profileRep);
-
 	return (
 		<div className="dark:text-foreground flex flex-col h-full items-center p-10">
 			<Card className=" w-2/3 flex-1 flex flex-col items-center justify-center p-14">

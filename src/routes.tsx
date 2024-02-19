@@ -1,12 +1,12 @@
 import { lazy } from "react";
 
-const Board = lazy(() => import("@/pages/board"));
-const Backlog = lazy(() => import("@/pages/backlog"));
-const Projects = lazy(() => import("@/pages/projects"));
-const Sprints = lazy(() => import("@/pages/sprints"));
-const Releases = lazy(() => import("@/pages/releases"));
-const Team = lazy(() => import("@/pages/team"));
-const Settings = lazy(() => import("@/pages/settings"));
+const Board = lazy(() => import("@/pages/board/index"));
+const Backlog = lazy(() => import("@/pages/backlog/index"));
+const Sprints = lazy(() => import("@/pages/sprints/index"));
+const Releases = lazy(() => import("@/pages/releases/index"));
+const Projects = lazy(() => import("@/pages/projects/index"));
+const Team = lazy(() => import("@/pages/team/index"));
+const Settings = lazy(() => import("@/pages/settings/index"));
 const Profile = lazy(() => import("@/pages/profile"));
 
 export { Backlog, Projects };

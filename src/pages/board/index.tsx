@@ -1,22 +1,22 @@
+import { useEffect } from "react";
+import BoardCard from "./boardCard";
+import Urls from "@/redux/actions/Urls";
+import { HiDatabase } from "react-icons/hi";
+import { HiOutlineInbox } from "react-icons/hi2";
+import { useSearchParams } from "react-router-dom";
+import { Separator } from "@/components/ui/separator";
+import { useDispatch, useSelector } from "react-redux";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
-import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { HiDatabase } from "react-icons/hi";
-import { Separator } from "@/components/ui/separator";
-import BoardCard from "./boardCard";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 import { getAction, patchAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { useSearchParams } from "react-router-dom";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { HiOutlineInbox } from "react-icons/hi2";
+import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 const Board = () => {
 	const dispatch = useDispatch();
-
 	const [searchParams, setSearchParams] = useSearchParams();
+
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 
@@ -46,6 +46,16 @@ const Board = () => {
 		}, 0);
 	};
 
+	const getIssuesByTypes = (
+		issueType: "todo" | "ongoing" | "pending" | "done"
+	) => {
+		return issuesListData?.data?.items?.filter(
+			(issue) =>
+				issue?.status === issueType &&
+				issue?.sprint === searchParams.get("selectedSprint")
+		);
+	};
+
 	/*  ######################################################################################## */
 
 	const sprintOptions =
@@ -56,21 +66,6 @@ const Board = () => {
 
 	const selectedSprintInfo = sprintListData?.data?.items?.find(
 		(sprnt) => sprnt?.id === searchParams.get("selectedSprint")
-	);
-
-	/*  ######################################################################################## */
-
-	const todoIssues = issuesListData?.data?.items?.filter(
-		(issue) => issue?.status === "todo"
-	);
-	const onGoingIssues = issuesListData?.data?.items?.filter(
-		(issue) => issue?.status === "ongoing"
-	);
-	const pendingIssues = issuesListData?.data?.items?.filter(
-		(issue) => issue?.status === "pending"
-	);
-	const doneIssues = issuesListData?.data?.items?.filter(
-		(issue) => issue?.status === "done"
 	);
 
 	/*  ######################################################################################## */
@@ -126,9 +121,13 @@ const Board = () => {
 							name="sprint"
 							showSearch={false}
 							onValueChange={(value) => {
-								value
-									? setSearchParams({ selectedSprint: value })
-									: setSearchParams({});
+								if (value) {
+									searchParams.set("selectedSprint", value);
+									setSearchParams(searchParams);
+								} else {
+									searchParams.delete("selectedSprint");
+									setSearchParams(searchParams);
+								}
 							}}
 							options={sprintOptions}
 							buttonClassName="border-0"
@@ -142,7 +141,7 @@ const Board = () => {
 					</div>
 				</div>
 				<div className="px-5 flex my-5">
-					<div>Day 5</div>
+					{/* <div>Day 5</div>s */}
 					<Separator
 						decorative
 						className="px-2"
@@ -153,13 +152,13 @@ const Board = () => {
 							? formatter.format(
 									new Date(selectedSprintInfo?.start_date)
 							  )
-							: "_"}{" "}
+							: " "}{" "}
 						-{" "}
 						{selectedSprintInfo?.end_date
 							? formatter.format(
 									new Date(selectedSprintInfo?.end_date)
 							  )
-							: "_"}
+							: " "}
 					</div>
 				</div>
 				<div>
@@ -183,14 +182,21 @@ const Board = () => {
 									<div>Todo</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findIssueCount(todoIssues)}
+										{findIssueCount(
+											getIssuesByTypes("todo")
+										)}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{todoIssues?.map((tdInfo) => (
-											<BoardCard data={tdInfo} />
-										))}
+										{getIssuesByTypes("todo")?.map(
+											(tdInfo) => (
+												<BoardCard
+													data={tdInfo}
+													key={tdInfo?.id}
+												/>
+											)
+										)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -212,14 +218,21 @@ const Board = () => {
 									<div>Ongoing</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findIssueCount(onGoingIssues)}
+										{findIssueCount(
+											getIssuesByTypes("ongoing")
+										)}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{onGoingIssues?.map((tdInfo) => (
-											<BoardCard data={tdInfo} />
-										))}
+										{getIssuesByTypes("ongoing")?.map(
+											(tdInfo) => (
+												<BoardCard
+													data={tdInfo}
+													key={tdInfo?.id}
+												/>
+											)
+										)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -240,14 +253,21 @@ const Board = () => {
 									<div>Pending</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findIssueCount(pendingIssues)}
+										{findIssueCount(
+											getIssuesByTypes("pending")
+										)}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{pendingIssues?.map((tdInfo) => (
-											<BoardCard data={tdInfo} />
-										))}
+										{getIssuesByTypes("pending")?.map(
+											(tdInfo) => (
+												<BoardCard
+													data={tdInfo}
+													key={tdInfo?.id}
+												/>
+											)
+										)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -268,14 +288,21 @@ const Board = () => {
 									<div>Done</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findIssueCount(doneIssues)}
+										{findIssueCount(
+											getIssuesByTypes("done")
+										)}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{doneIssues?.map((tdInfo) => (
-											<BoardCard data={tdInfo} />
-										))}
+										{getIssuesByTypes("done")?.map(
+											(tdInfo) => (
+												<BoardCard
+													data={tdInfo}
+													key={tdInfo?.id}
+												/>
+											)
+										)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -283,19 +310,6 @@ const Board = () => {
 					</ResizablePanelGroup>
 				</div>
 			</div>
-			{/* <div className="dark:text-foreground flex justify-center h-[calc(100vh-100px)] items-center">
-				<div className="flex flex-col justify-center items-center text-center gap-3">
-					<div>
-						<HiOutlineInbox className="text-primary h-20 w-20 " />
-					</div>
-					<div className="text-primary text-3xl font-semibold">
-						Nothing here!
-					</div>
-					<div className="dark:text-foreground">
-						You have not been assigned any tasks
-					</div>
-				</div>
-			</div> */}
 		</>
 	);
 };

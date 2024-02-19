@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-const index = () => {
+const Signup = () => {
 	return (
 		<div className="flex justify-center h-screen items-center dark:bg-background">
 			<Card className="w-[500px] ">
@@ -44,4 +44,4 @@ const index = () => {
 	);
 };
 
-export default index;
+export default Signup;

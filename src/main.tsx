@@ -14,9 +14,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				<Provider store={store}>
 					<App />
 					<Toaster
+						invert
 						richColors
-						position="bottom-center"
 						closeButton
+						position="bottom-center"
 						toastOptions={{ duration: 2000 }}
 					/>
 				</Provider>

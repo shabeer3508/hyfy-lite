@@ -1,8 +1,7 @@
-// import pb from "./lib/pocketbase";
 import { Suspense, lazy } from "react";
+import { Route, Routes } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Route, Navigate, Routes } from "react-router-dom";
 
 const TheLayout = lazy(() => import("./layout/TheLayout"));
 const Login = lazy(() => import("./pages/auth/login/index"));
@@ -20,18 +19,15 @@ const loading = () => {
 const App = () => {
 	return (
 		<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-			{/* <div className="dark"> */}
 			<Suspense fallback={loading()}>
 				<Routes>
-					<Route path="login" element={<Login />} />
-					<Route path="signup" element={<SignUp />} />
-					<Route path="/*" element={<TheLayout />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<SignUp />} />
 					<Route path="/*" element={<TheLayout />} />
 					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Suspense>
 			<Toaster />
-			{/* </div> */}
 		</ThemeProvider>
 	);
 };

@@ -1,38 +1,69 @@
-import { IoIosSearch } from "react-icons/io";
-import { Input } from "@/components/ui/input";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import ModeToggle from "@/components/mode-toggle";
-import { LogOut, Settings, User } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
-import helpIcon from "../assets/icons/header-icons/icon_help.svg";
-import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
-
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuGroup,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuShortcut,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import HYSearch from "@/components/HYComponents/HYSearch";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import helpIcon from "../assets/icons/header-icons/icon_help.svg";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const TheHeader = () => {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const [searchParams, setSearchParams] = useSearchParams();
 
-	const logoutUser = () => {
-		localStorage.removeItem("hyfy_auth_token");
-		navigate("/login");
+	const reducerName = reducerNameFromUrl("project", "GET");
+	const projectList = useSelector((state: any) => state?.[reducerName]);
+
+	/*  ######################################################################################## */
+
+	const getProjects = (prams?: string) => {
+		let query = "?expand=owner";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ project: Urls.project + query }));
 	};
+
+	/*  ######################################################################################## */
+
+	const projectOptions =
+		projectList?.data?.items?.map((prjct) => ({
+			value: prjct?.id,
+			label: prjct?.title,
+		})) ?? [];
+
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getProjects();
+	}, []);
+
+	/*  ######################################################################################## */
 
 	return (
 		<div className="w-full transition-all duration-200 ease-in ">
 			<div className="flex h-20 items-center px-6">
 				<div className="font-semibold  flex items-center  dark:text-foreground">
-					Project Name
+					<HYCombobox
+						name="project"
+						showSearch={false}
+						onValueChange={(value) => {
+							if (value) {
+								searchParams.set("selectedProject", value);
+								setSearchParams(searchParams);
+							} else {
+								searchParams.delete("selectedProject");
+								setSearchParams(searchParams);
+							}
+						}}
+						options={projectOptions}
+						buttonClassName="border-0"
+					/>
 				</div>
 				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
 					<HYSearch />
@@ -57,37 +88,6 @@ const TheHeader = () => {
 							name={"John Doe"}
 						/>
 					</Button>
-
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild></DropdownMenuTrigger>
-						<DropdownMenuContent className="w-56">
-							<DropdownMenuLabel>My Account</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuGroup>
-								<DropdownMenuItem>
-									<User className="mr-2 h-4 w-4" />
-									<span>Profile</span>
-									<DropdownMenuShortcut>
-										⇧⌘P
-									</DropdownMenuShortcut>
-								</DropdownMenuItem>
-
-								<DropdownMenuItem>
-									<Settings className="mr-2 h-4 w-4" />
-									<span>Settings</span>
-									<DropdownMenuShortcut>
-										⌘S
-									</DropdownMenuShortcut>
-								</DropdownMenuItem>
-							</DropdownMenuGroup>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem onClick={() => logoutUser()}>
-								<LogOut className="mr-2 h-4 w-4" />
-								<span>Log out</span>
-								<DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-							</DropdownMenuItem>
-						</DropdownMenuContent>
-					</DropdownMenu>
 				</div>
 			</div>
 		</div>

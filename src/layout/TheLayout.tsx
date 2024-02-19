@@ -30,14 +30,7 @@ const TheLayout = () => {
 			</div>
 			<div className="relative flex grow flex-col ">
 				<div className=" left-0 right-0 top-0 z-40 print:hidden ">
-					<TheHeader
-						onClickMenu={() =>
-							dispatch({
-								type: "set",
-								sidebarShow: !sidebar.sidebarShow,
-							})
-						}
-					/>
+					<TheHeader />
 				</div>
 				<div className="flex grow transform-gpu flex-col overflow-clip">
 					<TheContent />

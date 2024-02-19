@@ -1,24 +1,23 @@
+import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import { useSearchParams } from "react-router-dom";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction } from "@/redux/actions/AppActions";
+import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
 import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { Separator } from "@radix-ui/react-select";
-import { useEffect } from "react";
-
 import {
 	HiPlus,
 	HiFilter,
 	HiBookOpen,
 	HiOutlineDotsVertical,
 } from "react-icons/hi";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
-import { IoIosSearch } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
+import { Card } from "@/components/ui/card";
+import HYDialog from "@/components/HYComponents/HYDialog";
 
 const EpicsColumn = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -39,15 +38,6 @@ const EpicsColumn = () => {
 	useEffect(() => {
 		getEpics();
 	}, []);
-
-	const logoColors = [
-		"text-[#71A4FF]",
-		"text-[#4C4878]",
-		"text-[#A4599A]",
-		"text-[#E2A766]",
-		"text-[#389C98]",
-		"text-[#FF6481]",
-	];
 
 	return (
 		<div className="flex flex-col h-full px-6 border-r">
@@ -97,43 +87,13 @@ const EpicsColumn = () => {
 			<div className="">
 				{epicItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
-						<div className="py-4 pr-4">
+						<div className="py-4 pr-4 space-y-2">
 							{epicItems.map((epic, i) => (
-								<>
-									<div
-										onClick={() =>
-											setSearchParams({
-												selected_epic: epic?.id,
-											})
-										}
-										key={epic?.id}
-										className={`flex gap-3 justify-between items-center text-sm border px-3 py-3 rounded hover:border-primary cursor-pointer ${
-											searchParams.get(
-												"selected_epic"
-											) === epic.id
-												? "border-primary"
-												: ""
-										}`}
-									>
-										<div className="flex items-center gap-2">
-											<HiBookOpen
-												className={`w-5 ${
-													logoColors[i % 6]
-												}`}
-											/>
-											<div>{epic?.name}</div>
-										</div>
-										<div className="text-[#737377]">
-											{epic?.expand?.releases?.name}
-										</div>
-										<div className=" text-[#737377]">|</div>
-										<div className="text-[#737377]">
-											{epic?.issues?.length} Issues
-										</div>
-										<HiOutlineDotsVertical className="text-[#737377]" />
-									</div>
-									<Separator className="my-2" />
-								</>
+								<EpicCard
+									epic={epic}
+									key={epic?.id}
+									index={i}
+								/>
 							))}
 						</div>
 					</ScrollArea>
@@ -169,3 +129,54 @@ const EpicsColumn = () => {
 };
 
 export default EpicsColumn;
+
+const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
+	const [searchParams, setSearchParams] = useSearchParams();
+
+	const logoColors = [
+		"text-[#71A4FF]",
+		"text-[#4C4878]",
+		"text-[#A4599A]",
+		"text-[#E2A766]",
+		"text-[#389C98]",
+		"text-[#FF6481]",
+	];
+	return (
+		<Card
+			onClick={() =>
+				setSearchParams({
+					selected_epic: epic?.id,
+				})
+			}
+			key={epic?.id}
+			className={` border  rounded hover:border-primary cursor-pointer ${
+				searchParams.get("selected_epic") === epic.id
+					? "border-primary"
+					: ""
+			}`}
+		>
+			<HYDialog
+				className="max-w-6xl"
+				title={"Epic"}
+				// content={<IssueDetailView data={data} />}
+			>
+				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
+					<div className="flex items-center gap-2">
+						<HiBookOpen
+							className={`w-5 ${logoColors[index % 6]}`}
+						/>
+						<div>{epic?.name}</div>
+					</div>
+					<div className="text-[#737377]">
+						{epic?.expand?.releases?.name}
+					</div>
+					<div className=" text-[#737377]">|</div>
+					<div className="text-[#737377]">
+						{epic?.issues?.length} Issues
+					</div>
+					<HiOutlineDotsVertical className="text-[#737377]" />
+				</div>
+			</HYDialog>
+		</Card>
+	);
+};
