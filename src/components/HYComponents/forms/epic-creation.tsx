@@ -1,54 +1,58 @@
-import React, { useState } from "react";
-
+import { z } from "zod";
+import Urls from "@/redux/actions/Urls";
+import { useForm } from "react-hook-form";
+import { HYCombobox } from "../HYCombobox";
+import { useEffect, useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
-import HYSelect from "../HYSelect";
-import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { getAction, postAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
+import {
+	getAction,
+	postAction,
+	reducerNameFromUrl,
+} from "@/redux/actions/AppActions";
 
-const formSchema = z.object({
-	name: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
-	status: z.string(),
-	release: z.string().optional().nullable(),
-	dependency: z.string().optional().nullable(),
-	dependency_type: z.string().optional().nullable(),
-	priority: z.string().optional().nullable(),
-	description: z.string().optional().nullable(),
-});
-
-const EpicCreationForm = ({ children }: any) => {
+const EpicCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
-
 	const [openForm, setOpenForm] = useState(false);
+
+	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicItems = epicsListData?.data?.items;
+	const releaseReducerName = reducerNameFromUrl("release", "GET");
+	const releaseList = useSelector(
+		(state: any) => state?.[releaseReducerName]
+	);
+
+	/*  ######################################################################################## */
+
+	const formSchema = z.object({
+		name: z.string().min(2, {
+			message: "Username must be at least 2 characters.",
+		}),
+		status: z.string(),
+		release: z.string().optional().nullable(),
+		dependency: z.string().optional().nullable(),
+		dependency_type: z.string().optional().nullable(),
+		priority: z.string().optional().nullable(),
+		description: z.string().optional().nullable(),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -62,6 +66,24 @@ const EpicCreationForm = ({ children }: any) => {
 			description: null,
 		},
 	});
+
+	/*  ######################################################################################## */
+
+	const getReleases = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ release: Urls.release + query }));
+	};
+
+	const getEpics = (prams?: string) => {
+		let query = "?expand=releases,project_id";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ epics: Urls.epics + query }));
+	};
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getEpics = (prams?: string) => {
@@ -82,6 +104,29 @@ const EpicCreationForm = ({ children }: any) => {
 		}
 	};
 
+	/*  ######################################################################################## */
+
+	const releaseOptions =
+		releaseList?.data?.items?.map((relse) => ({
+			value: relse?.id,
+			label: relse?.name,
+		})) ?? [];
+
+	const epicOptions =
+		epicItems?.map((epic) => ({
+			value: epic?.id,
+			label: epic?.name,
+		})) ?? [];
+
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getReleases();
+		getEpics();
+	}, []);
+
+	/*  ######################################################################################## */
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -97,7 +142,11 @@ const EpicCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Epic Title</FormLabel>
-									<Input placeholder="title" {...field} />
+									<Input
+										placeholder="title"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -106,13 +155,30 @@ const EpicCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="status"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="flex flex-col my-3">
 									<FormLabel>Status</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
+										buttonClassName="w-full"
 										id="status"
-										className="w-full"
-										options={["blocking"]}
+										form={form}
+										options={[
+											{
+												label: "Open",
+												value: "open",
+											},
+											{
+												label: "In progress",
+												value: "in-progress",
+											},
+											{
+												label: "Pending",
+												value: "pending",
+											},
+											{
+												label: "Done",
+												value: "done",
+											},
+										]}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -122,13 +188,13 @@ const EpicCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="release"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="flex flex-col">
 									<FormLabel>Release</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
 										id="release"
-										className="w-full"
-										options={[]}
+										form={form}
+										options={releaseOptions}
+										buttonClassName="w-full"
 									/>
 									<FormMessage />
 								</FormItem>
@@ -141,11 +207,11 @@ const EpicCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Dependency</FormLabel>
-										<HYSelect
-											field={field}
+										<HYCombobox
 											id="dependency"
-											className="w-full"
-											options={[]}
+											form={form}
+											options={epicOptions}
+											buttonClassName="w-full"
 										/>
 										<FormMessage />
 									</FormItem>
@@ -157,11 +223,16 @@ const EpicCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Dependency Type</FormLabel>
-										<HYSelect
-											field={field}
-											id="dependency"
-											className="w-full"
-											options={["blocking"]}
+										<HYCombobox
+											id="dependency_type"
+											form={form}
+											options={[
+												{
+													label: "Blocking",
+													value: "blocking",
+												},
+											]}
+											buttonClassName="w-full"
 										/>
 										<FormMessage />
 									</FormItem>
@@ -174,11 +245,28 @@ const EpicCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Priority</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
 										id="priority"
-										className="w-full"
-										options={["backlog"]}
+										form={form}
+										options={[
+											{
+												label: "Critical",
+												value: "critical",
+											},
+											{
+												label: "Heigh",
+												value: "heigh",
+											},
+											{
+												label: "Medium",
+												value: "medium",
+											},
+											{
+												label: "Low",
+												value: "low",
+											},
+										]}
+										buttonClassName="w-full"
 									/>
 									<FormMessage />
 								</FormItem>
@@ -188,10 +276,14 @@ const EpicCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="description"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-2">
 									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Input placeholder="" {...field} />
+										<Input
+											placeholder=""
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

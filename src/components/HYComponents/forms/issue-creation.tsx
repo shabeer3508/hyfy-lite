@@ -1,59 +1,68 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
+import { HiDatabase, HiOutlineClock } from "react-icons/hi";
 import HYSelect from "../HYSelect";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { getAction, postAction } from "@/redux/actions/AppActions";
+import {
+	getAction,
+	postAction,
+	reducerNameFromUrl,
+} from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
-
-const formSchema = z.object({
-	name: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
-	type: z.string(),
-	status: z.string(),
-	epic: z.string().optional().nullable(),
-	points: z.string().optional().nullable(),
-	assign_to: z.string().optional().nullable(),
-	dependency: z.string().optional().nullable(),
-	dependency_type: z.string().optional().nullable(),
-	priority: z.string().optional().nullable(),
-	estimated_hours: z.string().optional().nullable(),
-	description: z.string().optional().nullable(),
-	sub_tasks: z.string().optional().nullable(),
-});
+import { HYCombobox } from "../HYCombobox";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
-
 	const [openForm, setOpenForm] = useState(false);
+
+	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicItems = epicsListData?.data?.items;
+
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	const issuesListData = useSelector((state: any) => state?.GetIssues);
+	const issueItems = issuesListData?.data?.items;
+
+	/*  ######################################################################################## */
+
+	const formSchema = z.object({
+		name: z.string().min(2, {
+			message: "Username must be at least 2 characters.",
+		}),
+		type: z.string(),
+		status: z.string(),
+		epic: z.string().optional().nullable(),
+		points: z.string().optional().nullable(),
+		assign_to: z.string().optional().nullable(),
+		dependency: z.string().optional().nullable(),
+		dependency_type: z.string().optional().nullable(),
+		priority: z.string().optional().nullable(),
+		estimated_hours: z.string().optional().nullable(),
+		description: z.string().optional().nullable(),
+		sub_tasks: z.string().optional().nullable(),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -61,12 +70,12 @@ const IssueCreationForm = ({ children }: any) => {
 			name: "",
 			dependency: null,
 			status: "backlog",
-			// dependency: null,
-			// dependency_type: null,
-			// priority: null,
-			// description: null,
+			points: "5",
+			type: "story",
 		},
 	});
+
+	/*  ######################################################################################## */
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getIssues = (prams?: string) => {
@@ -79,10 +88,75 @@ const IssueCreationForm = ({ children }: any) => {
 		const resp = (await dispatch(postAction(Urls.issues, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
+			form.reset({
+				name: "",
+				dependency: null,
+				status: "backlog",
+				type: "story",
+				points: "5",
+			});
 			setOpenForm(false);
 			getIssues();
 		}
 	};
+
+	/*  ######################################################################################## */
+
+	const epicOptions =
+		epicItems?.map((epic) => ({
+			value: epic?.id,
+			label: epic?.name,
+		})) ?? [];
+
+	const usersOptions =
+		usersList?.data?.items?.map((user) => ({
+			value: user?.id,
+			label: user?.name,
+		})) ?? [];
+
+	const issueOptions =
+		issueItems
+			?.filter((issue) => issue?.type === "story")
+			?.map((issue) => ({
+				value: issue?.id,
+				label: issue?.name,
+			})) ?? [];
+
+	/*  ######################################################################################## */
+
+	const pointOptions = [
+		{ label: "5", value: "5" },
+		{ label: "10", value: "10" },
+		{ label: "15", value: "15" },
+	];
+
+	const priorityOptions = [
+		{ label: "Critical", value: "critical" },
+		{ label: "Heigh", value: "heigh" },
+		{ label: "Medium", value: "medium" },
+		{ label: "Low", value: "low" },
+	];
+
+	const estimatedHours = [
+		{ label: "1", value: "1" },
+		{ label: "2", value: "2" },
+		{ label: "3", value: "3" },
+		{ label: "4", value: "4" },
+	];
+
+	const typeOptions = [
+		{ label: "Task", value: "task" },
+		{ label: "Bug", value: "bug" },
+		{ label: "Story", value: "story" },
+	];
+
+	const statusOptions = [
+		{ label: "Backlog", value: "backlog" },
+		{ label: "Todo", value: "todo" },
+		{ label: "Ongoing", value: "ongoing" },
+		{ label: "Pending", value: "pending" },
+		{ label: "Done", value: "done" },
+	];
 
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
@@ -100,7 +174,11 @@ const IssueCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem className="col-span-2">
 										<FormLabel>Story Title</FormLabel>
-										<Input placeholder="title" {...field} />
+										<Input
+											placeholder="title"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											{...field}
+										/>
 										<FormMessage />
 									</FormItem>
 								)}
@@ -111,11 +189,12 @@ const IssueCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Type</FormLabel>
-										<HYSelect
-											field={field}
-											id="status"
-											className="w-full"
-											options={["task", "bug", "story"]}
+										<HYCombobox
+											defaultValue="story"
+											buttonClassName="w-full"
+											id="type"
+											form={form}
+											options={typeOptions}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -128,17 +207,15 @@ const IssueCreationForm = ({ children }: any) => {
 								control={form.control}
 								name="epic"
 								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Epic</FormLabel>
-										<HYSelect
-											field={field}
-											id="release"
-											className="w-full"
-											options={[
-												"backlog",
-												"todo",
-												"ongoing",
-											]}
+									<FormItem className="flex flex-col">
+										<FormLabel className="my-1">
+											Epic
+										</FormLabel>
+										<HYCombobox
+											buttonClassName="w-full"
+											id="epic"
+											form={form}
+											options={epicOptions}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -150,11 +227,13 @@ const IssueCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Points</FormLabel>
-										<HYSelect
-											field={field}
+										<HYCombobox
+											defaultValue="5"
+											label={<HiDatabase />}
+											buttonClassName="w-full"
 											id="points"
-											className="w-full"
-											options={[]}
+											form={form}
+											options={pointOptions}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -167,18 +246,15 @@ const IssueCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Status</FormLabel>
-									<HYSelect
-										field={field}
+
+									<HYCombobox
+										defaultValue="backlog"
+										buttonClassName="w-full"
 										id="status"
-										className="w-full"
-										options={[
-											"backlog",
-											"todo",
-											"ongoing",
-											"pending",
-											"done",
-										]}
+										form={form}
+										options={statusOptions}
 									/>
+
 									<FormMessage />
 								</FormItem>
 							)}
@@ -187,13 +263,13 @@ const IssueCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="assign_to"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-3">
 									<FormLabel>Assign To</FormLabel>
-									<HYSelect
-										field={field}
-										id="priority"
-										className="w-full"
-										options={["backlog"]}
+									<HYCombobox
+										buttonClassName="w-full"
+										id="assign_to"
+										form={form}
+										options={usersOptions}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -206,13 +282,12 @@ const IssueCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Dependency</FormLabel>
-										<HYSelect
-											field={field}
+										<HYCombobox
+											buttonClassName="w-full"
 											id="dependency"
-											className="w-full"
-											options={[]}
+											form={form}
+											options={issueOptions}
 										/>
-
 										<FormMessage />
 									</FormItem>
 								)}
@@ -227,7 +302,7 @@ const IssueCreationForm = ({ children }: any) => {
 											field={field}
 											id="dependency_type"
 											className="w-full"
-											options={["backlog"]}
+											options={["blocking"]}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -239,13 +314,13 @@ const IssueCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="priority"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="flex flex-col my-2">
 									<FormLabel>Priority</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
+										buttonClassName="w-full"
 										id="priority"
-										className="w-full"
-										options={["backlog"]}
+										form={form}
+										options={priorityOptions}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -256,13 +331,14 @@ const IssueCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="estimated_hours"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-1">
 									<FormLabel>Estimated Hours</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
+										label={<HiOutlineClock />}
+										buttonClassName="w-full"
 										id="estimated_hours"
-										className="w-full"
-										options={["1", "2", "3", "4", "5", "6"]}
+										form={form}
+										options={estimatedHours}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -276,7 +352,11 @@ const IssueCreationForm = ({ children }: any) => {
 								<FormItem>
 									<FormLabel>Description</FormLabel>
 									<FormControl>
-										<Input placeholder="" {...field} />
+										<Input
+											placeholder=""
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -287,10 +367,15 @@ const IssueCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="sub_tasks"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-1">
 									<FormLabel>Sub Tasks</FormLabel>
 									<FormControl>
-										<Input placeholder="" {...field} />
+										<Input
+											disabled
+											placeholder=""
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HYSelect from "../HYSelect";
 import Urls from "@/redux/actions/Urls";
 import HYInputDate from "../HYInputDate";
@@ -47,6 +47,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 		defaultValues: {
 			name: "",
 			status: "planning",
+			description: "",
 		},
 	});
 
@@ -63,6 +64,12 @@ const ReleaseCreationForm = ({ children }: any) => {
 		const resp = (await dispatch(postAction(Urls.release, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
+			form.reset({
+				name: "",
+				status: "planning",
+				description: "",
+				priority: null,
+			});
 			setOpenForm(false);
 			getReleases();
 		}
@@ -75,7 +82,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>Add Sprint</DialogTitle>
+					<DialogTitle>Add Release</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(handleEpicCreation)}>
@@ -112,7 +119,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 											form={form}
 											options={[
 												{
-													label: "Panning",
+													label: "Planning",
 													value: "planning",
 												},
 												{

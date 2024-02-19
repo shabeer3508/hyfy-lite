@@ -7,7 +7,6 @@ import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/HYComponents/HYDialog";
-import HYSelect from "@/components/HYComponents/HYSelect";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -51,6 +50,8 @@ const BacklogColumn = () => {
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
+	/*  ######################################################################################## */
+
 	const backlogIssues =
 		issueItems?.filter((issue) => issue?.status === "backlog") ?? [];
 
@@ -63,26 +64,11 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const sortoptions = [
-		{
-			label: "New",
-			action: () => {},
-		},
-		{
-			label: "Oldest",
-			action: () => {},
-		},
-		{
-			label: "Recently Edited",
-			action: () => {},
-		},
-		{
-			label: "A-Z",
-			action: () => {},
-		},
-		{
-			label: "Z-A",
-			action: () => {},
-		},
+		{ label: "New", action: () => {} },
+		{ label: "Oldest", action: () => {} },
+		{ label: "Recently Edited", action: () => {} },
+		{ label: "A-Z", action: () => {} },
+		{ label: "Z-A", action: () => {} },
 	];
 
 	/*  ######################################################################################## */

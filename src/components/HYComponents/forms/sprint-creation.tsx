@@ -1,30 +1,21 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-
-import { Label } from "@/components/ui/label";
 import HYSelect from "../HYSelect";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
 import {
 	Form,
-	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -33,38 +24,39 @@ import {
 import { getAction, postAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { Checkbox } from "@/components/ui/checkbox";
+import HYInputDate from "../HYInputDate";
+import { HYCombobox } from "../HYCombobox";
 
-const formSchema = z.object({
-	name: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
-	}),
-	status: z.string(),
-	duration: z.string().optional().nullable(),
-	exclude_days: z.string().optional().nullable(),
-	exclude_public_holiday: z.boolean().optional().nullable(),
-	start_date: z.string().optional().nullable(),
-	end_date: z.string().optional().nullable(),
-	description: z.string().optional().nullable(),
-	project_id: z.string().optional().nullable(),
-	issues: z.string().optional().nullable(),
-});
-
-const SprintCreationForm = ({ children }: any) => {
+const SprintCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
-
 	const [openForm, setOpenForm] = useState(false);
+
+	/*  ######################################################################################## */
+
+	const formSchema = z.object({
+		name: z.string().min(2, {
+			message: "Username must be at least 2 characters.",
+		}),
+		status: z.string(),
+		duration: z.string().optional().nullable(),
+		exclude_days: z.string().optional().nullable(),
+		exclude_public_holiday: z.boolean().optional().nullable(),
+		start_date: z.string().optional().nullable(),
+		end_date: z.string().optional().nullable(),
+		description: z.string().optional().nullable(),
+		project_id: z.string().optional().nullable(),
+		issues: z.string().optional().nullable(),
+	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: "",
-			// status: "blocking",
-			// dependency: null,
-			// dependency_type: null,
-			// priority: null,
-			// description: null,
+			status: "backlog",
 		},
 	});
+
+	/*  ######################################################################################## */
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getSprints = (prams?: string) => {
@@ -77,10 +69,22 @@ const SprintCreationForm = ({ children }: any) => {
 		const resp = (await dispatch(postAction(Urls.sprints, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
+			form.reset({ name: "", status: "backlog" });
 			setOpenForm(false);
 			getSprints();
 		}
 	};
+
+	/*  ######################################################################################## */
+
+	const statusOptions = [
+		{ label: "Backlog", value: "backlog" },
+		{ label: "Ongoing", value: "ongoing" },
+		{ label: "In progress", value: "in-progress" },
+		{ label: "Retro", value: "retro" },
+	];
+
+	/*  ######################################################################################## */
 
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
@@ -97,7 +101,11 @@ const SprintCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem className="col-span-2">
 									<FormLabel>Sprint Title</FormLabel>
-									<Input placeholder="title" {...field} />
+									<Input
+										placeholder="title"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}
@@ -106,18 +114,14 @@ const SprintCreationForm = ({ children }: any) => {
 							control={form.control}
 							name="status"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="flex flex-col my-2">
 									<FormLabel>Status</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
+										buttonClassName="w-full"
+										defaultValue="backlog"
 										id="status"
-										className="w-full"
-										options={[
-											"backlog",
-											"ongoing",
-											"retro",
-											"in-progress",
-										]}
+										form={form}
+										options={statusOptions}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -135,10 +139,10 @@ const SprintCreationForm = ({ children }: any) => {
 										id="release"
 										className="w-full"
 										options={[
-											"7 days",
-											"5 days",
-											"2 days",
 											"1 day",
+											"2 days",
+											"5 days",
+											"7 days",
 										]}
 									/>
 									<FormMessage />
@@ -166,14 +170,7 @@ const SprintCreationForm = ({ children }: any) => {
 							name="exclude_public_holiday"
 							render={({ field }) => (
 								<FormItem className="flex items-center pt-1">
-									<Checkbox
-										id="exclude_public_holiday"
-										// checked={false}
-										// {...field}
-										// onCheckedChange={() => {
-										// 	setSearchParams({});
-										// }}
-									/>
+									<Checkbox id="exclude_public_holiday" />
 									<FormLabel className="flex items-center px-2">
 										Also Exclude public holidays
 									</FormLabel>
@@ -188,7 +185,7 @@ const SprintCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>Start Date</FormLabel>
-										<Input type="date" {...field} />
+										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
 								)}
@@ -199,7 +196,7 @@ const SprintCreationForm = ({ children }: any) => {
 								render={({ field }) => (
 									<FormItem>
 										<FormLabel>End Date</FormLabel>
-										<Input type="date" {...field} />
+										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
 								)}
@@ -211,7 +208,11 @@ const SprintCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Description</FormLabel>
-									<Input type="text" {...field} />
+									<Input
+										type="text"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										{...field}
+									/>
 									<FormMessage />
 								</FormItem>
 							)}

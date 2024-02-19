@@ -1,5 +1,7 @@
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import HYSelect from "@/components/HYComponents/HYSelect";
 import { Card, CardContent } from "@/components/ui/card";
+import { HiDatabase, HiOutlineClock } from "react-icons/hi";
 
 const SprintCard = ({ data }: any) => {
 	return (
@@ -20,10 +22,27 @@ const SprintCard = ({ data }: any) => {
 					{data?.name}
 				</div>
 				<div className="">
-					<HYSelect id="" options={["options"]} className="w-full" />
+					<HYCombobox
+						label={<HiDatabase />}
+						options={[
+							{ label: "5", value: "5" },
+							{ label: "10", value: "10" },
+							{ label: "15", value: "15" },
+						]}
+					/>
 				</div>
 				<div>
-					<HYSelect id="" options={["options"]} className="w-full" />
+					<HYCombobox
+						label={<HiOutlineClock />}
+						options={[
+							{ label: "1", value: "5" },
+							{ label: "2", value: "10" },
+							{ label: "3", value: "15" },
+							{ label: "4", value: "15" },
+							{ label: "5", value: "15" },
+						]}
+					/>
+					{/* <HYSelect id="" options={["options"]} className="w-full" /> */}
 				</div>
 				<div>
 					<HYSelect id="" options={["options"]} className="w-full" />

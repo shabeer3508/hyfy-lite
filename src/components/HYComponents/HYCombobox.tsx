@@ -1,8 +1,8 @@
-import * as React from "react";
-import { Check, ChevronsUpDown } from "lucide-react";
-
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { UseFormReturn } from "react-hook-form";
+import { Check, ChevronsUpDown } from "lucide-react";
 import {
 	Command,
 	CommandEmpty,
@@ -15,9 +15,12 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { useEffect, useState } from "react";
-import { Value } from "@radix-ui/react-select";
-import { UseFormReturn } from "react-hook-form";
+import { ScrollArea } from "../ui/scroll-area";
+
+interface MenuOption {
+	label: string;
+	value: string;
+}
 
 export function HYCombobox({
 	id,
@@ -32,8 +35,8 @@ export function HYCombobox({
 	form,
 }: {
 	id?: string;
-	label?: string;
-	options: any;
+	label?: any;
+	options: MenuOption[];
 	name?: string;
 	buttonClassName?: string;
 	optionsClassName?: string;
@@ -41,6 +44,7 @@ export function HYCombobox({
 	showSearch?: boolean;
 	defaultValue?: string;
 	form?: UseFormReturn<any>;
+	updateList?: () => void; // TODO: use this for updating the paginated list
 }) {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
@@ -80,36 +84,42 @@ export function HYCombobox({
 					)}
 					<CommandEmpty>No options found.</CommandEmpty>
 					<CommandGroup>
-						{options.map((opt) => (
-							<CommandItem
-								key={opt.value}
-								value={opt.value}
-								onSelect={(currentValue) => {
-									setValue(
-										currentValue === value
-											? ""
-											: currentValue
-									);
-									onValueChange?.(
-										currentValue === value
-											? ""
-											: currentValue
-									);
-									form?.setValue(id, currentValue);
-									setOpen(false);
-								}}
-							>
-								<Check
-									className={cn(
-										"mr-2 h-4 w-4",
-										value === opt.value
-											? "opacity-100"
-											: "opacity-0"
-									)}
-								/>
-								{opt.label}
-							</CommandItem>
-						))}
+						<ScrollArea
+							className={`${
+								options?.length > 6 && "max-h-[20vh] h-[20vh]"
+							}`}
+						>
+							{options.map((opt) => (
+								<CommandItem
+									key={opt.value}
+									value={opt.value}
+									onSelect={(currentValue) => {
+										setValue(
+											currentValue === value
+												? ""
+												: currentValue
+										);
+										onValueChange?.(
+											currentValue === value
+												? ""
+												: currentValue
+										);
+										form?.setValue(id, currentValue);
+										setOpen(false);
+									}}
+								>
+									<Check
+										className={cn(
+											"mr-2 h-4 w-4",
+											value === opt.value
+												? "opacity-100"
+												: "opacity-0"
+										)}
+									/>
+									{opt.label}
+								</CommandItem>
+							))}
+						</ScrollArea>
 					</CommandGroup>
 				</Command>
 			</PopoverContent>
