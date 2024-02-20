@@ -15,7 +15,7 @@ const Urls = {
 	profile: "/profile/records",
 
 	project: "/project/records",
-	epics: "/epic/records",
+	epic: "/epic/records",
 	issues: "/issues/records",
 	release: "/release/records",
 	sprints: "/sprints/records",
