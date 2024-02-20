@@ -153,7 +153,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 							control={form.control}
 							name="exclude_days"
 							render={({ field }) => (
-								<FormItem>
+								<FormItem className="my-1">
 									<FormLabel>Exclude</FormLabel>
 									<HYSelect
 										field={field}
@@ -172,7 +172,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 								<FormItem className="flex items-center pt-1">
 									<Checkbox id="exclude_public_holiday" />
 									<FormLabel className="flex items-center px-2">
-										Also Exclude public holidays
+										Also exclude public holidays
 									</FormLabel>
 									<FormMessage />
 								</FormItem>

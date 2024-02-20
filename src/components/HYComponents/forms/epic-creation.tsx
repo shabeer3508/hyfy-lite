@@ -33,8 +33,10 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
-	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
+
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
 	const releaseList = useSelector(
 		(state: any) => state?.[releaseReducerName]
