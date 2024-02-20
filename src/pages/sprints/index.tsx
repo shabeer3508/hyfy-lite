@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import SprintCard from "./sprintCard";
+import IssueMiniCard from "./sprintCard";
 import Urls from "../../redux/actions/Urls";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "@/redux/actions/AppActions";
@@ -46,11 +46,17 @@ const Sprints = () => {
 		(sprnt) => sprnt?.sprint === searchParams.get("selectedSprint")
 	);
 
-	const bugsCount = filteredIssues?.filter((issue) => issue.type === "bug").length;
+	const bugsCount = filteredIssues?.filter(
+		(issue) => issue.type === "bug"
+	).length;
 
-	const storyCount = filteredIssues?.filter((issue) => issue.type === "story").length;
+	const storyCount = filteredIssues?.filter(
+		(issue) => issue.type === "story"
+	).length;
 
-	const taskCount = filteredIssues?.filter((issue) => issue.type === "task").length;
+	const taskCount = filteredIssues?.filter(
+		(issue) => issue.type === "task"
+	).length;
 
 	/*  ######################################################################################## */
 
@@ -69,7 +75,9 @@ const Sprints = () => {
 						<HYCombobox
 							showSearch={false}
 							onValueChange={(value) => {
-								value ? setSearchParams({ selectedSprint: value }) : setSearchParams({});
+								value
+									? setSearchParams({ selectedSprint: value })
+									: setSearchParams({});
 							}}
 							options={sprintOptions}
 							name="sprint"
@@ -110,7 +118,7 @@ const Sprints = () => {
 			<ScrollArea className="h-[calc(100vh-200px)] w-full">
 				<div className="px-5 space-y-2">
 					{filteredIssues?.map((sprint) => {
-						return <SprintCard data={sprint} />;
+						return <IssueMiniCard data={sprint} />;
 					})}
 				</div>
 			</ScrollArea>

@@ -26,7 +26,8 @@ const EpicsColumn = () => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");

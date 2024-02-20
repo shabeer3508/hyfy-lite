@@ -180,7 +180,7 @@ const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 		<Card
 			draggable
 			key={issue.id}
-			className=" border rounded border-[#696B70] hover:border-primary cursor-pointer"
+			className=" border rounded hover:border-primary cursor-pointer"
 		>
 			<HYDialog
 				className="max-w-6xl"

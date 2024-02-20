@@ -191,7 +191,7 @@ const SprintsColumn = () => {
 																<div
 																	draggable
 																	key={itm}
-																	className="flex gap-3 justify-between items-center text-sm border border-[#696B70] hover:border-[#696B70]/50 px-3 py-3 rounded cursor-pointer"
+																	className="flex gap-3 justify-between items-center text-sm border  hover:border-primary px-3 py-3 rounded cursor-pointer"
 																>
 																	<div className="flex gap-1 items-center">
 																		{itm.type ===
