@@ -7,27 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import {
-	getAction,
-	postAction,
-	reducerNameFromUrl,
-} from "@/redux/actions/AppActions";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const EpicCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
@@ -36,9 +18,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	const epicsListData = useSelector((state: any) => state?.GetEpics);
 	const epicItems = epicsListData?.data?.items;
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector(
-		(state: any) => state?.[releaseReducerName]
-	);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
 
 	/*  ######################################################################################## */
 
@@ -291,11 +271,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 						/>
 
 						<DialogFooter className="mt-5">
-							<Button
-								type="reset"
-								variant="outline"
-								onClick={() => setOpenForm(false)}
-							>
+							<Button type="reset" variant="outline" onClick={() => setOpenForm(false)}>
 								Cancel
 							</Button>
 							<Button type="submit">Add</Button>

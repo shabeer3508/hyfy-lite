@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import SprintCard from "./sprintCard";
-import Urls from "@/redux/actions/Urls";
+import Urls from "../../redux/actions/Urls";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "@/redux/actions/AppActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -46,17 +46,11 @@ const Sprints = () => {
 		(sprnt) => sprnt?.sprint === searchParams.get("selectedSprint")
 	);
 
-	const bugsCount = filteredIssues?.filter(
-		(issue) => issue.type === "bug"
-	).length;
+	const bugsCount = filteredIssues?.filter((issue) => issue.type === "bug").length;
 
-	const storyCount = filteredIssues?.filter(
-		(issue) => issue.type === "story"
-	).length;
+	const storyCount = filteredIssues?.filter((issue) => issue.type === "story").length;
 
-	const taskCount = filteredIssues?.filter(
-		(issue) => issue.type === "task"
-	).length;
+	const taskCount = filteredIssues?.filter((issue) => issue.type === "task").length;
 
 	/*  ######################################################################################## */
 
@@ -75,9 +69,7 @@ const Sprints = () => {
 						<HYCombobox
 							showSearch={false}
 							onValueChange={(value) => {
-								value
-									? setSearchParams({ selectedSprint: value })
-									: setSearchParams({});
+								value ? setSearchParams({ selectedSprint: value }) : setSearchParams({});
 							}}
 							options={sprintOptions}
 							name="sprint"
