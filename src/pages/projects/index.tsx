@@ -46,31 +46,21 @@ const Project = () => {
 				<div className="flex gap-2">
 					<HYSearch />
 					<div className="">
-						<HYSelect
-							id=""
-							label="Status"
-							options={["done", "in-progress", "pending", "open"]}
-						/>
+						<HYSelect id="" label="Status" options={["done", "in-progress", "pending", "open"]} />
 					</div>
 				</div>
 			</div>
 			<div className=" overflow-auto px-8 ">
 				<div className="flex flex-col gap-3 mt-4">
 					{items?.map((item: any, index: number) => (
-						<Card
-							key={`pi_${index}`}
-							className="flex justify-between items-center h-16 px-3 rounded-lg"
-						>
+						<Card key={`pi_${index}`} className="flex justify-between items-center h-16 px-3 rounded-lg">
 							<div className="flex gap-3 items-center">
 								<img src="/folder_icon.svg" alt="Project" />
 								<div className="capitalize ">{item?.title}</div>
 							</div>
 							<div className="flex gap-4">
 								<div className="flex items-center gap-4">
-									<HYAvatar
-										url="https://github.com/shadcn.png"
-										name={item?.owner?.name}
-									/>
+									<HYAvatar url="https://github.com/shadcn.png" name={item?.owner?.name} />
 									<a>{item?.expand?.owner?.name}</a>
 								</div>
 								<HYStatusBadge status={item?.status} />

@@ -9,13 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { postAction } from "@/redux/actions/AppActions";
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -27,23 +21,17 @@ const Login = () => {
 		setIsLoading(true);
 
 		try {
-			(dispatch(postAction(Urls.authenticate, data)) as any).then(
-				(res: any) => {
-					setIsLoading(false);
+			(dispatch(postAction(Urls.authenticate, data)) as any).then((res: any) => {
+				setIsLoading(false);
 
-					const success = res.payload.status == 200;
+				const success = res.payload.status == 200;
 
-					if (success) {
-						localStorage.setItem(
-							"hyfy_auth_token",
-							res?.payload?.data?.token
-						);
-						if (res?.payload?.data?.record?.role === "employee")
-							navigate("/board");
-						else navigate("/backlog");
-					}
+				if (success) {
+					localStorage.setItem("hyfy_auth_token", res?.payload?.data?.token);
+					if (res?.payload?.data?.record?.role === "employee") navigate("/board");
+					else navigate("/backlog");
 				}
-			);
+			});
 		} catch (e) {
 			toast.error(e.message);
 		}
@@ -54,9 +42,7 @@ const Login = () => {
 			<Card className="w-[500px] dark:bg-[#23252A]">
 				<CardHeader>
 					<CardTitle className="text-primary">Hyfy</CardTitle>
-					<CardDescription className="text-foreground text-sm font-semibold pt-3">
-						Login
-					</CardDescription>
+					<CardDescription className="text-foreground text-sm font-semibold pt-3">Login</CardDescription>
 				</CardHeader>
 				<CardContent className="">
 					<form onSubmit={handleSubmit(login)}>
@@ -78,9 +64,7 @@ const Login = () => {
 							/>
 						</div>
 						<div className="flex flex-col space-y-1.5 mt-3">
-							<Label className="text-xs dark:text-foreground">
-								Enter Secure password
-							</Label>
+							<Label className="text-xs dark:text-foreground">Enter Secure password</Label>
 							<Input
 								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border border-[#FFFFFF1A]"
 								type="password"
