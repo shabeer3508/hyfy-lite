@@ -12,7 +12,12 @@ import HYDialog from "@/components/HYComponents/HYDialog";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
 import EpicDetailView from "@/components/HYComponents/DetailViews/Epic-detail-view";
-import { HiPlus, HiFilter, HiBookOpen, HiOutlineDotsVertical } from "react-icons/hi";
+import {
+	HiPlus,
+	HiFilter,
+	HiBookOpen,
+	HiOutlineDotsVertical,
+} from "react-icons/hi";
 import HYDropDown from "@/components/HYComponents/HYDropDown";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
@@ -21,11 +26,14 @@ const EpicsColumn = () => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 
-	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
+	const releaseList = useSelector(
+		(state: any) => state?.[releaseReducerName]
+	);
 
 	/*  ######################################################################################## */
 
@@ -34,7 +42,7 @@ const EpicsColumn = () => {
 		if (prams) {
 			query = query + prams;
 		}
-		dispatch(getAction({ epics: Urls.epic + query }));
+		dispatch(getAction({ epic: Urls.epic + query }));
 	};
 
 	const getReleases = (prams?: string) => {
@@ -101,12 +109,20 @@ const EpicsColumn = () => {
 			<div className="flex border-b w-full justify-between py-3">
 				<div className="flex gap-3">
 					<HYDropDown options={sortoptions}>
-						<Button variant="ghost" size="icon" className="border aspect-square h-10 w-10">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
 							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
 						</Button>
 					</HYDropDown>
 					<HYDropdownMenuCheckbox>
-						<Button variant="ghost" size="icon" className="border aspect-square h-10 w-10">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="border aspect-square h-10 w-10"
+						>
 							<HiFilter className="h-5 w-5 text-[#707173]" />
 						</Button>
 					</HYDropdownMenuCheckbox>
@@ -114,7 +130,10 @@ const EpicsColumn = () => {
 				<div className="">
 					<HYCombobox
 						label="Release "
-						options={[{ label: "All", value: "all" }, ...releaseOptions]}
+						options={[
+							{ label: "All", value: "all" },
+							...releaseOptions,
+						]}
 						buttonClassName="max-w-[200px]"
 					/>
 				</div>
@@ -139,7 +158,11 @@ const EpicsColumn = () => {
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
 							{epicItems.map((epic, i) => (
-								<EpicCard epic={epic} key={epic?.id} index={i} />
+								<EpicCard
+									epic={epic}
+									key={epic?.id}
+									index={i}
+								/>
 							))}
 						</div>
 					</ScrollArea>
@@ -150,9 +173,12 @@ const EpicsColumn = () => {
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
 								1
 							</div>
-							<div className="text-primary font-bold text-xl">Add epics here</div>
+							<div className="text-primary font-bold text-xl">
+								Add epics here
+							</div>
 							<div className="w-2/3 text-center text-[#F8F8F8]">
-								Epics will be milestones that help you manage your project
+								Epics will be milestones that help you manage
+								your project
 							</div>
 							<EpicCreationForm>
 								<Button
@@ -193,18 +219,29 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 			}
 			key={epic?.id}
 			className={` border  rounded hover:border-primary cursor-pointer ${
-				searchParams.get("selected_epic") === epic.id ? "border-primary" : ""
+				searchParams.get("selected_epic") === epic.id
+					? "border-primary"
+					: ""
 			}`}
 		>
-			<HYDialog className="max-w-6xl" content={<EpicDetailView data={epic} />}>
+			<HYDialog
+				className="max-w-6xl"
+				content={<EpicDetailView data={epic} />}
+			>
 				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
 					<div className="flex items-center gap-2">
-						<HiBookOpen className={`w-5 ${logoColors[index % 6]}`} />
+						<HiBookOpen
+							className={`w-5 ${logoColors[index % 6]}`}
+						/>
 						<div>{epic?.name}</div>
 					</div>
-					<div className="text-[#737377]">{epic?.expand?.releases?.name}</div>
+					<div className="text-[#737377]">
+						{epic?.expand?.releases?.name}
+					</div>
 					<div className=" text-[#737377]">|</div>
-					<div className="text-[#737377]">{epic?.issues?.length} Issues</div>
+					<div className="text-[#737377]">
+						{epic?.issues?.length} Issues
+					</div>
 					<HiOutlineDotsVertical className="text-[#737377]" />
 				</div>
 			</HYDialog>
