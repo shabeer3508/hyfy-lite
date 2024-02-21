@@ -1,4 +1,6 @@
+import ProjectDetailView from "@/components/HYComponents/DetailViews/Project-detail-view";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
+import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
 import HYStatusBadge from "@/components/HYComponents/HYStatusBadge";
@@ -36,7 +38,7 @@ const Project = () => {
 
 	return (
 		<div className=" flex flex-col h-full">
-			<div className=" flex justify-between items-end mx-8">
+			<div className=" flex justify-between items-end mx-6">
 				<div className="flex flex-col gap-4">
 					<p className=" text-xl ">Projects</p>
 					<ProjectCreationForm>
@@ -50,25 +52,10 @@ const Project = () => {
 					</div>
 				</div>
 			</div>
-			<div className=" overflow-auto px-8 ">
+			<div className=" overflow-auto px-6 ">
 				<div className="flex flex-col gap-3 mt-4">
 					{items?.map((item: any, index: number) => (
-						<Card key={`pi_${index}`} className="flex justify-between items-center h-16 px-3 rounded-lg">
-							<div className="flex gap-3 items-center">
-								<img src="/folder_icon.svg" alt="Project" />
-								<div className="capitalize ">{item?.title}</div>
-							</div>
-							<div className="flex gap-4">
-								<div className="flex items-center gap-4">
-									<HYAvatar url="https://github.com/shadcn.png" name={item?.owner?.name} />
-									<a>{item?.expand?.owner?.name}</a>
-								</div>
-								<HYStatusBadge status={item?.status} />
-								<Button variant="ghost" size="sm">
-									<MoreVertical />
-								</Button>
-							</div>
-						</Card>
+						<ProjectCard data={item} key={index} />
 					))}
 				</div>
 			</div>
@@ -77,3 +64,29 @@ const Project = () => {
 };
 
 export default Project;
+
+const ProjectCard = ({ data }: { data: any }) => {
+	return <Card>
+		<HYDialog
+			className="max-w-6xl"
+			content={<ProjectDetailView data={data} />}
+		>
+			<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
+				<div className="flex gap-3 items-center">
+					<img src="/folder_icon.svg" alt="Project" />
+					<div className="capitalize">{data?.title}</div>
+				</div>
+				<div className="flex gap-4">
+					<div className="flex items-center gap-4">
+						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.name} />
+						<a>{data?.expand?.owner?.name}</a>
+					</div>
+					<HYStatusBadge status={data?.status} />
+					<Button variant="ghost" size="sm">
+						<MoreVertical />
+					</Button>
+				</div>
+			</div>
+		</HYDialog>
+	</Card>
+}

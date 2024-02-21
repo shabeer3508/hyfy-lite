@@ -1,11 +1,11 @@
-import HYAvatar from "@/components/HYComponents/HYAvatar";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import Urls from "@/redux/actions/Urls";
+import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
+import { clearUser, getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const Profile = () => {
 	const navigate = useNavigate();
@@ -27,6 +27,7 @@ const Profile = () => {
 
 	const logoutUser = () => {
 		localStorage.removeItem("hyfy_auth_token");
+		dispatch(clearUser())
 		navigate("/login");
 	};
 

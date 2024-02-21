@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
 import {
 	Select,
@@ -7,17 +8,20 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getAction, postAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	const dispatch = useDispatch();
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const [postData, setPostData] = useState({
 		name: "",
 		status: "backlog",
 		type: "task",
 		points: "5",
+		project_id: appProfileInfo?.project_id
 	});
 
 	/*  ######################################################################################## */
@@ -48,6 +52,7 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 			});
 		}
 	};
+
 	/*  ######################################################################################## */
 
 	return (
@@ -55,17 +60,13 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 			<Input
 				placeholder="Add Story"
 				onKeyDown={handleIssueCreation}
-				onChange={({ target }) => {
-					setPostData((prev) => ({ ...prev, name: target.value }));
-				}}
+				onChange={({ target }) => setPostData((prev) => ({ ...prev, name: target.value }))}
 				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
 			/>
 			<Select
 				defaultValue="story"
 				value={postData.type}
-				onValueChange={(value) => {
-					setPostData((prev) => ({ ...prev, type: value }));
-				}}
+				onValueChange={(value) => setPostData((prev) => ({ ...prev, type: value }))}
 			>
 				<SelectTrigger className="w-[80px] focus:ring-0 focus:ring-offset-0 border-0 text-primary">
 					<SelectValue placeholder="" />

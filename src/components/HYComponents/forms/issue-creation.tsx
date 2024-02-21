@@ -31,6 +31,7 @@ import {
 } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
@@ -38,6 +39,8 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const epicsListData = useSelector((state: any) => state?.GetEpics);
 	const epicItems = epicsListData?.data?.items;
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
@@ -62,17 +65,21 @@ const IssueCreationForm = ({ children }: any) => {
 		estimated_hours: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
 		sub_tasks: z.string().optional().nullable(),
+		project_id: z.string()
 	});
+
+	const defaultFormValues = {
+		name: "",
+		dependency: null,
+		status: "backlog",
+		points: "5",
+		type: "story",
+		project_id: appProfileInfo.project_id
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: "",
-			dependency: null,
-			status: "backlog",
-			points: "5",
-			type: "story",
-		},
+		defaultValues: defaultFormValues,
 	});
 
 	/*  ######################################################################################## */
@@ -88,13 +95,7 @@ const IssueCreationForm = ({ children }: any) => {
 		const resp = (await dispatch(postAction(Urls.issues, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
-			form.reset({
-				name: "",
-				dependency: null,
-				status: "backlog",
-				type: "story",
-				points: "5",
-			});
+			form.reset(defaultFormValues);
 			setOpenForm(false);
 			getIssues();
 		}

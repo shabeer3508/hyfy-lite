@@ -20,25 +20,27 @@ import {
 } from "react-icons/hi";
 import HYDropDown from "@/components/HYComponents/HYDropDown";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 
 const EpicsColumn = () => {
 	const dispatch = useDispatch();
 	const [searchParams, setSearchParams] = useSearchParams();
 
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
+	console.log("🚀 ~ EpicsColumn ~ epicItems:", epicItems)
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector(
-		(state: any) => state?.[releaseReducerName]
-	);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
 
 	/*  ######################################################################################## */
 
 	const getEpics = (prams?: string) => {
-		let query = "?expand=releases,project_id";
+		let query = `?expand=releases,project_id`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -55,6 +57,8 @@ const EpicsColumn = () => {
 
 	/*  ######################################################################################## */
 
+	const filteredEpicsItems = epicItems?.filter(epic => epic.project_id === appProfileInfo?.project_id)
+
 	const releaseOptions =
 		releaseList?.data?.items?.map((relse) => ({
 			value: relse?.id,
@@ -64,23 +68,23 @@ const EpicsColumn = () => {
 	const sortoptions = [
 		{
 			label: "New",
-			action: () => {},
+			action: () => { },
 		},
 		{
 			label: "Oldest",
-			action: () => {},
+			action: () => { },
 		},
 		{
 			label: "Recently Edited",
-			action: () => {},
+			action: () => { },
 		},
 		{
 			label: "A-Z",
-			action: () => {},
+			action: () => { },
 		},
 		{
 			label: "Z-A",
-			action: () => {},
+			action: () => { },
 		},
 	];
 
@@ -142,9 +146,7 @@ const EpicsColumn = () => {
 				<Checkbox
 					id="terms"
 					checked={!searchParams.get("selected_epic")}
-					onCheckedChange={() => {
-						setSearchParams({});
-					}}
+					onCheckedChange={() => { setSearchParams({}) }}
 				/>
 				<label
 					htmlFor="terms"
@@ -154,10 +156,10 @@ const EpicsColumn = () => {
 				</label>
 			</div>
 			<div className="">
-				{epicItems?.length > 0 && (
+				{filteredEpicsItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
-							{epicItems.map((epic, i) => (
+							{filteredEpicsItems.map((epic, i) => (
 								<EpicCard
 									epic={epic}
 									key={epic?.id}
@@ -167,7 +169,7 @@ const EpicsColumn = () => {
 						</div>
 					</ScrollArea>
 				)}
-				{epicItems?.length === 0 && (
+				{filteredEpicsItems?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
@@ -218,11 +220,10 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 				})
 			}
 			key={epic?.id}
-			className={` border  rounded hover:border-primary cursor-pointer ${
-				searchParams.get("selected_epic") === epic.id
-					? "border-primary"
-					: ""
-			}`}
+			className={` border  rounded hover:border-primary cursor-pointer ${searchParams.get("selected_epic") === epic.id
+				? "border-primary"
+				: ""
+				}`}
 		>
 			<HYDialog
 				className="max-w-6xl"

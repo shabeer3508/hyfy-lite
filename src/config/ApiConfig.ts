@@ -8,6 +8,8 @@ const ApiConfig: { [key: string]: string } = {
 	release: Urls.release,
 	issues: Urls.issues,
 	sprints: Urls.sprints,
+
+	comments: Urls.comments,
 };
 
 export default ApiConfig;

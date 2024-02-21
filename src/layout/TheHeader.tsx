@@ -1,23 +1,25 @@
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
+import { useNavigate, } from "react-router-dom";
 import ModeToggle from "@/components/mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import { useNavigate, useSearchParams } from "react-router-dom";
 import helpIcon from "../assets/icons/header-icons/icon_help.svg";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { getAction, reducerNameFromUrl, setProject } from "@/redux/actions/AppActions";
 
 const TheHeader = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [searchParams, setSearchParams] = useSearchParams();
 
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const projectList = useSelector((state: any) => state?.[reducerName]);
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
@@ -52,33 +54,29 @@ const TheHeader = () => {
 					<HYCombobox
 						name="project"
 						showSearch={false}
-						onValueChange={(value) => {
-							if (value) {
-								searchParams.set("selectedProject", value);
-								setSearchParams(searchParams);
-							} else {
-								searchParams.delete("selectedProject");
-								setSearchParams(searchParams);
-							}
-						}}
-						defaultValue={projectOptions?.[0]?.value}
 						options={projectOptions}
-						buttonClassName="border-0"
+						buttonClassName="border"
+						defaultValue={appProfileInfo?.project_id}
+						onValueChange={(value: string) => dispatch(setProject(value))}
 					/>
 				</div>
-				<div className="flex grow items-center justify-end gap-5 dark:text-foreground">
+				<div className="flex grow items-center justify-end gap-3 dark:text-foreground">
 					<HYSearch />
 					<ModeToggle />
-					<img
-						src={notiIcon}
-						alt="notification icon"
-						className="h-5 cursor-pointer"
-					/>
-					<img
-						src={helpIcon}
-						alt="help icon"
-						className="h-5 cursor-pointer"
-					/>
+					<Button type="button" variant="ghost">
+						<img
+							src={notiIcon}
+							alt="notification icon"
+							className="h-5 cursor-pointer"
+						/>
+					</Button>
+					<Button type="button" variant="ghost">
+						<img
+							src={helpIcon}
+							alt="help icon"
+							className="h-5 cursor-pointer"
+						/>
+					</Button>
 					<Button
 						onClick={() => navigate("/profile")}
 						variant="ghost"

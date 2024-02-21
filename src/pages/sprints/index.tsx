@@ -2,19 +2,22 @@ import { useEffect } from "react";
 import IssueMiniCard from "./issueMiniCard";
 import Urls from "../../redux/actions/Urls";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction } from "@/redux/actions/AppActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { HYCombobox } from "../../components/HYComponents/HYCombobox";
-import { useSearchParams } from "react-router-dom";
+import { getAction, setSprintsSprint } from "@/redux/actions/AppActions";
 
 const Sprints = () => {
 	const dispatch = useDispatch();
-	const [searchParams, setSearchParams] = useSearchParams();
 
 	const issueListData = useSelector((state: any) => state?.GetIssues);
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+
+	const issueListItems = issueListData?.data?.items
+	const sprintListItems = sprintListData?.data?.items
 
 	/*  ######################################################################################## */
 
@@ -27,7 +30,7 @@ const Sprints = () => {
 	};
 
 	const getSprints = (prams?: string) => {
-		let query = "";
+		let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -36,46 +39,35 @@ const Sprints = () => {
 
 	/*  ######################################################################################## */
 
-	const sprintOptions =
-		sprintListData?.data?.items?.map((sprnt) => ({
-			value: sprnt?.id,
-			label: sprnt?.name,
-		})) ?? [];
+	const sprintOptions = sprintListItems?.map((sprnt) => ({ value: sprnt?.id, label: sprnt?.name })) ?? [];
 
-	const filteredIssues = issueListData?.data?.items?.filter(
-		(sprnt) => sprnt?.sprint === searchParams.get("selectedSprint")
+	const filteredIssues = issueListItems?.filter(
+		(sprnt) => appProfileInfo?.sprints?.selected_sprint && sprnt?.sprint === appProfileInfo?.sprints?.selected_sprint
 	);
 
-	const findTotalIssues = (type: "bug" | "story" | "task") => {
-		return filteredIssues?.filter(
-			(issue) => issue.type === type
-		).length;
-	}
+	const findTotalIssues = (type: "bug" | "story" | "task") => filteredIssues?.filter((issue) => issue.type === type).length;
 
 	/*  ######################################################################################## */
 
 	useEffect(() => {
 		getIssues();
 		getSprints();
-	}, []);
+	}, [appProfileInfo?.project_id]);
 
 	/*  ####################################################################################### */
 
 	return (
 		<div className="text-xs">
-			<div className="flex justify-between px-5 items-center">
+			<div className="flex justify-between px-6 items-center">
 				<div className="text-base flex gap-5">
 					<div>
 						<HYCombobox
-							showSearch={false}
-							onValueChange={(value) => {
-								value
-									? setSearchParams({ selectedSprint: value })
-									: setSearchParams({});
-							}}
-							options={sprintOptions}
 							name="sprint"
-							buttonClassName="border-0"
+							showSearch={false}
+							options={sprintOptions}
+							buttonClassName="border"
+							defaultValue={appProfileInfo?.sprints?.selected_sprint}
+							onValueChange={(value) => dispatch(setSprintsSprint(value))}
 						/>
 					</div>
 					<div className="flex gap-3 text-xs items-center">
@@ -102,7 +94,7 @@ const Sprints = () => {
 					<HYSearch />
 				</div>
 			</div>
-			<div className="px-5 grid grid-cols-5 mt-6 mb-4 gap-3">
+			<div className="px-6 grid grid-cols-5 mt-6 mb-4 gap-3">
 				<div>Item</div>
 				<div>Points</div>
 				<div>Hours</div>

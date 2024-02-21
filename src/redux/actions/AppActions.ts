@@ -1,5 +1,4 @@
 import Actions from "./ActionTypes";
-import { AppInitialState } from "../reducers/AppReducer";
 import { capitalizeFirstLetter } from "../../utils/utils";
 
 const AppActions = {};
@@ -138,43 +137,42 @@ export function deleteAction(apiUrl: string, id: string, params = "") {
 	};
 }
 
-////////////////// SETTINGS REDUCER ACTIONS ///////////////////////
+/////////////////////////  HYFY REDUCER ACTIONS //////////////////////
 
-export function setDirection(dir: "ltr" | "rtl") {
+// USER ACTIONS
+
+export function setCurrentUser(data: any) {
 	return {
-		type: Actions.SET_DIRECTION,
-		payload: dir,
-	};
-}
-
-export function setLocale(locale: any) {
-	return {
-		type: Actions.SET_LOCALE,
-		payload: locale,
-	};
-}
-
-export function setDarkMode(mode: "dark" | "light" | "auto") {
-	return {
-		type: Actions.SET_DARK_MODE,
-		payload: mode,
-	};
-}
-
-// export function updateTemplateTheme(themeInfo: any) {
-//   return {
-//     type: Actions.SET_TEMPLATE_THEME,
-//     payload: themeInfo,
-//   };
-// }
-
-export function syncAppSettings(data: AppInitialState) {
-	return {
-		type: Actions.SET_APPSTATE,
+		type: Actions.SET_USER,
 		payload: data,
 	};
 }
 
-////////////////// TEMPLATE REDUCER ACTIONS ///////////////////////
+export function clearUser() {
+	return {
+		type: Actions.CLEAR_USER,
+	};
+}
+
+export function setProject(projectId: string) {
+	return {
+		type: Actions.SET_PROJECT,
+		payload: projectId,
+	};
+}
+
+export function setBoardSprint(sprintId: string) {
+	return {
+		type: Actions.SET_BOARD_SPRINT,
+		payload: sprintId,
+	};
+}
+
+export function setSprintsSprint(sprintId: string) {
+	return {
+		type: Actions.SET_SPRINTS_SPRINT,
+		payload: sprintId,
+	};
+}
 
 export default AppActions;

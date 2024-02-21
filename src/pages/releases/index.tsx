@@ -18,11 +18,9 @@ const Releases = () => {
 	const reducerName = reducerNameFromUrl("release", "GET");
 	const itemsRes = useSelector((state: any) => state?.[reducerName]);
 
-	useEffect(() => {
-		loadAction();
-	}, []);
+	/*  ######################################################################################## */
 
-	function loadAction(prams?: string) {
+	const getReleases = (prams?: string) => {
 		let query = "";
 		if (prams) {
 			query = query + prams;
@@ -30,20 +28,21 @@ const Releases = () => {
 		dispatch(getAction({ release: Urls.release + query }));
 	}
 
-	async function updateItemStage(id: string, stage: string) {
-		const resp = (await dispatch(
-			patchAction({ release: Urls.release }, { status: stage }, id)
-		)) as any;
+	const updateItemStage = async (id: string, stage: string) => {
+		const resp = (await dispatch(patchAction({ release: Urls.release }, { status: stage }, id))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
-			loadAction();
+			getReleases();
 		}
 	}
+
+	/*  ######################################################################################## */
 
 	const items = itemsRes?.data?.items?.map((val: any) => ({
 		...val,
 		...val?.expand,
 	}));
+
 	const PlaningItems = items?.filter(
 		(item: any) => item?.status === "planning"
 	);
@@ -54,9 +53,17 @@ const Releases = () => {
 		(item: any) => item?.status === "released"
 	);
 
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getReleases();
+	}, []);
+
+	/*  ######################################################################################## */
+
 	return (
 		<div className=" flex flex-col h-full">
-			<div className=" flex justify-between items-end mx-8">
+			<div className=" flex justify-between items-end mx-6">
 				<div className="flex flex-col gap-4">
 					<p className=" text-xl ">Releases</p>
 					<ReleaseCreationForm>
@@ -74,7 +81,7 @@ const Releases = () => {
 					</div>
 				</div>
 			</div>
-			<div className="h-full overflow-auto px-8 ">
+			<div className="h-full overflow-auto px-6 ">
 				<div className="grid grid-cols-3 gap-8 mt-4">
 					<div
 						onDragOver={(e) => e.preventDefault()}

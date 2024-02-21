@@ -3,8 +3,6 @@ import Actions from "../actions/ActionTypes";
 export interface AppState {
 	mode: "dark" | "light" | "auto";
 	dir: "ltr" | "rtl";
-	decimals: number;
-	currency: any;
 	language: any;
 	locale: any;
 }
@@ -18,9 +16,7 @@ const initialState: AppInitialState = {
 	syncing: false,
 	appState: {
 		dir: "ltr",
-		decimals: 2,
 		mode: "light",
-		currency: null,
 		language: null,
 		locale: { code: "en", name: "English", rtl: false },
 	},

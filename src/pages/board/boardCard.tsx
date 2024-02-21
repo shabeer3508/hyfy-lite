@@ -13,12 +13,12 @@ const BoardCard = ({ data }: any) => {
 			}}
 			className="cursor-grab"
 		>
-			<CardContent className="p-3 gap-2 flex flex-col">
+			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog
 					className="max-w-6xl"
 					content={<IssueDetailView data={data} />}
 				>
-					<div>
+					<div className="h-[90px] justify-between flex flex-col ">
 						<div className="text-left flex gap-2 space-y-2">
 							{data?.type === "story" && (
 								<img src="/story_icon.svg" alt="Project" />

@@ -19,6 +19,8 @@ const Urls = {
 	issues: "/issues/records",
 	release: "/release/records",
 	sprints: "/sprints/records",
+
+	comments: "/comments/records",
 };
 
 export default Urls;

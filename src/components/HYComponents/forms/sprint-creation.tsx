@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import HYSelect from "../HYSelect";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -26,10 +26,12 @@ import Urls from "@/redux/actions/Urls";
 import { Checkbox } from "@/components/ui/checkbox";
 import HYInputDate from "../HYInputDate";
 import { HYCombobox } from "../HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const SprintCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
@@ -44,16 +46,19 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		start_date: z.string().optional().nullable(),
 		end_date: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
-		project_id: z.string().optional().nullable(),
+		project_id: z.string(),
 		issues: z.string().optional().nullable(),
 	});
 
+	const defaultFormValues = {
+		name: "",
+		status: "backlog",
+		project_id: appProfileInfo?.project_id
+	}
+
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: "",
-			status: "backlog",
-		},
+		defaultValues: defaultFormValues,
 	});
 
 	/*  ######################################################################################## */
@@ -69,7 +74,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		const resp = (await dispatch(postAction(Urls.sprints, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
-			form.reset({ name: "", status: "backlog" });
+			form.reset(defaultFormValues);
 			setOpenForm(false);
 			getSprints();
 		}

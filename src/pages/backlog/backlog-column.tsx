@@ -23,6 +23,7 @@ import {
 import HYDropDown from "@/components/HYComponents/HYDropDown";
 import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
@@ -31,6 +32,9 @@ const BacklogColumn = () => {
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+
 
 	/*  ######################################################################################## */
 
@@ -53,7 +57,7 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const backlogIssues =
-		issueItems?.filter((issue) => issue?.status === "backlog") ?? [];
+		issueItems?.filter((issue) => issue?.status === "backlog" && issue?.project_id === appProfileInfo?.project_id) ?? [];
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({

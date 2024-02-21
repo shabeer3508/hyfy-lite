@@ -43,6 +43,7 @@ export function HYCombobox({
 	onValueChange?: any;
 	showSearch?: boolean;
 	defaultValue?: string;
+	disableUnSelect?: boolean;
 	form?: UseFormReturn<any>;
 	updateList?: () => void; // TODO: use this for updating the paginated list
 }) {
@@ -54,6 +55,13 @@ export function HYCombobox({
 			setValue(defaultValue);
 		}
 	}, [defaultValue]);
+
+	const handleOnSelect = (currentValue: string) => {
+		setValue(currentValue === value ? "" : currentValue);
+		onValueChange?.(currentValue === value ? "" : currentValue);
+		form?.setValue(id, currentValue);
+		setOpen(false);
+	}
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -69,7 +77,7 @@ export function HYCombobox({
 							{label}
 						</span>
 					)}
-					<span className="w-1/2 truncate">
+					<span className="w-1/2 truncate capitalize">
 						{value
 							? options.find((opt) => opt.value === value)?.label
 							: `Select ${name ?? ""}..`}
@@ -85,28 +93,15 @@ export function HYCombobox({
 					<CommandEmpty>No options found.</CommandEmpty>
 					<CommandGroup>
 						<ScrollArea
-							className={`${
-								options?.length > 6 && "max-h-[20vh] h-[20vh]"
-							}`}
+							className={`${options?.length > 6 && "max-h-[20vh] h-[20vh]"
+								}`}
 						>
 							{options.map((opt) => (
 								<CommandItem
+									className="capitalize"
 									key={opt.value}
 									value={opt.value}
-									onSelect={(currentValue) => {
-										setValue(
-											currentValue === value
-												? ""
-												: currentValue
-										);
-										onValueChange?.(
-											currentValue === value
-												? ""
-												: currentValue
-										);
-										form?.setValue(id, currentValue);
-										setOpen(false);
-									}}
+									onSelect={(currentValue) => handleOnSelect(currentValue)}
 								>
 									<Check
 										className={cn(

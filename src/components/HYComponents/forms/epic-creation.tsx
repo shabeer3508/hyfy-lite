@@ -28,11 +28,13 @@ import {
 	postAction,
 	reducerNameFromUrl,
 } from "@/redux/actions/AppActions";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const EpicCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
@@ -54,6 +56,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		dependency_type: z.string().optional().nullable(),
 		priority: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
+		project_id: z.string()
 	});
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -66,6 +69,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 			dependency_type: null,
 			priority: null,
 			description: null,
+			project_id: appProfileInfo.project_id
 		},
 	});
 

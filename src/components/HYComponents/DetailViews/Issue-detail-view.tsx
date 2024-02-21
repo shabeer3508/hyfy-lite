@@ -178,7 +178,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 export default IssueDetailView;
 
-const CommentCard = () => {
+export const CommentCard = () => {
 	return (
 		<Card>
 			<CardContent className="p-3 text-xs">

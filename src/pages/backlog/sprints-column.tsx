@@ -15,17 +15,18 @@ import { HiPlus, HiDatabase } from "react-icons/hi";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { IoIosFlash } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams } from "react-router-dom";
 import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
 import HYDropDown from "@/components/HYComponents/HYDropDown";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { IssueCard } from "./backlog-column";
 import HYDialog from "@/components/HYComponents/HYDialog";
 import SprintDetailView from "@/components/HYComponents/DetailViews/Sprint-detail-view";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
-	const [searchParams, setSearchParams] = useSearchParams();
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
 	const sprintItems = sprintListData?.data?.items;
@@ -51,27 +52,14 @@ const SprintsColumn = () => {
 
 	/*  ######################################################################################## */
 
+	const filteredSprints = sprintItems?.filter(sprnt => sprnt.project_id === appProfileInfo.project_id)
+
 	const sortoptions = [
-		{
-			label: "New",
-			action: () => { },
-		},
-		{
-			label: "Oldest",
-			action: () => { },
-		},
-		{
-			label: "Recently Edited",
-			action: () => { },
-		},
-		{
-			label: "A-Z",
-			action: () => { },
-		},
-		{
-			label: "Z-A",
-			action: () => { },
-		},
+		{ label: "New", action: () => { } },
+		{ label: "Oldest", action: () => { } },
+		{ label: "Recently Edited", action: () => { } },
+		{ label: "A-Z", action: () => { } },
+		{ label: "Z-A", action: () => { } },
 	];
 
 	/*  ######################################################################################## */
@@ -120,10 +108,10 @@ const SprintsColumn = () => {
 				</div>
 			</div>
 			<div>
-				{sprintItems?.length > 0 && (
+				{filteredSprints?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
-							{sprintItems.map((sprint, i) => {
+							{filteredSprints.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(
 									(issue) => issue?.sprint === sprint?.id
@@ -132,7 +120,7 @@ const SprintsColumn = () => {
 								return (
 									<div
 										key={sprint.id}
-										className="flex gap-3 justify-between items-center text-sm border  px-3 rounded hover:border-primary cursor-pointer"
+										className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer"
 									>
 										<Accordion
 											type="single"
@@ -143,7 +131,7 @@ const SprintsColumn = () => {
 												value="item-1"
 												className="border-0 p-0 m-0"
 											>
-												<div className="flex justify-between w-full ">
+												<div className="flex justify-between w-full">
 													<HYDialog
 														className="max-w-6xl"
 														content={<SprintDetailView data={sprint} />}
@@ -151,7 +139,7 @@ const SprintsColumn = () => {
 														<div className="flex justify-between items-center w-full">
 															<div className="flex gap-1 items-center">
 																<IoIosFlash
-																	className={`w-5 text-[#707173]`}
+																	className={`w-5  ${sprint?.is_started ? "text-primary" : "text-[#707173]"}`}
 																/>
 																<div className="sm:w-[50px] md:w-[60px] 2xl:w-[100px]  truncate">
 																	{sprint.name}
@@ -185,7 +173,7 @@ const SprintsColumn = () => {
 														</div>
 													</HYDialog>
 													<div className="pl-2">
-														<AccordionTrigger />
+														<Button type="button" variant="ghost"><AccordionTrigger /></Button>
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
@@ -209,7 +197,7 @@ const SprintsColumn = () => {
 						</div>
 					</ScrollArea>
 				)}
-				{sprintItems?.length === 0 && (
+				{filteredSprints?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-200px)] items-center mt-[30px]">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">

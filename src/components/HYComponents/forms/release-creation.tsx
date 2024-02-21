@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import HYSelect from "../HYSelect";
 import Urls from "@/redux/actions/Urls";
 import HYInputDate from "../HYInputDate";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { HYCombobox } from "../HYCombobox";
 import { Input } from "@/components/ui/input";
@@ -25,10 +25,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const ReleaseCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
@@ -40,15 +43,20 @@ const ReleaseCreationForm = ({ children }: any) => {
 		to_date: z.date().optional().nullable(),
 		priority: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
+		project_id: z.string()
 	});
+
+	const formDefaultValues = {
+		name: "",
+		status: "planning",
+		description: "",
+		priority: null,
+		project_id: appProfileInfo?.project_id
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: "",
-			status: "planning",
-			description: "",
-		},
+		defaultValues: formDefaultValues,
 	});
 
 	/*  ######################################################################################## */
@@ -64,12 +72,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 		const resp = (await dispatch(postAction(Urls.release, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
-			form.reset({
-				name: "",
-				status: "planning",
-				description: "",
-				priority: null,
-			});
+			form.reset(formDefaultValues);
 			setOpenForm(false);
 			getReleases();
 		}
