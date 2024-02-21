@@ -1,95 +1,69 @@
-import React from "react";
+import { useState } from "react";
 import { Label } from "@/components/ui/label"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-  } from "@/components/ui/select"
-import HYSearch from "@/components/HYComponents/HYSearch";
 import { Button } from "@/components/ui/button";
+import HYSearch from "@/components/HYComponents/HYSearch";
+import HYSelect from "@/components/HYComponents/HYSelect";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
 import {
 	Card,
-	CardContent,
 	CardDescription,
-	CardFooter,
 	CardHeader,
 	CardTitle,
-  } from "@/components/ui/card"
-  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-
-  
-  
-
+} from "@/components/ui/card"
 
 const Team = () => {
+
+	const [memberInfo, setMemberInfo] = useState({
+		showSideBar: false,
+		showAddMembers: false,
+		showManageMembers: false,
+	})
+
 	return (
-		<div className="dark:text-foreground flex flex-col  ml-4 h-screen gap-y-8 w-full ">
-			<div className="flex flex-row w-full justify-between items-center mb-2 ">
-				<Label className=" top-2 " htmlFor="team">Teams</Label>
-			<div className="flex-row gap-3">
-					<Tabs defaultValue="members" className="w-[400px]">
+		<div className="dark:text-foreground mx-6 h-screen">
+			<div className="gap-3">
+				<Tabs defaultValue="members" className=" ">
+
+					<div className="flex items-center justify-between">
+						<Label className="" htmlFor="team">Teams</Label>
 						<TabsList>
 							<TabsTrigger value="members">Members</TabsTrigger>
-							<TabsTrigger value="performance">performance</TabsTrigger>
+							<TabsTrigger value="performance">Performance</TabsTrigger>
 						</TabsList>
-					</Tabs>
+					</div>
 
-				</div>
+					<TabsContent value="members">
+
+						<div className="flex justify-between items-center my-3 2xl:w-2/3">
+							<div className="flex flex-row gap-3 w-1/3 tems-center">
+								<HYSelect className="w-full" label="" options={["Recent", "Old"]} id={"filter"} />
+								<HYSelect className="w-full" label="Roles" options={["all", "admin", "manager", "employee"]} id={"user"} />
+							</div>
+
+							<div className="flex gap-3">
+								<HYSearch />
+								<Button className="text-white">Add Member</Button>
+							</div>
+						</div >
+
+						<div className="flex flex-col gap-y-3  items-center 2xl:w-2/3 ">
+							<Card className="flex flex-row items-center  w-full  ">
+								<HYAvatar className="size-12 ml-6" url="https://github.com/shadcn.png" />
+								<CardHeader >
+									<CardTitle>Roshan</CardTitle>
+									<CardDescription>Flutter developer</CardDescription>
+								</CardHeader>
+
+							</Card>
+						</div>
+
+					</TabsContent>
+				</Tabs>
 			</div>
-				
-			<div className="flex flex-row  gap-80 items-center">
-				<div className="flex flex-row gap-3 w-64 items-center">
-					<Select>
-						<SelectTrigger className="">
-							<SelectValue placeholder="Recent" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="light">Light</SelectItem>
-							<SelectItem value="dark">Dark</SelectItem>
-							<SelectItem value="system">System</SelectItem>
-						</SelectContent>
-					</Select>
-					<Select>
-						<SelectTrigger className="">
-							<SelectValue placeholder="Roles All" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="light">Light</SelectItem>
-							<SelectItem value="dark">Dark</SelectItem>
-							<SelectItem value="system">System</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-				<div className="flex flex-row gap-3  w-64 ">
-					<HYSearch ></HYSearch>
-					<Button variant="outline">Add Member</Button>
-				</div>
-			</div>
-			<div className="flex flex-col gap-y-3  items-center  ">
-				<Card className="flex flex-row items-center  w-full  ">
-					<Avatar className=" w-16 h-16 ml-3  ">
-						<AvatarImage src="https://github.com/shadcn.png" />
-						<AvatarFallback>CN</AvatarFallback>
-					</Avatar>
-
-					<CardHeader >
-						<CardTitle>Roshan</CardTitle>
-						<CardDescription>Flutter developer</CardDescription>
-					</CardHeader>
-					
-				</Card>
-
-				
-
-			</div>
-	</div>
-		
+		</div>
 	);
 };
 
-export default Team;	
+export default Team;
 

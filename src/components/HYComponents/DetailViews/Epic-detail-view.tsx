@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { Separator } from "@/components/ui/separator";
 import HYSearch from "../HYSearch";
-import SprintCard from "@/pages/sprints/sprintCard";
-import { useDispatch, useSelector } from "react-redux";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { HYCombobox } from "../HYCombobox";
+import { Separator } from "@/components/ui/separator";
+import { useDispatch, useSelector } from "react-redux";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import IssueMiniCard from "@/pages/sprints/issueMiniCard";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const EpicDetailView = ({ data }: { data: any }) => {
 	const dispatch = useDispatch();
@@ -92,14 +92,14 @@ const EpicDetailView = ({ data }: { data: any }) => {
 						)
 					</div>
 				</div>
-				<div>
+				<div className="pr-5 ">
 					<HYSearch />
 				</div>
 			</div>
 			<ScrollArea className="max-h-[calc(100vh-500px)] h-full w-full">
-				<div className="pr-5 space-y-2">
+				<div className="pr-5 space-y-2 text-xs">
 					{issueListItems?.map((sprint) => {
-						return <SprintCard data={sprint} />;
+						return <IssueMiniCard data={sprint} key={sprint?.id} />;
 					})}
 				</div>
 			</ScrollArea>

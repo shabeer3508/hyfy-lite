@@ -40,7 +40,7 @@ const Board = () => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const findIssueCount = (data) => {
+	const findTotalPoints = (data: any[]) => {
 		return data?.reduce((accumulator, currentValue) => {
 			return accumulator + +currentValue?.points;
 		}, 0);
@@ -150,14 +150,14 @@ const Board = () => {
 					<div>
 						{selectedSprintInfo?.start_date
 							? formatter.format(
-									new Date(selectedSprintInfo?.start_date)
-							  )
+								new Date(selectedSprintInfo?.start_date)
+							)
 							: " "}{" "}
 						-{" "}
 						{selectedSprintInfo?.end_date
 							? formatter.format(
-									new Date(selectedSprintInfo?.end_date)
-							  )
+								new Date(selectedSprintInfo?.end_date)
+							)
 							: " "}
 					</div>
 				</div>
@@ -182,9 +182,7 @@ const Board = () => {
 									<div>Todo</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findIssueCount(
-											getIssuesByTypes("todo")
-										)}
+										{findTotalPoints(getIssuesByTypes("todo"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
@@ -218,9 +216,7 @@ const Board = () => {
 									<div>Ongoing</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findIssueCount(
-											getIssuesByTypes("ongoing")
-										)}
+										{findTotalPoints(getIssuesByTypes("ongoing"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
@@ -253,9 +249,7 @@ const Board = () => {
 									<div>Pending</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findIssueCount(
-											getIssuesByTypes("pending")
-										)}
+										{findTotalPoints(getIssuesByTypes("pending"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
@@ -288,9 +282,7 @@ const Board = () => {
 									<div>Done</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findIssueCount(
-											getIssuesByTypes("done")
-										)}
+										{findTotalPoints(getIssuesByTypes("done"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">

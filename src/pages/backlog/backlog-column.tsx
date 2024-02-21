@@ -64,11 +64,11 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const sortoptions = [
-		{ label: "New", action: () => {} },
-		{ label: "Oldest", action: () => {} },
-		{ label: "Recently Edited", action: () => {} },
-		{ label: "A-Z", action: () => {} },
-		{ label: "Z-A", action: () => {} },
+		{ label: "New", action: () => { } },
+		{ label: "Oldest", action: () => { } },
+		{ label: "Recently Edited", action: () => { } },
+		{ label: "A-Z", action: () => { } },
+		{ label: "Z-A", action: () => { } },
 	];
 
 	/*  ######################################################################################## */
@@ -175,7 +175,7 @@ const BacklogColumn = () => {
 
 export default BacklogColumn;
 
-const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
+export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 	return (
 		<Card
 			draggable

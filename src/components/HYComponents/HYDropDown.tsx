@@ -21,9 +21,10 @@ const HYDropDown = ({
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
-				{options?.map((opt) => {
+				{options?.map((opt, index) => {
 					return (
 						<DropdownMenuItem
+							key={`_${index}_`}
 							onClick={opt?.action}
 							className="cursor-pointer"
 						>

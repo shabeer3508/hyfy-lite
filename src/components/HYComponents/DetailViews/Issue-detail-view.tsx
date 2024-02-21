@@ -90,10 +90,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 						<HYSelect
 							id={"status"}
 							className="my-2"
-							field={{
-								onChange: () => {},
-								value: data?.status,
-							}}
+							field={{ onChange: () => { }, value: data?.status }}
 							options={[
 								"todo",
 								"ongoing",

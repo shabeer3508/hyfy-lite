@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import IssueMiniCard from "./sprintCard";
+import IssueMiniCard from "./issueMiniCard";
 import Urls from "../../redux/actions/Urls";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "@/redux/actions/AppActions";
@@ -46,17 +46,11 @@ const Sprints = () => {
 		(sprnt) => sprnt?.sprint === searchParams.get("selectedSprint")
 	);
 
-	const bugsCount = filteredIssues?.filter(
-		(issue) => issue.type === "bug"
-	).length;
-
-	const storyCount = filteredIssues?.filter(
-		(issue) => issue.type === "story"
-	).length;
-
-	const taskCount = filteredIssues?.filter(
-		(issue) => issue.type === "task"
-	).length;
+	const findTotalIssues = (type: "bug" | "story" | "task") => {
+		return filteredIssues?.filter(
+			(issue) => issue.type === type
+		).length;
+	}
 
 	/*  ######################################################################################## */
 
@@ -88,15 +82,15 @@ const Sprints = () => {
 						(
 						<div className="flex gap-1">
 							<img src="/story_icon.svg" alt="Project" />
-							<span>{storyCount}</span>
+							<span>{findTotalIssues("story")}</span>
 						</div>
 						<div className="flex gap-1">
 							<img src="/task_icon.svg" alt="Project" />
-							<span>{taskCount}</span>
+							<span>{findTotalIssues("task")}</span>
 						</div>
 						<div className="flex gap-1">
 							<img src="/bug_icon.svg" alt="Project" />
-							<span>{bugsCount}</span>
+							<span>{findTotalIssues("bug")}</span>
 						</div>
 						)
 					</div>
@@ -118,7 +112,7 @@ const Sprints = () => {
 			<ScrollArea className="h-[calc(100vh-200px)] w-full">
 				<div className="px-5 space-y-2">
 					{filteredIssues?.map((sprint) => {
-						return <IssueMiniCard data={sprint} />;
+						return <IssueMiniCard key={sprint?.id} data={sprint} />;
 					})}
 				</div>
 			</ScrollArea>

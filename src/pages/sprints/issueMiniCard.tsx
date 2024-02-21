@@ -1,13 +1,24 @@
+import Urls from "@/redux/actions/Urls";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
-import { reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const IssueMiniCard = ({ data }: any) => {
+	const dispatch = useDispatch()
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	/*  ######################################################################################## */
+
+	const upadateIssueByType = (value: string | number, key: string) => {
+		dispatch(patchAction({ issues: Urls.issues }, { [key]: value }, data?.id))
+	}
+
+	/*  ######################################################################################## */
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
@@ -23,6 +34,23 @@ const IssueMiniCard = ({ data }: any) => {
 		{ label: "Done", value: "done" },
 	];
 
+	const pointsOptions = [
+		{ label: "5", value: "5" },
+		{ label: "10", value: "10" },
+		{ label: "15", value: "15" },
+	]
+
+	const estimatedHoursOptions = [
+		{ label: "0", value: "0" },
+		{ label: "1", value: "1" },
+		{ label: "2", value: "2" },
+		{ label: "3", value: "3" },
+		{ label: "4", value: "4" },
+		{ label: "5", value: "5" },
+	]
+
+	/*  ######################################################################################## */
+
 	return (
 		<Card>
 			<CardContent className="px-0 py-1 grid grid-cols-5 gap-3">
@@ -30,47 +58,40 @@ const IssueMiniCard = ({ data }: any) => {
 					{data?.type === "task" && (
 						<img src="/task_icon.svg" alt="Project" />
 					)}
-
 					{data?.type === "story" && (
 						<img src="/story_icon.svg" alt="Project" />
 					)}
-
 					{data?.type === "bug" && (
 						<img src="/bug_icon.svg" alt="Project" />
 					)}
+
 					{data?.name}
 				</div>
 				<div className="">
 					<HYCombobox
-						defaultValue={data?.points}
 						label={<HiDatabase />}
-						options={[
-							{ label: "5", value: "5" },
-							{ label: "10", value: "10" },
-							{ label: "15", value: "15" },
-						]}
-					/>
-				</div>
-				<div>
-					<HYCombobox
-						defaultValue={data?.estimated_hours?.toString()}
-						label={<HiOutlineClock />}
-						options={[
-							{ label: "0", value: "0" },
-							{ label: "1", value: "1" },
-							{ label: "2", value: "2" },
-							{ label: "3", value: "3" },
-							{ label: "4", value: "4" },
-							{ label: "5", value: "5" },
-						]}
-					/>
-				</div>
-				<div>
-					<HYCombobox
-						defaultValue={data?.status}
+						options={pointsOptions}
 						buttonClassName="w-full"
+						defaultValue={data?.points}
+						onValueChange={(value) => upadateIssueByType(value, "points")}
+					/>
+				</div>
+				<div>
+					<HYCombobox
+						buttonClassName="w-full"
+						label={<HiOutlineClock />}
+						options={estimatedHoursOptions}
+						defaultValue={data?.estimated_hours?.toString()}
+						onValueChange={(value) => upadateIssueByType(value, "estimated_hours")}
+					/>
+				</div>
+				<div>
+					<HYCombobox
 						id="status"
 						options={statusOptions}
+						buttonClassName="w-full"
+						defaultValue={data?.status}
+						onValueChange={(value) => upadateIssueByType(value, "status")}
 					/>
 				</div>
 				<div>
@@ -84,10 +105,11 @@ const IssueMiniCard = ({ data }: any) => {
 								/>
 							</div>
 						}
-						id="assigned_to"
+						id="assign_to"
 						options={usersOptions}
 						buttonClassName="w-full"
 						defaultValue={data?.assign_to}
+						onValueChange={(value) => upadateIssueByType(value, "assign_to")}
 					/>
 				</div>
 			</CardContent>

@@ -6,7 +6,7 @@ import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
-import IssueMiniCard from "@/pages/sprints/sprintCard";
+import IssueMiniCard from "@/pages/sprints/issueMiniCard";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -126,7 +126,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-5 my-4 gap-3 text-[#737377] text-xs">
+            <div className="grid grid-cols-5 my-4 text-[#737377] text-xs">
                 <div>Item</div>
                 <div>Points</div>
                 <div>Hours</div>
