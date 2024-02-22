@@ -1,27 +1,27 @@
+import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
+import { IoIosFlash } from "react-icons/io";
+import { IssueCard } from "./backlog-column";
+import { Button } from "@/components/ui/button";
+import { HiPlus, HiDatabase } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { getAction, patchAction } from "@/redux/actions/AppActions";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/components/HYComponents/forms/sprint-creation";
+import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
+import SprintDetailView from "@/components/HYComponents/DetailViews/Sprint-detail-view";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { useEffect } from "react";
-import { HiPlus, HiDatabase } from "react-icons/hi";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
-import { IoIosFlash } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
-import { IssueCard } from "./backlog-column";
-import HYDialog from "@/components/HYComponents/HYDialog";
-import SprintDetailView from "@/components/HYComponents/DetailViews/Sprint-detail-view";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
@@ -44,11 +44,29 @@ const SprintsColumn = () => {
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
+	const getIssues = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
+
 	const findTotalPoints = (data: any[]) => {
 		return data?.reduce((accumulator, currentValue) => {
 			return accumulator + +currentValue?.points;
 		}, 0);
 	};
+
+	const updateDropedIssueToSprint = async (issueId: string, sprintId: string) => {
+		const resp = (await dispatch(
+			patchAction({ issues: Urls.issues }, { sprint: sprintId, status: "todo" }, issueId)
+		)) as any;
+		const success = resp.payload.status == 200;
+		if (success) {
+			getIssues();
+		}
+	}
 
 	/*  ######################################################################################## */
 
@@ -110,6 +128,7 @@ const SprintsColumn = () => {
 			<div>
 				{filteredSprints?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full">
+
 						<div className="py-4 pr-4 space-y-2">
 							{filteredSprints.map((sprint, i) => {
 
@@ -120,6 +139,11 @@ const SprintsColumn = () => {
 								return (
 									<div
 										key={sprint.id}
+										onDrop={(e) => {
+											e.preventDefault();
+											updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?.id)
+										}}
+										onDragOver={(e) => e.preventDefault()}
 										className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer"
 									>
 										<Accordion
@@ -177,13 +201,7 @@ const SprintsColumn = () => {
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
-													{sprintIssues?.map(
-														(itm, i2) => {
-															return (
-																<IssueCard key={i2} issue={itm} index={i2} />
-															);
-														}
-													)}
+													{sprintIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
 
 													<IssueCreationCardMini
 														sprintId={sprint?.id}

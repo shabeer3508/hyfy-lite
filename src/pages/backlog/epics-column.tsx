@@ -9,8 +9,12 @@ import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYDialog from "@/components/HYComponents/HYDialog";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
+import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 import EpicDetailView from "@/components/HYComponents/DetailViews/Epic-detail-view";
 import {
 	HiPlus,
@@ -18,10 +22,6 @@ import {
 	HiBookOpen,
 	HiOutlineDotsVertical,
 } from "react-icons/hi";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 
 const EpicsColumn = () => {
 	const dispatch = useDispatch();
@@ -32,7 +32,6 @@ const EpicsColumn = () => {
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
-	console.log("🚀 ~ EpicsColumn ~ epicItems:", epicItems)
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
 	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
@@ -66,26 +65,11 @@ const EpicsColumn = () => {
 		})) ?? [];
 
 	const sortoptions = [
-		{
-			label: "New",
-			action: () => { },
-		},
-		{
-			label: "Oldest",
-			action: () => { },
-		},
-		{
-			label: "Recently Edited",
-			action: () => { },
-		},
-		{
-			label: "A-Z",
-			action: () => { },
-		},
-		{
-			label: "Z-A",
-			action: () => { },
-		},
+		{ label: "New", action: () => { } },
+		{ label: "Oldest", action: () => { } },
+		{ label: "Recently Edited", action: () => { } },
+		{ label: "A-Z", action: () => { } },
+		{ label: "Z-A", action: () => { } },
 	];
 
 	/*  ######################################################################################## */
@@ -134,11 +118,8 @@ const EpicsColumn = () => {
 				<div className="">
 					<HYCombobox
 						label="Release "
-						options={[
-							{ label: "All", value: "all" },
-							...releaseOptions,
-						]}
 						buttonClassName="max-w-[200px]"
+						options={[{ label: "All", value: "all" }, ...releaseOptions]}
 					/>
 				</div>
 			</div>
@@ -160,11 +141,7 @@ const EpicsColumn = () => {
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
 							{filteredEpicsItems.map((epic, i) => (
-								<EpicCard
-									epic={epic}
-									key={epic?.id}
-									index={i}
-								/>
+								<EpicCard epic={epic} key={epic?.id} index={i} />
 							))}
 						</div>
 					</ScrollArea>
@@ -212,18 +189,12 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 		"text-[#389C98]",
 		"text-[#FF6481]",
 	];
+
 	return (
 		<Card
-			onClick={() =>
-				setSearchParams({
-					selected_epic: epic?.id,
-				})
-			}
 			key={epic?.id}
-			className={` border  rounded hover:border-primary cursor-pointer ${searchParams.get("selected_epic") === epic.id
-				? "border-primary"
-				: ""
-				}`}
+			onClick={() => setSearchParams({ selected_epic: epic?.id })}
+			className={` border  rounded hover:border-primary cursor-pointer ${searchParams.get("selected_epic") === epic.id ? "border-primary" : ""}`}
 		>
 			<HYDialog
 				className="max-w-6xl"
