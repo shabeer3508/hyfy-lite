@@ -3,27 +3,26 @@ import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import HYDropDown from "@/components/HYComponents/HYDropDown";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import IssueCreationForm from "@/components/HYComponents/forms/issue-creation";
+import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
 import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-view";
 import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
-
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	HiPlus,
 	HiFilter,
 	HiOutlineArrowNarrowUp,
 	HiDatabase,
 } from "react-icons/hi";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
@@ -53,6 +52,16 @@ const BacklogColumn = () => {
 		}
 		dispatch(getAction({ users: Urls.users + query }));
 	};
+
+	const updateIssueToBacklog = async (issueId: string) => {
+		const resp = (await dispatch(
+			patchAction({ issues: Urls.issues }, { sprint: "", status: "backlog" }, issueId)
+		)) as any;
+		const success = resp.payload.status == 200;
+		if (success) {
+			getIssues();
+		}
+	}
 
 	/*  ######################################################################################## */
 
@@ -121,10 +130,7 @@ const BacklogColumn = () => {
 				<div className="">
 					<HYCombobox
 						label="Assigned to "
-						options={[
-							{ label: "All", value: "all" },
-							...usersOptions,
-						]}
+						options={[{ label: "All", value: "all" }, ...usersOptions]}
 					/>
 				</div>
 			</div>
@@ -132,16 +138,18 @@ const BacklogColumn = () => {
 				<IssueCreationCardMini />
 			</div>
 
-			<div className="">
+			<div className=""
+				onDragOver={(e) => e.preventDefault()}
+				onDrop={(e) => {
+					e.preventDefault();
+					updateIssueToBacklog(e?.dataTransfer?.getData("id"))
+				}}>
+
 				{backlogIssues?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 pr-4 space-y-2">
 							{backlogIssues.map((issue, i) => (
-								<IssueCard
-									index={i}
-									issue={issue}
-									key={issue?.id}
-								/>
+								<IssueCard index={i} issue={issue} key={issue?.id} />
 							))}
 						</div>
 					</ScrollArea>
@@ -184,6 +192,7 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 		<Card
 			draggable
 			key={issue.id}
+			onDragStart={(e) => e.dataTransfer.setData("id", issue?.id)}
 			className=" border rounded hover:border-primary cursor-pointer"
 		>
 			<HYDialog
