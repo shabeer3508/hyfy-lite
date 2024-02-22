@@ -11,6 +11,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card"
+import { LuMoreVertical } from "react-icons/lu";
 
 const Team = () => {
 
@@ -37,7 +38,7 @@ const Team = () => {
 
 						<div className="flex justify-between items-center my-3 2xl:w-2/3">
 							<div className="flex flex-row gap-3 w-1/3 tems-center">
-								<HYSelect className="w-full" label="" options={["Recent", "Old"]} id={"filter"} />
+								<HYSelect className="w-full" label="Recent" options={["Recent", "Old"]} id={"filter"} />
 								<HYSelect className="w-full" label="Roles" options={["all", "admin", "manager", "employee"]} id={"user"} />
 							</div>
 
@@ -48,12 +49,18 @@ const Team = () => {
 						</div >
 
 						<div className="flex flex-col gap-y-3  items-center 2xl:w-2/3 ">
-							<Card className="flex flex-row items-center  w-full  ">
-								<HYAvatar className="size-12 ml-6" url="https://github.com/shadcn.png" />
-								<CardHeader >
-									<CardTitle>Roshan</CardTitle>
-									<CardDescription>Flutter developer</CardDescription>
-								</CardHeader>
+							<Card className="flex flex-row h-16 justify-between items-center  w-full  ">
+								<div className="flex items-center">
+									<HYAvatar className="size-12 ml-6" url="https://github.com/shadcn.png" />
+									<CardHeader className="gap-y-0" >
+										<CardTitle className="">Roshan</CardTitle>
+										<CardDescription className="">Flutter Dev</CardDescription>
+									</CardHeader>
+								</div>
+								<div className="flex dark:text-slate-400 gap-2 items-center ">
+									<Label className="" htmlFor="email">roshan@gmail.com</Label>
+									<LuMoreVertical className="mr-3 size-7"/>
+								</div>
 
 							</Card>
 						</div>
