@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
@@ -26,7 +27,7 @@ const Profile = () => {
 	}
 
 	const logoutUser = () => {
-		localStorage.removeItem("hyfy_auth_token");
+		Cookies.remove("hyfy_auth_token");
 		dispatch(clearUser())
 		navigate("/login");
 	};

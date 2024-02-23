@@ -239,7 +239,6 @@ const Board = () => {
 export default Board;
 
 
-
 const EmptyBoardList = ({ show }: { show: boolean }) => {
 	if (show) {
 		return (
