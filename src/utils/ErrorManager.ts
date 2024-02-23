@@ -1,4 +1,5 @@
 import { toast } from "sonner";
+import Cookies from "js-cookie";
 import HttpCodeMessages from "./HttpCodeMessages";
 
 const ErrorManager = {
@@ -65,7 +66,7 @@ const ErrorManager = {
 				}
 
 				toast.error(`${message}`);
-				localStorage.removeItem("hyfy_auth_token");
+				Cookies.remove("hyfy_auth_token");
 				return;
 			}
 
@@ -123,7 +124,7 @@ const ErrorManager = {
 		}
 	},
 	logOut() {
-		localStorage.removeItem("hyfy_auth_token");
+		Cookies.remove("hyfy_auth_token");
 	},
 };
 
