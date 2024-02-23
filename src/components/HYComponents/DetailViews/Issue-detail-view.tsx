@@ -1,44 +1,60 @@
+import dayjs from "dayjs";
 import HYAvatar from "../HYAvatar";
 import HYSelect from "../HYSelect";
+import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
 import { HiDatabase } from "react-icons/hi";
-import { Input } from "@/components/ui/input";
 import { HiDotsVertical } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
+import { useDispatch, useSelector } from "react-redux";
+import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const IssueDetailView = ({ data }: { data: any }) => {
+	const dispatch = useDispatch()
+
+	const commentsReducerName = reducerNameFromUrl("comments", "GET");
+	const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
+	const commentsItems = commentsList?.data?.items
+
+	/*  ######################################################################################## */
+
+	const getComments = () => {
+		let query = "?expand=created_by&&sort=-created";
+		dispatch(getAction({ comments: Urls.comments + query }));
+	}
+
+	/*  ######################################################################################## */
+
+	const filteredComments = commentsItems?.filter(comment => comment?.issue_id === data?.id)?.map(comment => ({ ...comment, ...comment?.expand }))
+
+	/*  ######################################################################################## */
+
+	useEffect(() => {
+		getComments()
+	}, [])
+
+	/*  ######################################################################################## */
+
 	return (
 		<div>
 			<div className="flex gap-2 text-xl">
 				{data?.type === "story" && (
-					<img
-						src="/story_icon.svg"
-						alt="Project"
-						height={25}
-						width={25}
-					/>
+					<img src="/story_icon.svg" alt="Project" height={25} width={25} />
 				)}
 
 				{data?.type === "task" && (
-					<img
-						src="/task_icon.svg"
-						alt="Project"
-						height={25}
-						width={25}
-					/>
+					<img src="/task_icon.svg" alt="Project" height={25} width={25} />
 				)}
 
 				{data?.type === "bug" && (
-					<img
-						src="/bug_icon.svg"
-						alt="Project"
-						height={25}
-						width={25}
-					/>
+					<img src="/bug_icon.svg" alt="Project" height={25} width={25} />
 				)}
+
 				{data?.name}
 			</div>
 			<div className="grid grid-cols-6 pt-5">
@@ -151,24 +167,10 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="space-y-3">
 					<div className="space-y-2">
 						<div>Comments</div>
-						<div className="flex gap-3">
-							<Input
-								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-								placeholder="Add Comment"
-							/>
-							<Button
-								className="border-primary text-primary"
-								variant="outline"
-								type="button"
-							>
-								Comment
-							</Button>
-						</div>
+						<CommentCreation issueId={data?.id} />
 					</div>
-					<div className="space-y-3">
-						<CommentCard />
-						<CommentCard />
-						<CommentCard />
+					<div className="space-y-3 py-2">
+						{filteredComments?.map((comment) => <CommentCard data={comment} />)}
 					</div>
 				</div>
 			</ScrollArea>
@@ -178,7 +180,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 export default IssueDetailView;
 
-export const CommentCard = () => {
+export const CommentCard = ({ data }: { data: any }) => {
 	return (
 		<Card>
 			<CardContent className="p-3 text-xs">
@@ -186,12 +188,12 @@ export const CommentCard = () => {
 					<div className="flex gap-2">
 						<HYAvatar
 							url="https://github.com/shadcn.png"
-							name={"Jhon"}
+							name={data?.created_by?.name}
 						/>
-						<div className="flex flex-col">
-							<a className="text-xs">{"Jhon"}</a>
+						<div className="flex flex-col capitalize">
+							<a className="text-xs">{data?.created_by?.name}</a>
 							<a className="text-xs text-[#9499A5]">
-								{"Flutter Dev"}
+								{data?.created_by?.role}
 							</a>
 						</div>
 					</div>
@@ -199,8 +201,8 @@ export const CommentCard = () => {
 						<HiDotsVertical />
 					</div>
 				</div>
-				<div>Added the feature but faced issues...</div>
-				<div className="text-[#9499A5]">On 24/10/2023</div>
+				<div className="my-1">{data?.message}</div>
+				<div className="text-[#9499A5]">On  {dayjs(data?.created).format("DD/MM/YYYY")}</div>
 			</CardContent>
 		</Card>
 	);

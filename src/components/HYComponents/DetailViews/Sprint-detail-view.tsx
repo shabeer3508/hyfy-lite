@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import HYAvatar from "../HYAvatar";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
@@ -9,10 +9,12 @@ import { Separator } from "@/components/ui/separator";
 import IssueMiniCard from "@/pages/sprints/issueMiniCard";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const SprintDetailView = ({ data }: { data: any }) => {
     const dispatch = useDispatch();
+
+    const [sprintData, setSprintData] = useState()
 
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
@@ -30,6 +32,23 @@ const SprintDetailView = ({ data }: { data: any }) => {
         dispatch(getAction({ issues: Urls.issues + query }));
     };
 
+    const getSprints = (prams?: string) => {
+        let query = "";
+        if (prams) {
+            query = query + prams;
+        }
+        dispatch(getAction({ sprints: Urls.sprints + query }));
+    };
+
+    const updateSprintInfo = async (key: string | number, value: string | boolean) => {
+        const resp = (await dispatch(patchAction({ sprints: Urls.sprints }, { [key]: value }, data?.id))) as any
+        const success = resp.payload.status == 200;
+        if (success) {
+            getSprints();
+        }
+    }
+
+    /*  ######################################################################################## */
 
     const filteredIssues = issueListItems?.filter(
         (sprnt) => sprnt?.sprint === data?.id
@@ -57,7 +76,9 @@ const SprintDetailView = ({ data }: { data: any }) => {
                     <HiCalendarDays className="text-[#707173]" />{data?.end_date && formatter.format(new Date(data?.end_date))}
                 </div>
                 <div>
-                    {data?.is_started ? <Button variant="destructive" className="w-[100px] text-white">Stop</Button> : <Button className="w-[100px] text-white">Start</Button>}
+                    {data?.is_started ?
+                        <Button onClick={() => updateSprintInfo("is_started", false)} variant="destructive" className="w-[100px] text-white" >Stop</Button> :
+                        <Button onClick={() => updateSprintInfo("is_started", true)} className="w-[100px] text-white">Start</Button>}
                 </div>
             </div>
             <div className="grid grid-cols-5 pb-5">

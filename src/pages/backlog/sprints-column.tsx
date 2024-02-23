@@ -155,7 +155,7 @@ const SprintsColumn = () => {
 												value="item-1"
 												className="border-0 p-0 m-0"
 											>
-												<div className="flex justify-between w-full">
+												<div className="flex justify-between items-center w-full">
 													<HYDialog
 														className="max-w-6xl"
 														content={<SprintDetailView data={sprint} />}
@@ -197,7 +197,7 @@ const SprintsColumn = () => {
 														</div>
 													</HYDialog>
 													<div className="pl-2">
-														<Button type="button" variant="ghost"><AccordionTrigger /></Button>
+														<Button type="button" variant="ghost" className="p-0" ><AccordionTrigger className="p-3" /></Button>
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
@@ -241,7 +241,7 @@ const SprintsColumn = () => {
 					</div>
 				)}
 			</div>
-		</div>
+		</div >
 	);
 };
 
