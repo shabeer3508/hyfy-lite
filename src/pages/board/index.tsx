@@ -129,7 +129,7 @@ const Board = () => {
 					>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center"
+								className="text-center dark:bg-[#131417] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -143,7 +143,7 @@ const Board = () => {
 										{findTotalPoints(getIssuesByTypes("todo"))}
 									</div>
 								</div>
-								<ScrollArea className="h-[calc(100vh-220px)]">
+								<ScrollArea className="h-[calc(100vh-220px)] ">
 									<div className="flex flex-col px-5 py-2 gap-3">
 										{getIssuesByTypes("todo")?.map(
 											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?.id} />
@@ -155,7 +155,7 @@ const Board = () => {
 						{/* <ResizableHandle /> */}
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center"
+								className="text-center dark:bg-[#131417] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -180,7 +180,7 @@ const Board = () => {
 						</ResizablePanel>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className=" text-center"
+								className=" text-center dark:bg-[#131417] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -205,7 +205,7 @@ const Board = () => {
 						</ResizablePanel>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center"
+								className="text-center dark:bg-[#131417] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();

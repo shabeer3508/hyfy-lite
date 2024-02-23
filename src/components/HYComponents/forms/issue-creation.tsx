@@ -37,7 +37,8 @@ const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
-	const epicsListData = useSelector((state: any) => state?.GetEpics);
+	const epicReducerName = reducerNameFromUrl("epic", "GET")
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -104,7 +105,7 @@ const IssueCreationForm = ({ children }: any) => {
 	/*  ######################################################################################## */
 
 	const epicOptions =
-		epicItems?.map((epic) => ({
+		epicItems?.filter(epic => epic.project_id === appProfileInfo.project_id)?.map((epic) => ({
 			value: epic?.id,
 			label: epic?.name,
 		})) ?? [];
@@ -117,7 +118,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const issueOptions =
 		issueItems
-			?.filter((issue) => issue?.type === "story")
+			?.filter((issue) => issue?.type === "story" && issue.project_id === appProfileInfo.project_id)
 			?.map((issue) => ({
 				value: issue?.id,
 				label: issue?.name,

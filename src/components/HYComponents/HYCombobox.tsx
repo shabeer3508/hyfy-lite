@@ -70,7 +70,7 @@ export function HYCombobox({
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className={`w-[200px] px-3 justify-between ${buttonClassName} `}
+					className={`w-[200px] px-3 justify-between dark:bg-[#111215] ${buttonClassName} `}
 				>
 					{label && (
 						<span className="whitespace-nowrap text-[#9499A5]">
@@ -96,6 +96,9 @@ export function HYCombobox({
 							className={`${options?.length > 6 && "max-h-[20vh] h-[20vh]"
 								}`}
 						>
+
+							{options?.length === 0 && <CommandItem className="text-center w-full">No options found</CommandItem>}
+
 							{options.map((opt) => (
 								<CommandItem
 									className="capitalize"

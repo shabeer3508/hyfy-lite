@@ -13,7 +13,7 @@ const BoardCard = ({ data }: any) => {
 			onDragStart={(e) => {
 				e.dataTransfer.setData("id", data?.id);
 			}}
-			className={`cursor-grab`}
+			className={`cursor-grab dark:bg-[#151619]`}
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog

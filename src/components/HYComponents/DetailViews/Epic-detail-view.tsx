@@ -6,10 +6,13 @@ import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import IssueMiniCard from "@/pages/sprints/issueMiniCard";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const EpicDetailView = ({ data }: { data: any }) => {
 	const dispatch = useDispatch();
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const issueListData = useSelector((state: any) => state?.GetIssues);
 	const issueListItems = issueListData?.data?.items;
@@ -21,7 +24,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
-		let query = "";
+		let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -29,16 +32,20 @@ const EpicDetailView = ({ data }: { data: any }) => {
 	};
 
 	const getReleases = (prams?: string) => {
-		let query = "";
+		let query = `?filter=project_id="${appProfileInfo.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
 		dispatch(getAction({ release: Urls.release + query }));
 	};
 
+
+	const filterIssueByEpic = issueListItems?.filter((issue) => issue?.epic === data.id)
+
 	const findIssueCount = (type: "bug" | "story" | "task") => {
-		return issueListItems?.filter((issue) => issue.type === type).length;
+		return filterIssueByEpic?.filter((issue) => issue.type === type).length;
 	};
+
 
 	/*  ######################################################################################## */
 
@@ -98,7 +105,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 			</div>
 			<ScrollArea className="max-h-[calc(100vh-500px)] h-full w-full">
 				<div className="pr-5 space-y-2 text-xs">
-					{issueListItems?.map((sprint) => {
+					{filterIssueByEpic?.map((sprint) => {
 						return <IssueMiniCard data={sprint} key={sprint?.id} />;
 					})}
 				</div>

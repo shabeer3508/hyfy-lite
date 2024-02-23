@@ -8,19 +8,16 @@ const TheLayout = () => {
 	const dispatch = useDispatch();
 
 	return (
-		<div className="flex h-screen transform-gpu scrollbar-hide dark:bg-black ">
+		<div className="flex h-screen transform-gpu scrollbar-hide dark:bg-[#111215] ">
 			<div
-				className={`${
-					sidebar.sidebarShow
-						? "translate-x-0"
-						: " -translate-x-full md:translate-x-0 "
-				}  absolute shadow-2xl md:shadow-none z-50 bg-white dark:bg-slate-950 md:dark:bg-black  md:relative print:hidden  ${
-					sidebar.minimize ? "w-16" : "w-[219px]"
-				} transform-gpu transition-all duration-300 ease-in ${
-					sidebar.sidebarShow
+				className={`${sidebar.sidebarShow
+					? "translate-x-0"
+					: " -translate-x-full md:translate-x-0 "
+					}  absolute shadow-2xl md:shadow-none z-50 bg-white dark:bg-slate-950 md:dark:bg-black  md:relative print:hidden  ${sidebar.minimize ? "w-16" : "w-[219px]"
+					} transform-gpu transition-all duration-300 ease-in ${sidebar.sidebarShow
 						? "ml-0"
 						: `${sidebar.minimize ? "-ml-16" : "-ml-[219px]"}`
-				}`}
+					}`}
 			>
 				<TheSidebar
 					onClickClose={() =>

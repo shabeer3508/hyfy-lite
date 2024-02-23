@@ -31,6 +31,7 @@ const _nav = [
 	{
 		path: "/teams",
 		icon_name: "nav_teams",
+		name: "Members",
 		icon: <HiUserGroup className="w-5 h-5" />,
 	},
 	{

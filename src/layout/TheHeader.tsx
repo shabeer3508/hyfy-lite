@@ -6,10 +6,12 @@ import ModeToggle from "@/components/mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import helpIcon from "../assets/icons/header-icons/icon_help.svg";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import notiIcon from "../assets/icons/header-icons/icon_notification.svg";
+
+import { HiBell } from "react-icons/hi";
+import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
+
 import { getAction, reducerNameFromUrl, setProject } from "@/redux/actions/AppActions";
 
 const TheHeader = () => {
@@ -60,29 +62,22 @@ const TheHeader = () => {
 						onValueChange={(value: string) => dispatch(setProject(value))}
 					/>
 				</div>
-				<div className="flex grow items-center justify-end gap-3 dark:text-foreground">
+				<div className="flex grow items-center justify-end gap-1 dark:text-foreground">
 					<HYSearch />
 					<ModeToggle />
-					<Button type="button" variant="ghost">
-						<img
-							src={notiIcon}
-							alt="notification icon"
-							className="h-5 cursor-pointer"
-						/>
+					<Button type="button" size="icon" variant="ghost" onClick={() => navigate("/notification")}>
+						<HiBell className="w-6 h-6 text-[#707173]" />
 					</Button>
-					<Button type="button" variant="ghost">
-						<img
-							src={helpIcon}
-							alt="help icon"
-							className="h-5 cursor-pointer"
-						/>
+					<Button type="button" size="icon" variant="ghost">
+						<HiMiniQuestionMarkCircle className="w-6 h-6 text-[#707173]" />
 					</Button>
 					<Button
 						onClick={() => navigate("/profile")}
-						variant="ghost"
+						className="bg-transparent hover:bg-transparent"
+						size="icon"
 					>
 						<HYAvatar
-							className=" size-8 "
+							className="size-6 "
 							url="https://github.com/shadcn.png"
 							name={"John Doe"}
 						/>

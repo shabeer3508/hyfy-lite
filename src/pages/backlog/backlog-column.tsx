@@ -166,7 +166,7 @@ const BacklogColumn = () => {
 							</div>
 							<div className="w-2/3 text-center text-[#F8F8F8]">
 								You can add stories here and then drag ‘n’ drop
-								them to epics or stories.
+								them to stories.
 							</div>
 							<IssueCreationForm>
 								<Button
