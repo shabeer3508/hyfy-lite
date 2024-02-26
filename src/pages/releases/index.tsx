@@ -13,11 +13,16 @@ import {
 	patchAction,
 	reducerNameFromUrl,
 } from "@/redux/actions/AppActions";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { HiViewBoards } from "react-icons/hi";
+import { BiDirections } from "react-icons/bi";
 
 
 
 const Releases = () => {
 	const dispatch = useDispatch();
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
 	const itemsList = useSelector((state: any) => state?.[releaseReducerName]);
@@ -26,7 +31,7 @@ const Releases = () => {
 	/*  ######################################################################################## */
 
 	const getReleases = (prams?: string) => {
-		let query = "";
+		let query = `?filter=project_id="${appProfileInfo.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -47,7 +52,7 @@ const Releases = () => {
 
 	useEffect(() => {
 		getReleases();
-	}, []);
+	}, [appProfileInfo.project_id]);
 
 	/*  ######################################################################################## */
 
@@ -55,11 +60,17 @@ const Releases = () => {
 		<div className=" flex flex-col h-full">
 			<Tabs defaultValue="board" className=" px-6">
 				<div className="flex items-center justify-between my-4">
-					<div className="flex items-center gap-5">
+					<div className="flex items-center gap-8">
 						<div className="text-xl">Releases</div>
 						<TabsList>
-							<TabsTrigger value="board">Board</TabsTrigger>
-							<TabsTrigger value="timeline">Timeline</TabsTrigger>
+							<TabsTrigger value="board" className="flex gap-1">
+								<HiViewBoards className="w-4 h-4" />
+								Board
+							</TabsTrigger>
+							<TabsTrigger value="timeline" className="flex gap-1">
+								<BiDirections className="w-4 h-4" />
+								Timeline
+							</TabsTrigger>
 						</TabsList>
 					</div>
 					<ReleaseCreationForm>
@@ -89,7 +100,7 @@ const Releases = () => {
 								className="space-y-2"
 							>
 								<p className="text-lg">Planing</p>
-								<ScrollArea className="max-h-[calc(100vh-260px)] h-full">
+								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("planning")?.map((item: any) => (
 											<ReleaseCard key={`${item?.id}`} item={item} />
@@ -106,7 +117,7 @@ const Releases = () => {
 								className="space-y-2"
 							>
 								<p className="text-lg">Ongoing</p>
-								<ScrollArea className="max-h-[calc(100vh-260px)] h-full">
+								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("ongoing")?.map((item: any) => (
 											<ReleaseCard key={`${item?.id}`} item={item} />
@@ -123,7 +134,7 @@ const Releases = () => {
 								className="space-y-2"
 							>
 								<p className="text-lg">Released</p>
-								<ScrollArea className="max-h-[calc(100vh-260px)] h-full">
+								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("released")?.map((item: any) => (
 											<ReleaseCard key={`${item?.id}`} item={item} />

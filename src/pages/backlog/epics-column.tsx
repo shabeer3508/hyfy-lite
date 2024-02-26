@@ -47,7 +47,7 @@ const EpicsColumn = () => {
 	};
 
 	const getReleases = (prams?: string) => {
-		let query = "";
+		let query = `?filter=project_id="${appProfileInfo.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -82,7 +82,7 @@ const EpicsColumn = () => {
 	/*  ######################################################################################## */
 
 	return (
-		<div className="flex flex-col h-full px-6 border-r">
+		<div className="flex flex-col h-full px-6 border-r ">
 			<div className="flex items-center justify-between w-full">
 				<div className="mr-3">Epics</div>
 				<div className="flex gap-3">

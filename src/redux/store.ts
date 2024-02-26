@@ -1,4 +1,5 @@
 import Axios from "axios";
+import Cookies from "js-cookie";
 import axiosMiddleware from "redux-axios-middleware";
 import { applyMiddleware, compose, createStore } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
@@ -36,7 +37,7 @@ const middleware = axiosMiddleware(client, {
 				success: async function (items: any, req: any) {
 					// let token = items?.getState().UserReducer?.token;
 					// if (!token) {
-					const token = localStorage.getItem("hyfy_auth_token");
+					const token = Cookies.get("hyfy_auth_token");
 					// }
 					if (token) {
 						req.headers["Authorization"] = `Bearer ${token}`;

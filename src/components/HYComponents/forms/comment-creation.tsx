@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
@@ -12,38 +11,31 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
 
     const [postData, setPostData] = useState({
         message: "",
+        issue_id: issueId,
+        project_id: projectId,
         created_by: authInfo?.user?.id,
-        issue_id: null,
     });
+
+    /*  ######################################################################################## */
 
     const getComments = () => {
         let query = "";
         dispatch(getAction({ comments: Urls.comments + query }));
     }
 
-    /*  ######################################################################################## */
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (issueId) {
-            setPostData((prevData) => ({ ...prevData, issue_id: issueId }));
-        }
-
-        if (projectId) {
-            setPostData((prevData) => ({ ...prevData, project_id: projectId }));
-        }
 
         (dispatch(postAction(Urls.comments, postData)) as any).then((res) => {
             const success = res.payload.status == 200;
             if (success) {
                 setPostData({
                     message: "",
+                    issue_id: issueId,
+                    project_id: projectId,
                     created_by: authInfo?.user?.id,
-                    issue_id: null
                 })
                 getComments()
-                toast.success("Comment created Successfully")
             }
         });
 
@@ -58,11 +50,9 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
                     <Input
                         required
                         value={postData?.message}
-                        className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                         placeholder="Add Comment"
-                        onChange={({ target }) => {
-                            setPostData((prev) => ({ ...prev, message: target.value }));
-                        }}
+                        className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        onChange={({ target }) => setPostData((prev) => ({ ...prev, message: target.value }))}
                     />
                     <Button
                         className="border-primary text-primary"

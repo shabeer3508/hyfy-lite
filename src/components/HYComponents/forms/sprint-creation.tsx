@@ -33,6 +33,8 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 	const [openForm, setOpenForm] = useState(false);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
+	const authInfo = useSelector((state: any) => state.UserReducer);
+
 	/*  ######################################################################################## */
 
 	const formSchema = z.object({
@@ -43,17 +45,19 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		duration: z.string().optional().nullable(),
 		exclude_days: z.string().optional().nullable(),
 		exclude_public_holiday: z.boolean().optional().nullable(),
-		start_date: z.string().optional().nullable(),
-		end_date: z.string().optional().nullable(),
+		start_date: z.date().optional().nullable(),
+		end_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
 		project_id: z.string(),
+		created_by: z.string(),
 		issues: z.string().optional().nullable(),
 	});
 
 	const defaultFormValues = {
 		name: "",
 		status: "backlog",
-		project_id: appProfileInfo?.project_id
+		project_id: appProfileInfo?.project_id,
+		created_by: authInfo?.user?.id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({

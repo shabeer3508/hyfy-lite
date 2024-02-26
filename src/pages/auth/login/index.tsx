@@ -1,3 +1,4 @@
+import Cookies from "js-cookie"
 import { toast } from "sonner";
 import { useState } from "react";
 import { HiMail } from "react-icons/hi";
@@ -10,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { postAction, setCurrentUser } from "@/redux/actions/AppActions";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -27,7 +29,7 @@ const Login = () => {
 				const success = res.payload.status == 200;
 
 				if (success) {
-					localStorage.setItem("hyfy_auth_token", res?.payload?.data?.token);
+					Cookies.set('hyfy_auth_token', res?.payload?.data?.token, { expires: 7 })
 					dispatch(setCurrentUser(res?.payload?.data?.record));
 
 					if (res?.payload?.data?.record?.role === "employee") navigate("/board");

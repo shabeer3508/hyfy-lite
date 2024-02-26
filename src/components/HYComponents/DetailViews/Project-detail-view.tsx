@@ -1,19 +1,47 @@
+import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
+import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
 import { HiCalendarDays } from "react-icons/hi2";
 import { CommentCard } from "./Issue-detail-view";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import CommentCreation from "../forms/comment-creation";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const ProjectDetailView = ({ data }: { data: any }) => {
+    const dispatch = useDispatch()
+
+    const commentsReducerName = reducerNameFromUrl("comments", "GET");
+    const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
+    const commentsItems = commentsList?.data?.items
 
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+
+    /*  ######################################################################################## */
+
+    const getComments = () => {
+        let query = "?expand=created_by&sort=-created";
+        dispatch(getAction({ comments: Urls.comments + query }));
+    }
+
+    /*  ######################################################################################## */
 
     const statusOptions = [
         { label: "Open", value: "open" }, { label: "In-progress", value: "in-progress" },
         { label: "Pending", value: "pending" }, { label: "Done", value: "done" }
     ]
+
+    const filteredComments = commentsItems?.filter(comment => comment?.project_id === data?.id)?.map(comment => ({ ...comment, ...comment?.expand }))
+
+    /*  ######################################################################################## */
+
+    useEffect(() => {
+        getComments()
+    }, [])
+
+    /*  ######################################################################################## */
 
     return (
         <div>
@@ -75,12 +103,10 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                 <div className="space-y-3">
                     <div className="space-y-2">
                         <div>Comments</div>
-                        <CommentCreation />
+                        <CommentCreation projectId={data?.id} />
                     </div>
                     <div className="space-y-3">
-                        <CommentCard />
-                        <CommentCard />
-                        <CommentCard />
+                        {filteredComments?.map((comment) => <CommentCard data={comment} />)}
                     </div>
                 </div>
             </ScrollArea>

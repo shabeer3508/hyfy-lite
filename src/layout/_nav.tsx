@@ -1,10 +1,4 @@
-import {
-	HiOutlineLightBulb,
-	HiOutlineHashtag,
-	HiUserGroup,
-	HiClipboardList,
-	HiViewBoards,
-} from "react-icons/hi";
+import { HiOutlineLightBulb, HiOutlineHashtag, HiUserGroup, HiClipboardList, HiViewBoards } from "react-icons/hi";
 import { HiArrowPathRoundedSquare } from "react-icons/hi2";
 import { TbSettingsFilled } from "react-icons/tb";
 
@@ -35,8 +29,9 @@ const _nav = [
 		icon: <HiOutlineLightBulb className="w-5 h-5" />,
 	},
 	{
-		path: "/team",
+		path: "/teams",
 		icon_name: "nav_teams",
+		name: "Members",
 		icon: <HiUserGroup className="w-5 h-5" />,
 	},
 	{
