@@ -94,8 +94,8 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	return (
-		<div className="flex flex-col h-full  px-6 border-r">
-			<div className="flex items-center justify-between w-full">
+		<div className="flex flex-col h-full border-r">
+			<div className="flex items-center justify-between w-full px-6">
 				<div className="mr-3">Backlog</div>
 				<div className="flex gap-3">
 					<HYSearch />
@@ -106,36 +106,40 @@ const BacklogColumn = () => {
 					</IssueCreationForm>
 				</div>
 			</div>
-			<div className="flex border-b w-full justify-between py-3">
-				<div className="flex gap-3">
-					<HYDropDown options={sortoptions}>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="border aspect-square h-10 w-10"
-						>
-							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
-						</Button>
-					</HYDropDown>
-					<HYDropdownMenuCheckbox>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="border aspect-square h-10 w-10"
-						>
-							<HiFilter className="h-5 w-5 text-[#707173]" />
-						</Button>
-					</HYDropdownMenuCheckbox>
-				</div>
-				<div className="">
-					<HYCombobox
-						label="Assigned to "
-						options={[{ label: "All", value: "all" }, ...usersOptions]}
-					/>
+			<div className="px-6 w-full">
+				<div className="flex border-b  justify-between py-3">
+					<div className="flex gap-3">
+						<HYDropDown options={sortoptions}>
+							<Button
+								variant="ghost"
+								size="icon"
+								className="border aspect-square h-10 w-10"
+							>
+								<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+							</Button>
+						</HYDropDown>
+						<HYDropdownMenuCheckbox>
+							<Button
+								variant="ghost"
+								size="icon"
+								className="border aspect-square h-10 w-10"
+							>
+								<HiFilter className="h-5 w-5 text-[#707173]" />
+							</Button>
+						</HYDropdownMenuCheckbox>
+					</div>
+					<div className="">
+						<HYCombobox
+							label="Assigned to "
+							options={[{ label: "All", value: "all" }, ...usersOptions]}
+						/>
+					</div>
 				</div>
 			</div>
-			<div className="flex items-center border-b h-14 w-full">
-				<IssueCreationCardMini />
+			<div className=" w-full px-6">
+				<div className="flex items-center border-b h-14">
+					<IssueCreationCardMini />
+				</div>
 			</div>
 
 			<div className=""
@@ -147,7 +151,7 @@ const BacklogColumn = () => {
 
 				{backlogIssues?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
-						<div className="py-4 pr-4 space-y-2">
+						<div className="py-4 px-6 space-y-2">
 							{backlogIssues.map((issue, i) => (
 								<IssueCard index={i} issue={issue} key={issue?.id} />
 							))}

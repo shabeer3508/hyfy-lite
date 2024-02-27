@@ -89,8 +89,8 @@ const SprintsColumn = () => {
 	/*  ######################################################################################## */
 
 	return (
-		<div className="flex flex-col h-full px-6">
-			<div className="flex items-center justify-between w-full">
+		<div className="flex flex-col h-full">
+			<div className="flex items-center justify-between w-full px-6">
 				<div className="mr-3">Sprints</div>
 				<div className="flex gap-3">
 					<HYSearch />
@@ -101,35 +101,37 @@ const SprintsColumn = () => {
 					</SprintCreationForm>
 				</div>
 			</div>
-			<div className="flex border-b w-full justify-between py-3">
-				<div className="flex gap-3">
-					<HYDropDown options={sortoptions}>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="border aspect-square h-10 w-10"
-						>
-							<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
-						</Button>
-					</HYDropDown>
-				</div>
-				<div className="">
-					<HYCombobox
-						label="Status "
-						options={[
-							{ label: "All", value: "all" },
-							{ label: "Backlog", value: "backlog" },
-							{ label: "In Progress", value: "in-progress" },
-							{ label: "Retro", value: "retro" },
-						]}
-					/>
+			<div className="px-6 w-full">
+				<div className="flex border-b  justify-between py-3">
+					<div className="flex gap-3">
+						<HYDropDown options={sortoptions}>
+							<Button
+								variant="ghost"
+								size="icon"
+								className="border aspect-square h-10 w-10"
+							>
+								<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+							</Button>
+						</HYDropDown>
+					</div>
+					<div className="">
+						<HYCombobox
+							label="Status "
+							options={[
+								{ label: "All", value: "all" },
+								{ label: "Backlog", value: "backlog" },
+								{ label: "In Progress", value: "in-progress" },
+								{ label: "Retro", value: "retro" },
+							]}
+						/>
+					</div>
 				</div>
 			</div>
 			<div>
 				{filteredSprints?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full">
 
-						<div className="py-4 pr-4 space-y-2">
+						<div className="py-4 px-6 space-y-2">
 							{filteredSprints.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(

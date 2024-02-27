@@ -75,7 +75,9 @@ const EpicDetailView = ({ data }: { data: any }) => {
 				<HYCombobox
 					name="Release"
 					showSearch={false}
+					unSelectable={false}
 					options={releaseOptions}
+					defaultValue={data?.releases}
 				/>
 			</div>
 			<Separator className="my-2" />

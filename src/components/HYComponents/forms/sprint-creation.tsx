@@ -88,7 +88,6 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 
 	const statusOptions = [
 		{ label: "Backlog", value: "backlog" },
-		{ label: "Ongoing", value: "ongoing" },
 		{ label: "In progress", value: "in-progress" },
 		{ label: "Retro", value: "retro" },
 	];

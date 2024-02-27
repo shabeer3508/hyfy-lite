@@ -5,9 +5,6 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import {
 	NavItem,
-	// NavItemDivider,
-	// NavItemDropdown,
-	// NavItemTitle,
 } from "./SidebarNavItems/NavItems";
 
 import logo from "../assets/hyfy_logo.svg";
@@ -42,21 +39,17 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 						<img className=" h-9 w-20 " src={logo} alt="logo" />
 					)}
 				</div>
-				<div className="visible md:invisible absolute  ">
+				{/* <div className="visible md:invisible absolute  ">
 					<Button variant="outline" className=" w-5 h-5 p-0 rounded-full " onClick={onClickClose}>
 						<ChevronLeft />
 					</Button>
-				</div>
+				</div> */}
 			</div>
 
 			<div className="   flex-1 overflow-y-auto border-r scrollbar-hide">
 				<div className=" mx-2 -mt-[1px]"></div>
 				<div className={`${minimize ? "items-center p-0 px-0 pt-4" : ""} flex flex-col gap-2 `}>
-					{navItems.map((item, idx) => {
-						return (
-							<NavItem onClick={() => setIndex(idx)} key={`ni_${idx}`} item={item} minimize={minimize} />
-						);
-					})}
+					{navItems.map((item, idx) => <NavItem onClick={() => setIndex(idx)} key={`ni_${idx}`} item={item} minimize={minimize} />)}
 				</div>
 			</div>
 			<div className="relative border-r  flex h-11 flex-shrink-0 items-center justify-center  p-5 dark:border-line_dark">

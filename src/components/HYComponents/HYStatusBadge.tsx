@@ -6,7 +6,7 @@ interface HYStatusBadgeProps {
 
 const HYStatusBadge = ({ status }: HYStatusBadgeProps) => {
 	return (
-		<Badge variant="outline" className="px-5 h-8 capitalize ">
+		<Badge variant="outline" className="px-5 h-8 capitalize " onClick={(e) => e.stopPropagation()}>
 			{status}
 		</Badge>
 	);

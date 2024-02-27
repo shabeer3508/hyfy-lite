@@ -106,7 +106,7 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                         <CommentCreation projectId={data?.id} />
                     </div>
                     <div className="space-y-3">
-                        {filteredComments?.map((comment) => <CommentCard data={comment} />)}
+                        {filteredComments?.map((comment, i) => <CommentCard key={`${comment?.id}_${i}`} data={comment} />)}
                     </div>
                 </div>
             </ScrollArea>

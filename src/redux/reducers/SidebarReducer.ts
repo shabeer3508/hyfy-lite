@@ -1,5 +1,5 @@
 const initialState = {
-	sidebarShow: "responsive",
+	sidebarShow: true,
 	minimize: false,
 	dir: "ltr", // ltr : rtl
 };

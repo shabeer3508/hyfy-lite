@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { UseFormReturn } from "react-hook-form";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -15,7 +16,6 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { ScrollArea } from "../ui/scroll-area";
 
 interface MenuOption {
 	label: string;
@@ -78,7 +78,8 @@ export function HYCombobox({
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className={`w-[200px] px-3 justify-between dark:bg-[#111215] border-border  ${buttonClassName} `}
+					onClick={(e) => e.stopPropagation()}
+					className={`w-[200px] px-3 justify-between dark:bg-[#111215] border-border text-xs  ${buttonClassName} `}
 				>
 					{label && (
 						<span className="whitespace-nowrap text-[#9499A5]">
@@ -93,17 +94,12 @@ export function HYCombobox({
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent className={`w-[200px] p-0 ${optionsClassName}`}>
+			<PopoverContent className={`w-[200px] p-0 ${optionsClassName}`} onClick={e => e.stopPropagation()}>
 				<Command>
-					{showSearch && (
-						<CommandInput placeholder={`Search  ${name ?? ""}..`} />
-					)}
+					{showSearch && (<CommandInput placeholder={`Search  ${name ?? ""}..`} />)}
 					<CommandEmpty>No options found.</CommandEmpty>
 					<CommandGroup>
-						<ScrollArea
-							className={`${options?.length > 6 && "max-h-[20vh] h-[20vh]"
-								}`}
-						>
+						<ScrollArea className={`${options?.length > 6 && "max-h-[20vh] h-[20vh]"}`}>
 
 							{options?.length === 0 && <CommandItem className="text-center w-full">No options found</CommandItem>}
 
@@ -111,17 +107,10 @@ export function HYCombobox({
 								<CommandItem
 									key={opt.value}
 									value={opt.value}
-									className="capitalize"
+									className="capitalize text-xs cursor-pointer"
 									onSelect={(currentValue) => handleOnSelect(currentValue)}
 								>
-									<Check
-										className={cn(
-											"mr-2 h-4 w-4",
-											value === opt.value
-												? "opacity-100"
-												: "opacity-0"
-										)}
-									/>
+									<Check className={cn("mr-2 h-4 w-4", value === opt.value ? "opacity-100" : "opacity-0")} />
 									{opt.label}
 								</CommandItem>
 							))}

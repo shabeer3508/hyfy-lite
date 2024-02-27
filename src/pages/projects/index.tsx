@@ -9,10 +9,12 @@ import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
-import HYStatusBadge from "@/components/HYComponents/HYStatusBadge";
+import HYTooltip from "@/components/HYComponents/HYTooltip";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import ProjectCreationForm from "@/components/HYComponents/forms/project-creation";
 import ProjectDetailView from "@/components/HYComponents/DetailViews/Project-detail-view";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 
 const Project = () => {
@@ -20,11 +22,7 @@ const Project = () => {
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const itemsRes = useSelector((state: any) => state?.[reducerName]);
 
-	useEffect(() => {
-		loadAction();
-	}, []);
-
-	function loadAction(prams?: string) {
+	const getProjects = (prams?: string) => {
 		let query = "?expand=owner";
 		if (prams) {
 			query = query + prams;
@@ -36,6 +34,11 @@ const Project = () => {
 		...val,
 		...val?.expand,
 	}));
+
+
+	useEffect(() => {
+		getProjects();
+	}, []);
 
 	return (
 		<div className=" flex flex-col h-full">
@@ -53,13 +56,13 @@ const Project = () => {
 					</div>
 				</div>
 			</div>
-			<div className=" overflow-auto px-6 ">
-				<div className="flex flex-col gap-3 mt-4">
+			<ScrollArea className="mt-4">
+				<div className="flex flex-col gap-3 px-6 py-3">
 					{items?.map((item: any, index: number) => (
 						<ProjectCard data={item} key={index} index={index} />
 					))}
 				</div>
-			</div>
+			</ScrollArea>
 		</div>
 	);
 };
@@ -67,6 +70,15 @@ const Project = () => {
 export default Project;
 
 const ProjectCard = ({ data, index }: { data: any, index: number }) => {
+
+	const issuesListData = useSelector((state: any) => state?.GetIssues);
+	const issuesItems = issuesListData?.data?.items;
+
+	const projectIssues = issuesItems?.filter(
+		(issue) => issue?.project_id === data?.id
+	);
+
+	const pieceWidth = 100 / projectIssues?.length;
 
 	const logoColors = [
 		"text-[#FFFFFF]",
@@ -78,6 +90,13 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 		"text-[#389C98]",
 	];
 
+	const statusOptions = [
+		{ label: "Done", value: "done" },
+		{ label: "In-progress", value: "in-progress" },
+		{ label: "Pending", value: "pending" },
+		{ label: "Open", value: "open" }]
+
+
 	return <Card className="dark:bg-[#151619]">
 		<HYDialog
 			className="max-w-6xl"
@@ -88,12 +107,27 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 					<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
 					<div className="capitalize">{data?.title}</div>
 				</div>
-				<div className="flex gap-4">
-					<div className="flex items-center gap-4">
+				<div className="flex gap-4 items-center">
+					<HYCombobox unSelectable={false} defaultValue={data?.status} options={statusOptions} />
+					<div className="flex items-center gap-4 w-[200px] truncate">
 						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.name} />
-						<a>{data?.expand?.owner?.name}</a>
+						<a title={data?.expand?.owner?.name}>{data?.expand?.owner?.name}</a>
 					</div>
-					<HYStatusBadge status={data?.status} />
+					<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
+						{projectIssues?.map((itm => (
+							<HYTooltip message={itm?.status} className='capitalize'>
+								<div
+									className={`
+                                         ${itm?.status === "done" && "bg-[#56972E]"}
+                                         ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
+                                         ${itm?.status === "ongoing" && "bg-cyan-500"} 
+                                         ${itm?.status === "todo" && "bg-[#006EEF]"} 
+                                         ${itm?.status === "pending" && "bg-[#D63B00]"} `}
+									style={{ width: `${pieceWidth}%` }}>
+								</div>
+							</HYTooltip>
+						)))}
+					</div>
 					<Button variant="ghost" size="sm">
 						<MoreVertical />
 					</Button>

@@ -106,9 +106,17 @@ const Board = () => {
 						/>
 					</div>
 					<div className="flex gap-2">
-						<HYSelect id="tasks" options={[]} />
-						<HYSelect id="types" options={[]} />
-						<HYSelect id="points" options={[]} />
+						<HYCombobox unSelectable={false} label={"Tasks"} defaultValue="all" options={[{ label: "All", value: "all" }, { label: "My Tasks", value: "my_tasks" }]} />
+						<HYCombobox unSelectable={false} label={"Types"} defaultValue="all" options={[
+							{ label: "All", value: "all" },
+							{ label: "Story", value: "story" },
+							{ label: "Task", value: "task" },
+							{ label: "Bug", value: "bug" },
+						]} />
+						<HYCombobox unSelectable={false} defaultValue="hp" options={[
+							{ label: "Highest Points", value: "hp" },
+							{ label: "Lowest Points", value: "lp" },
+						]} />
 						<HYSearch />
 					</div>
 				</div>

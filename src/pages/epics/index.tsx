@@ -7,17 +7,19 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HYSearch from '@/components/HYComponents/HYSearch'
 import HYDialog from '@/components/HYComponents/HYDialog';
+import HYTooltip from '@/components/HYComponents/HYTooltip';
 import HYDropDown from '@/components/HYComponents/HYDropDown';
 import { HYCombobox } from '@/components/HYComponents/HYCombobox';
-import { HiBookOpen, HiFilter } from 'react-icons/hi';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
-import { HiMiniListBullet, HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { getAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
 import EpicCreationForm from '@/components/HYComponents/forms/epic-creation';
+import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/HYComponents/HYCheckboxDropDown';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import EpicDetailView from '@/components/HYComponents/DetailViews/Epic-detail-view';
+import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
 
 const EpicScreen = () => {
     const dispatch = useDispatch()
@@ -91,7 +93,28 @@ const EpicScreen = () => {
 
     return (
         <div className=" flex flex-col h-full">
-            <Tabs defaultValue="list" className="px-6">
+
+            {filteredEpics?.length === 0 && (<div className="dark:text-foreground flex justify-center h-full items-center">
+                <div className="flex flex-col justify-center items-center text-center gap-3">
+                    <div>
+                        <HiOutlineInbox className="text-primary h-20 w-20 " />
+                    </div>
+                    <div className="text-primary text-3xl font-semibold">
+                        Nothing here!
+                    </div>
+                    <div className="dark:text-foreground">
+                        Create an epic from the backlog to start working!
+                    </div>
+                    <div className='my-3'>
+                        <EpicCreationForm>
+                            <Button className='text-white'>Create an Epic</Button>
+                        </EpicCreationForm>
+                    </div>
+                </div>
+            </div>)}
+
+
+            {filteredEpics?.length > 0 && (<Tabs defaultValue="list" className="px-6">
                 <div className="flex items-center justify-between my-4">
                     <div className="flex items-center gap-8">
                         <div className="text-xl">Epics</div>
@@ -141,108 +164,96 @@ const EpicScreen = () => {
                             options={[{ label: "All", value: "all" }, ...releaseOptions]}
                         />
                     </div>
-                    <div>
-                        {filteredEpics?.length > 0 && (
-                            <ScrollArea className="h-[calc(100vh-200px)] w-full">
+                    <div >
 
-                                <div className="py-4 pr-4 space-y-2">
-                                    {filteredEpics.map((epic, i) => {
+                        <ScrollArea className="h-[calc(100vh-200px)] w-full">
 
-                                        const epicIssues = issuesItems?.filter(
-                                            (issue) => issue?.epic === epic?.id
-                                        );
+                            <div className="py-4 pr-4 space-y-2">
+                                {filteredEpics.map((epic, i) => {
 
-                                        const pieceWidth = 100 / epicIssues?.length;
+                                    const epicIssues = issuesItems?.filter(
+                                        (issue) => issue?.epic === epic?.id
+                                    );
 
-                                        return (
-                                            <div
-                                                key={epic.id}
-                                                className="flex gap-3 justify-between items-center text-sm border  rounded card-gradient "
+                                    const pieceWidth = 100 / epicIssues?.length;
+
+                                    return (
+                                        <div
+                                            key={epic.id}
+                                            className="flex gap-3 justify-between items-center text-sm border  rounded card-gradient "
+                                        >
+                                            <Accordion
+                                                type="single"
+                                                collapsible
+                                                className="w-full border-0 p-0 m-0"
                                             >
-                                                <Accordion
-                                                    type="single"
-                                                    collapsible
-                                                    className="w-full border-0 p-0 m-0"
+                                                <AccordionItem
+                                                    value="item-1"
+                                                    className="border-0 p-0 m-0"
                                                 >
-                                                    <AccordionItem
-                                                        value="item-1"
-                                                        className="border-0 p-0 m-0"
-                                                    >
-                                                        <div className="flex justify-between items-center w-full">
-                                                            <div className="mr-1">
-                                                                <Button type="button" variant="ghost" className="p-0" ><AccordionTrigger className="p-3" /></Button>
-                                                            </div>
-                                                            <div className="flex justify-between items-center w-full">
-                                                                <div className="flex gap-1 items-center">
-                                                                    <HiBookOpen className={`w-5 h-5 mr-2 ${logoColors[i % 6]}`} />
-                                                                    <HYDialog
-                                                                        className="max-w-6xl "
-                                                                        content={<EpicDetailView data={epic} />}
-                                                                    >
-                                                                        <div className="sm:w-[100px] md:w-[120px] 2xl:w-[200px] capitalize truncate cursor-pointer">
-                                                                            {epic.name}
-                                                                        </div>
-                                                                    </HYDialog>
-                                                                </div>
-                                                                <div className='flex py-2 items-center'>
-                                                                    <div className="flex gap-2 items-center text-[#737377] px-4 border-r">
-                                                                        <HYCombobox
-                                                                            unSelectable={false}
-                                                                            options={releaseOptions}
-                                                                            defaultValue={epic?.releases}
-                                                                            buttonClassName="max-w-[200px]"
-                                                                        />
-                                                                    </div>
-                                                                    <div className="flex gap-2 items-center text-[#737377] px-4 py-2 ">
-                                                                        {epicIssues.length} Stories
-                                                                    </div>
-                                                                    <div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
-                                                                        {epicIssues?.map((itm => (<div className={`
-                                                                         ${itm?.status === "done" && "bg-[#56972E]"}
-                                                                         ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
-                                                                         ${itm?.status === "ongoing" && "bg-[#006EEF]"} 
-                                                                         ${itm?.status === "todo" && "bg-[#006EEF]"} 
-                                                                         ${itm?.status === "pending" && "bg-[#D63B00]"} 
-                                                                         `} style={{ width: `${pieceWidth}%` }}></div>)))}
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
+                                                    <div className="flex justify-between items-center w-full">
+                                                        <div className="mr-1">
+                                                            <Button type="button" variant="ghost" className="p-0 hover:bg-background" ><AccordionTrigger className="p-3" /></Button>
                                                         </div>
-                                                        <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
-                                                            {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
-                                                        </AccordionContent>
-                                                    </AccordionItem>
-                                                </Accordion>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </ScrollArea>
-                        )}
-                    </div>
+                                                        <div className="flex justify-between items-center w-full">
+                                                            <div className="flex gap-1 items-center">
+                                                                <HiBookOpen className={`w-5 h-5 mr-2 ${logoColors[i % 6]}`} />
+                                                                <HYDialog
+                                                                    className="max-w-6xl "
+                                                                    content={<EpicDetailView data={epic} />}
+                                                                >
+                                                                    <div className="sm:w-[100px] md:w-[120px] 2xl:w-[200px] capitalize truncate cursor-pointer">
+                                                                        {epic.name}
+                                                                    </div>
+                                                                </HYDialog>
+                                                            </div>
+                                                            <div className='flex py-2 items-center'>
+                                                                <div className="flex gap-2 items-center text-[#737377] px-4 border-r">
+                                                                    <HYCombobox
+                                                                        unSelectable={false}
+                                                                        options={releaseOptions}
+                                                                        defaultValue={epic?.releases}
+                                                                        buttonClassName="max-w-[200px]"
+                                                                    />
+                                                                </div>
+                                                                <div className="flex gap-2 items-center text-[#737377] px-4 py-2 ">
+                                                                    {epicIssues?.length} Stories
+                                                                </div>
+                                                                <div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
+                                                                    {epicIssues?.map((itm => (
+                                                                        <HYTooltip message={itm?.status} className='capitalize'>
+                                                                            <div
+                                                                                className={`
+                                                                                ${itm?.status === "done" && "bg-[#56972E]"}
+                                                                                ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
+                                                                                ${itm?.status === "ongoing" && "bg-cyan-500"} 
+                                                                                ${itm?.status === "todo" && "bg-[#006EEF]"} 
+                                                                                ${itm?.status === "pending" && "bg-[#D63B00]"} `}
+                                                                                style={{ width: `${pieceWidth}%` }}>
+                                                                            </div>
+                                                                        </HYTooltip>
+                                                                    )))}
+                                                                </div>
+                                                                <Button className='hover:bg-background' variant='ghost' type='button' size='icon'><HiOutlineDotsVertical className='' /></Button>
+                                                            </div>
+                                                        </div>
 
+                                                    </div>
+                                                    <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
+                                                        {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
+                                                    </AccordionContent>
+                                                </AccordionItem>
+                                            </Accordion>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </ScrollArea>
+                    </div>
                 </TabsContent>
-            </Tabs>
+            </Tabs>)}
         </div >
-        // <div className="dark:text-foreground flex justify-center h-[calc(100vh-100px)] items-center">
-        //     <div className="flex flex-col justify-center items-center text-center gap-3">
-        //         <div>
-        //             <HiOutlineInbox className="text-primary h-20 w-20 " />
-        //         </div>
-        //         <div className="text-primary text-3xl font-semibold">
-        //             Nothing here!
-        //         </div>
-        //         <div className="dark:text-foreground">
-        //             Create an epic from the backlog to start working!
-        //         </div>
-        //         <div className='my-3'>
-        //             <EpicCreationForm>
-        //                 <Button className='text-white'>Create an Epic</Button>
-        //             </EpicCreationForm>
-        //         </div>
-        //     </div>
-        // </div>
+
     )
 }
 

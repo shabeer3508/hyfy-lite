@@ -167,7 +167,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 						<CommentCreation issueId={data?.id} />
 					</div>
 					<div className="space-y-3 py-2">
-						{filteredComments?.map((comment) => <CommentCard data={comment} />)}
+						{filteredComments?.map((comment, i) => <CommentCard key={`${comment?.id}_${i}`} data={comment} />)}
 					</div>
 				</div>
 			</ScrollArea>
