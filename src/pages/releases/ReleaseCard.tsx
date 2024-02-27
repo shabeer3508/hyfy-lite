@@ -15,7 +15,7 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 				e.dataTransfer.setData("id", item?.id);
 			}}
 			draggable={true}
-			className="flex flex-col justify-between rounded-lg hover:cursor-grab "
+			className="flex flex-col justify-between rounded-lg hover:cursor-grab dark:bg-[#151619] card-gradient"
 		>
 			<div className="flex gap-3 items-center h-16 px-4">
 				<img src="/release_icon.svg" alt="Project" />

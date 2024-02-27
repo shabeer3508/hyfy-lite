@@ -34,7 +34,7 @@ const Board = () => {
 	};
 
 	const getIssues = (prams?: string) => {
-		let query = `?filter=sprint="${appProfileInfo?.board?.selected_sprint}"`;
+		let query = `?perPage=300&filter=sprint="${appProfileInfo?.board?.selected_sprint}"`;
 		if (prams) {
 			query = query + prams;
 		}

@@ -6,6 +6,7 @@ import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-
 
 const BoardCard = ({ data }: any) => {
 
+
 	return (
 
 		<Card
@@ -13,7 +14,7 @@ const BoardCard = ({ data }: any) => {
 			onDragStart={(e) => {
 				e.dataTransfer.setData("id", data?.id);
 			}}
-			className={`cursor-grab dark:bg-[#151619]`}
+			className={`cursor-grab dark:bg-[#151619] card-gradient`}
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog

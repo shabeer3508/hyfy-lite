@@ -27,7 +27,7 @@ const HYSelect = ({
 	return (
 		<Select onValueChange={field?.onChange} defaultValue={field?.value}>
 			<SelectTrigger
-				className={`w-[180px] focus:ring-0 focus:ring-offset-0 dark:bg-[#111215] ${className}`}
+				className={`w-[180px] focus:ring-0 focus:ring-offset-0 dark:bg-[#111215] border-border ${className}`}
 			>
 				{label && (
 					<div className="whitespace-nowrap text-[#9499A5]">

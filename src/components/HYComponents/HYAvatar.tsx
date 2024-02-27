@@ -21,7 +21,7 @@ const HYAvatar = ({ url, name, className, color }: HYAvatarProps) => {
 	const initials = getInitials(name);
 	return (
 		<Avatar className={`size-8 ${className}`}>
-			<AvatarImage src={url} alt="@shadcn" />
+			<AvatarImage src={url} alt="@shadcn" draggable={false} />
 			<AvatarFallback className={`text-xs uppercase ${color}`}>
 				{initials}
 			</AvatarFallback>

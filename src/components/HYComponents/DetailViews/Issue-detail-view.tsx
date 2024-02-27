@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
 import HYAvatar from "../HYAvatar";
-import HYSelect from "../HYSelect";
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
+import { HYCombobox } from "../HYCombobox";
 import { HiDatabase } from "react-icons/hi";
 import { HiDotsVertical } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,14 @@ const IssueDetailView = ({ data }: { data: any }) => {
 	/*  ######################################################################################## */
 
 	const filteredComments = commentsItems?.filter(comment => comment?.issue_id === data?.id)?.map(comment => ({ ...comment, ...comment?.expand }))
+
+
+	const statusOptions = [
+		{ value: "todo", label: "Todo" },
+		{ value: "ongoing", label: "Ongoing" },
+		{ value: "pending", label: "Pending" },
+		{ value: "done", label: "Done" },
+		{ value: "backlog", label: "Backlog" }]
 
 	/*  ######################################################################################## */
 
@@ -103,18 +111,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col">
 						<div className="text-xs text-[#9499A5]">Status</div>
-						<HYSelect
-							id={"status"}
-							className="my-2"
-							field={{ onChange: () => { }, value: data?.status }}
-							options={[
-								"todo",
-								"ongoing",
-								"pending",
-								"done",
-								"backlog",
-							]}
-						/>
+						<HYCombobox defaultValue={data?.status} options={statusOptions} buttonClassName="w-[150px] my-2" unSelectable={false} />
 					</div>
 				</div>
 			</div>
@@ -182,7 +179,7 @@ export default IssueDetailView;
 
 export const CommentCard = ({ data }: { data: any }) => {
 	return (
-		<Card>
+		<Card className="dark:bg-[#151619]">
 			<CardContent className="p-3 text-xs">
 				<div className="flex justify-between items-center mb-3">
 					<div className="flex gap-2">

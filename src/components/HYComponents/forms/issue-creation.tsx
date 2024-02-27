@@ -87,7 +87,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getIssues = (prams?: string) => {
-			let query = "?expand=release_id,project_id";
+			let query = `?expand=release_id,project_id&perPage=300&filter=project_id="${appProfileInfo?.project_id}"`;
 			if (prams) {
 				query = query + prams;
 			}
@@ -178,7 +178,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<FormLabel>Story Title</FormLabel>
 										<Input
 											placeholder="title"
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 											{...field}
 										/>
 										<FormMessage />
@@ -356,7 +356,7 @@ const IssueCreationForm = ({ children }: any) => {
 									<FormControl>
 										<Input
 											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 											{...field}
 										/>
 									</FormControl>

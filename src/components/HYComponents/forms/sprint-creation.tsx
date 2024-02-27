@@ -69,7 +69,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getSprints = (prams?: string) => {
-			let query = "";
+			let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 			if (prams) {
 				query = query + prams;
 			}
@@ -112,7 +112,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 									<FormLabel>Sprint Title</FormLabel>
 									<Input
 										placeholder="title"
-										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />
@@ -219,7 +219,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 									<FormLabel>Description</FormLabel>
 									<Input
 										type="text"
-										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />

@@ -38,7 +38,7 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
-		let query = "";
+		let query = "?perPage=300";
 		if (prams) {
 			query = query + prams;
 		}
@@ -46,7 +46,7 @@ const BacklogColumn = () => {
 	};
 
 	const getUsers = (prams?: string) => {
-		let query = "";
+		let query = "?perPage=300";
 		if (prams) {
 			query = query + prams;
 		}
@@ -193,7 +193,7 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 			draggable
 			key={issue.id}
 			onDragStart={(e) => e.dataTransfer.setData("id", issue?.id)}
-			className=" border rounded hover:border-primary cursor-pointer"
+			className=" border border-[#696B70] rounded card-gradient cursor-pointer dark:bg-[#151619]"
 		>
 			<HYDialog
 				className="max-w-6xl"

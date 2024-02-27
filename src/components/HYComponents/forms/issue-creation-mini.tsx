@@ -27,7 +27,7 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
-		let query = "";
+		let query = "?perPage=300";
 		if (prams) {
 			query = query + prams;
 		}

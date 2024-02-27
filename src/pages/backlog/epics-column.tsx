@@ -190,11 +190,12 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 		"text-[#FF6481]",
 	];
 
+
 	return (
 		<Card
 			key={epic?.id}
 			onClick={() => setSearchParams({ selected_epic: epic?.id })}
-			className={` border  rounded hover:border-primary cursor-pointer ${searchParams.get("selected_epic") === epic.id ? "border-primary" : ""}`}
+			className={`dark:bg-[#151619] border  rounded card-gradient cursor-pointer ${searchParams.get("selected_epic") === epic.id ? "border-primary" : ""}`}
 		>
 			<HYDialog
 				className="max-w-6xl"

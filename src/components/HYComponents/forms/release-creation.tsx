@@ -63,7 +63,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getReleases = (prams?: string) => {
-			let query = "";
+			let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 			if (prams) {
 				query = query + prams;
 			}

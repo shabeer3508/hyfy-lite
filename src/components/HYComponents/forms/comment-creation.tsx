@@ -51,7 +51,7 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
                         required
                         value={postData?.message}
                         placeholder="Add Comment"
-                        className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                        className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
                         onChange={({ target }) => setPostData((prev) => ({ ...prev, message: target.value }))}
                     />
                     <Button

@@ -24,15 +24,16 @@ interface MenuOption {
 
 export function HYCombobox({
 	id,
-	options,
 	name,
+	label,
+	form,
+	options,
+	defaultValue,
+	onValueChange,
 	buttonClassName,
 	optionsClassName,
-	onValueChange,
 	showSearch = false,
-	label,
-	defaultValue,
-	form,
+	unSelectable = true,
 }: {
 	id?: string;
 	label?: any;
@@ -46,6 +47,7 @@ export function HYCombobox({
 	disableUnSelect?: boolean;
 	form?: UseFormReturn<any>;
 	updateList?: () => void; // TODO: use this for updating the paginated list
+	unSelectable?: boolean;
 }) {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
@@ -57,9 +59,15 @@ export function HYCombobox({
 	}, [defaultValue]);
 
 	const handleOnSelect = (currentValue: string) => {
-		setValue(currentValue === value ? "" : currentValue);
-		onValueChange?.(currentValue === value ? "" : currentValue);
-		form?.setValue(id, currentValue);
+		if (unSelectable) {
+			setValue(currentValue === value ? "" : currentValue);
+			onValueChange?.(currentValue === value ? "" : currentValue);
+			form?.setValue(id, currentValue);
+		} else {
+			setValue(currentValue);
+			onValueChange?.(currentValue);
+			form?.setValue(id, currentValue);
+		}
 		setOpen(false);
 	}
 
@@ -70,7 +78,7 @@ export function HYCombobox({
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}
-					className={`w-[200px] px-3 justify-between dark:bg-[#111215] ${buttonClassName} `}
+					className={`w-[200px] px-3 justify-between dark:bg-[#111215] border-border  ${buttonClassName} `}
 				>
 					{label && (
 						<span className="whitespace-nowrap text-[#9499A5]">
@@ -101,9 +109,9 @@ export function HYCombobox({
 
 							{options.map((opt) => (
 								<CommandItem
-									className="capitalize"
 									key={opt.value}
 									value={opt.value}
+									className="capitalize"
 									onSelect={(currentValue) => handleOnSelect(currentValue)}
 								>
 									<Check

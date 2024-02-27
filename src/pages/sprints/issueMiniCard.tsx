@@ -51,8 +51,9 @@ const IssueMiniCard = ({ data }: any) => {
 
 	/*  ######################################################################################## */
 
+
 	return (
-		<Card>
+		<Card className="dark:bg-[#151619] card-gradient" >
 			<CardContent className="px-0 py-1 grid grid-cols-5 gap-3">
 				<div className="px-3 flex items-center gap-3">
 					{data?.type === "task" && (
@@ -88,6 +89,7 @@ const IssueMiniCard = ({ data }: any) => {
 				<div>
 					<HYCombobox
 						id="status"
+						unSelectable={false}
 						options={statusOptions}
 						buttonClassName="w-full"
 						defaultValue={data?.status}

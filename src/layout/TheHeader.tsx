@@ -56,8 +56,9 @@ const TheHeader = () => {
 					<HYCombobox
 						name="project"
 						showSearch={false}
-						options={projectOptions}
+						unSelectable={false}
 						buttonClassName="border"
+						options={projectOptions}
 						defaultValue={appProfileInfo?.project_id}
 						onValueChange={(value: string) => dispatch(setProject(value))}
 					/>

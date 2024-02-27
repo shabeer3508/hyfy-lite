@@ -1,5 +1,5 @@
 import { HiOutlineLightBulb, HiOutlineHashtag, HiUserGroup, HiClipboardList, HiViewBoards } from "react-icons/hi";
-import { HiArrowPathRoundedSquare } from "react-icons/hi2";
+import { HiArrowPathRoundedSquare, HiBookOpen } from "react-icons/hi2";
 import { TbSettingsFilled } from "react-icons/tb";
 
 const _nav = [
@@ -12,6 +12,11 @@ const _nav = [
 		path: "/backlog",
 		icon_name: "nav_backlog",
 		icon: <HiClipboardList className="w-5 h-5" />,
+	},
+	{
+		path: "/epics",
+		icon_name: "nav_backlog",
+		icon: <HiBookOpen className="w-5 h-5" />,
 	},
 	{
 		path: "/sprints",
