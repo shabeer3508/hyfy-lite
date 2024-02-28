@@ -1,5 +1,6 @@
 import Actions from "./ActionTypes";
 import { capitalizeFirstLetter } from "../../utils/utils";
+import { BoardStates, SprintStates } from "../reducers/AppProfileReducer";
 
 const AppActions = {};
 
@@ -154,6 +155,12 @@ export function clearUser() {
 	};
 }
 
+// Common Modul informations
+
+export function resetAppInfo() {
+	return { type: Actions.RESET_APP_INFO };
+}
+
 export function setProject(projectId: string) {
 	return {
 		type: Actions.SET_PROJECT,
@@ -161,17 +168,17 @@ export function setProject(projectId: string) {
 	};
 }
 
-export function setBoardSprint(sprintId: string) {
+export function setBoardData(data: any, data_key: keyof BoardStates) {
 	return {
-		type: Actions.SET_BOARD_SPRINT,
-		payload: sprintId,
+		type: Actions.SET_BOARD_DATA,
+		payload: { data: data, key: data_key },
 	};
 }
 
-export function setSprintsSprint(sprintId: string) {
+export function setSprintsData(data: any, data_key: keyof SprintStates) {
 	return {
-		type: Actions.SET_SPRINTS_SPRINT,
-		payload: sprintId,
+		type: Actions.SET_SPRINTS_DATA,
+		payload: { data: data, key: data_key },
 	};
 }
 

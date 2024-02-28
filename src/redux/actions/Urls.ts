@@ -13,6 +13,7 @@ const Urls = {
 
 	users: "/users/records",
 	profile: "/profile/records",
+	organization: "/organization/records",
 
 	project: "/project/records",
 	epic: "/epic/records",

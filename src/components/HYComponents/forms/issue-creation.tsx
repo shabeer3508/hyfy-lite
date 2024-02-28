@@ -163,12 +163,12 @@ const IssueCreationForm = ({ children }: any) => {
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="max-w-2xl">
+			<DialogContent className="max-w-2xl h-[75vh] ">
 				<DialogHeader>
 					<DialogTitle>Add Story</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleEpicCreation)}>
+					<form onSubmit={form.handleSubmit(handleEpicCreation)} className="overflow-auto pr-3">
 						<div className="grid grid-cols-3 gap-3">
 							<FormField
 								control={form.control}
@@ -262,6 +262,7 @@ const IssueCreationForm = ({ children }: any) => {
 							)}
 						/>
 						<FormField
+							disabled
 							control={form.control}
 							name="assign_to"
 							render={({ field }) => (
@@ -384,7 +385,7 @@ const IssueCreationForm = ({ children }: any) => {
 							)}
 						/>
 
-						<DialogFooter className="mt-5">
+						<DialogFooter className="mt-5 pt-3 sticky bottom-0 bg-background border-t">
 							<Button
 								type="reset"
 								variant="outline"
@@ -392,7 +393,7 @@ const IssueCreationForm = ({ children }: any) => {
 							>
 								Cancel
 							</Button>
-							<Button type="submit">Add</Button>
+							<Button type="submit" className="text-white">Add</Button>
 						</DialogFooter>
 					</form>
 				</Form>

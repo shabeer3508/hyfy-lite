@@ -28,7 +28,7 @@ const TheLayout = () => {
 				<div className=" left-0 right-0 top-0 z-40 print:hidden ">
 					<TheHeader />
 				</div>
-				<div className="flex grow transform-gpu flex-col overflow-auto">
+				<div className="flex grow transform-gpu flex-col overflow-clip">
 					<TheContent />
 				</div>
 				{/* <TheFooter /> */}

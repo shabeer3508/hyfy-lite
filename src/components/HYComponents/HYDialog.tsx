@@ -25,7 +25,7 @@ const HYDialog = ({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className={`max-w-2xl ${className} max-h-[90vh]`}>
+			<DialogContent className={`max-w-2xl ${className} max-h-[80vh]`}>
 				{title && (
 					<DialogHeader>
 						<DialogTitle>{title}</DialogTitle>

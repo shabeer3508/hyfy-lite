@@ -54,7 +54,7 @@ export interface IssueDataTypes {
 	estimated_hours?: number;
 	description?: string;
 	epic?: string;
-	assign_to?: string;
+	assign_to?: string[];
 	dependency?: string;
 	dependency_type?: "blocking" | "";
 	assignor?: string;

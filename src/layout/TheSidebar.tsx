@@ -1,14 +1,10 @@
-import { memo, useState } from "react";
 import _nav from "./_nav";
-import { useDispatch, useSelector } from "react-redux";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import {
-	NavItem,
-} from "./SidebarNavItems/NavItems";
-
+import { memo, useState } from "react";
 import logo from "../assets/hyfy_logo.svg";
-import pb from "@/lib/pocketbase";
+import { NavItem } from "./SidebarNavItems/NavItems";
+import { useDispatch, useSelector } from "react-redux";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+
 
 interface TheSidebarProps {
 	onClickClose: () => void;
@@ -23,8 +19,7 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 	const minimize = sidebar.minimize;
 
 	const navItems = _nav?.filter((navItm: any) => {
-		if (pb.authStore.model?.role === "employee" && navItm?.path === "/backlog") return false;
-		else return true;
+		return true;
 	});
 
 	return (

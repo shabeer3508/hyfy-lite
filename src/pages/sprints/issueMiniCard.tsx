@@ -97,6 +97,7 @@ const IssueMiniCard = ({ data }: any) => {
 					/>
 				</div>
 				<div>
+					{/*  TODO : Change this component to multiple user selction drop down */}
 					<HYCombobox
 						label={
 							<div>
@@ -110,7 +111,7 @@ const IssueMiniCard = ({ data }: any) => {
 						id="assign_to"
 						options={usersOptions}
 						buttonClassName="w-full"
-						defaultValue={data?.assign_to}
+						defaultValue={data?.assign_to[0]}
 						onValueChange={(value) => upadateIssueByType(value, "assign_to")}
 					/>
 				</div>

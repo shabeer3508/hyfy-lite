@@ -1,4 +1,4 @@
-import { HiDatabase } from "react-icons/hi";
+import { HiDatabase, HiOutlineUser } from "react-icons/hi";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYDialog from "@/components/HYComponents/HYDialog";
@@ -41,18 +41,23 @@ const BoardCard = ({ data }: any) => {
 						</div>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
-								<HYAvatar
-									className=""
-									url=""
-									name="Shad D"
-									color="bg-purple-400"
-								/>
-								<HYAvatar
-									className="-ml-2 shadow-md"
-									url=""
-									name="Apple Seed"
-									color="bg-amber-500"
-								/>
+								{data?.assign_to?.map(usr =>
+									<HYAvatar
+										className="cursor-default"
+										url=""
+										name="Shad D"
+										color="bg-purple-400"
+									/>
+								)}
+
+								{data?.assign_to?.length === 0 &&
+									<div
+										onClick={(e) => e?.stopPropagation()}
+										title="Unassigned"
+										className="cursor-default aspect-square border rounded-full flex justify-center items-center size-8 bg-gray-500" >
+										<HiOutlineUser />
+									</div>
+								}
 							</div>
 							<div className="flex items-center gap-2">
 								<HiDatabase /> {data?.points}

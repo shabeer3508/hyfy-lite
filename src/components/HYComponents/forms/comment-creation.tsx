@@ -19,7 +19,7 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
     /*  ######################################################################################## */
 
     const getComments = () => {
-        let query = "";
+        let query = "?expand=created_by&sort=-created";
         dispatch(getAction({ comments: Urls.comments + query }));
     }
 

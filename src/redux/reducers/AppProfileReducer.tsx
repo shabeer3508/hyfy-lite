@@ -1,10 +1,13 @@
 import Actions from "../actions/ActionTypes";
 
-interface BoardStates {
+export interface BoardStates {
     selected_sprint?: string
+    task_filter_value?: string
+    type_filter_value?: string
+    points_filter_value?: string
 }
 
-interface SprintStates {
+export interface SprintStates {
     selected_sprint?: string
 }
 
@@ -28,6 +31,9 @@ const initialState: AppProfileTypes = {
     project_id: "",
     board: {
         selected_sprint: "",
+        task_filter_value: "all",
+        type_filter_value: "all",
+        points_filter_value: "all"
     },
     backlog: {
         epics: {},
@@ -37,7 +43,6 @@ const initialState: AppProfileTypes = {
     sprints: {
         selected_sprint: ""
     },
-
     releases: {},
     projects: {},
     teams: {}
@@ -46,12 +51,14 @@ const initialState: AppProfileTypes = {
 export default function AppProfileReducer() {
     return (state = initialState, action: any) => {
         switch (action.type) {
+            case Actions.RESET_APP_INFO:
+                return initialState;
             case Actions.SET_PROJECT:
                 return { ...initialState, project_id: action.payload };
-            case Actions.SET_BOARD_SPRINT:
-                return { ...state, board: { ...state.board, selected_sprint: action.payload } };
-            case Actions.SET_SPRINTS_SPRINT:
-                return { ...state, sprints: { ...state.sprints, selected_sprint: action.payload } };
+            case Actions.SET_BOARD_DATA:
+                return { ...state, board: { ...state.board, [action.payload?.key]: action.payload?.data } };
+            case Actions.SET_SPRINTS_DATA:
+                return { ...state, sprints: { ...state.sprints, [action.payload?.key]: action.payload?.data } };
             default:
                 return state;
         }

@@ -193,7 +193,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 							>
 								Cancel
 							</Button>
-							<Button type="submit">Add</Button>
+							<Button type="submit" className="text-white">Add</Button>
 						</DialogFooter>
 					</form>
 				</Form>

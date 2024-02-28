@@ -46,7 +46,7 @@ const Project = () => {
 				<div className="flex flex-col gap-4">
 					<p className=" text-xl ">Projects</p>
 					<ProjectCreationForm>
-						<Button size="sm">Create Project</Button>
+						<Button size="sm" className="text-white">Create Project</Button>
 					</ProjectCreationForm>
 				</div>
 				<div className="flex gap-2">

@@ -7,7 +7,7 @@ import HYSearch from "@/components/HYComponents/HYSearch";
 import HYSelect from "@/components/HYComponents/HYSelect";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { HYCombobox } from "../../components/HYComponents/HYCombobox";
-import { getAction, setSprintsSprint } from "@/redux/actions/AppActions";
+import { getAction, setSprintsData } from "@/redux/actions/AppActions";
 
 const Sprints = () => {
 	const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const Sprints = () => {
 							options={sprintOptions}
 							buttonClassName="border"
 							defaultValue={appProfileInfo?.sprints?.selected_sprint}
-							onValueChange={(value) => dispatch(setSprintsSprint(value))}
+							onValueChange={(value) => dispatch(setSprintsData(value, "selected_sprint"))}
 						/>
 					</div>
 					<div className="flex gap-3 text-xs items-center">

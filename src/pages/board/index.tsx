@@ -3,15 +3,13 @@ import BoardCard from "./boardCard";
 import Urls from "@/redux/actions/Urls";
 import { HiDatabase } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
-import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import HYSelect from "@/components/HYComponents/HYSelect";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { getAction, patchAction, setBoardSprint } from "@/redux/actions/AppActions";
+import { getAction, patchAction, setBoardData } from "@/redux/actions/AppActions";
 
 const Board = () => {
 	const dispatch = useDispatch();
@@ -21,7 +19,9 @@ const Board = () => {
 	const issueListItems = issuesListData?.data?.items
 
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const boardInfo = appProfileInfo?.board
 
 	/*  ######################################################################################## */
 
@@ -34,7 +34,11 @@ const Board = () => {
 	};
 
 	const getIssues = (prams?: string) => {
-		let query = `?perPage=300&filter=sprint="${appProfileInfo?.board?.selected_sprint}"`;
+		let query = `?perPage=300
+				&filter=(sprint='${boardInfo?.selected_sprint}'
+				${boardInfo?.type_filter_value !== "all" ? `%26%26type='${boardInfo?.type_filter_value}'` : ""})
+				${boardInfo?.points_filter_value !== "all" ? `&sort=${boardInfo.points_filter_value}` : ""}`;
+
 		if (prams) {
 			query = query + prams;
 		}
@@ -47,25 +51,10 @@ const Board = () => {
 		}, 0);
 	};
 
-	const getIssuesByTypes = (
-		issueType: "todo" | "ongoing" | "pending" | "done"
-	) => {
-		return issueListItems?.filter((issue) => issue?.status === issueType && appProfileInfo?.board?.selected_sprint && issue?.sprint === appProfileInfo?.board?.selected_sprint);
+	const getIssuesByTypes = (issueStatus: "todo" | "ongoing" | "pending" | "done") => {
+		return issueListItems?.filter((issue) => issue?.status === issueStatus && boardInfo?.selected_sprint && issue?.sprint === boardInfo?.selected_sprint);
 	};
 
-	/*  ######################################################################################## */
-
-	const sprintOptions =
-		sprintListData?.data?.items?.map((sprnt) => ({
-			value: sprnt?.id,
-			label: sprnt?.name,
-		})) ?? [];
-
-	const selectedSprintInfo = sprintListData?.data?.items?.find(
-		(sprnt) => sprnt?.id === appProfileInfo?.board?.selected_sprint
-	);
-
-	/*  ######################################################################################## */
 
 	const updateItemStatus = async (id: string, stage: string) => {
 		const resp = (await dispatch(
@@ -79,15 +68,48 @@ const Board = () => {
 
 	/*  ######################################################################################## */
 
+	const sprintOptions =
+		sprintListData?.data?.items?.map((sprnt) => ({
+			value: sprnt?.id,
+			label: sprnt?.name,
+		})) ?? [];
+
+	const selectedSprintInfo = sprintListData?.data?.items?.find(
+		(sprnt) => sprnt?.id === boardInfo?.selected_sprint
+	);
+
+
+	const taskFilterOptions = [
+		{ label: "All", value: "all" },
+		{ label: "My Tasks", value: "my_tasks" },
+		{ label: "Unassigned", value: "unassigned" }
+	]
+
+	const typeFilterOptions = [
+		{ label: "All", value: "all" },
+		{ label: "Story", value: "story" },
+		{ label: "Task", value: "task" },
+		{ label: "Bug", value: "bug" },
+	]
+
+	const pointsFilterData = [
+		{ label: "All", value: "all" },
+		{ label: "Highest", value: "points" },
+		{ label: "Lowest", value: "-points" },
+	]
+
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
 		getSprints();
 	}, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
-		if (appProfileInfo?.board?.selected_sprint) {
+		if (boardInfo) {
 			getIssues();
 		}
-	}, [appProfileInfo?.board?.selected_sprint]);
+	}, [boardInfo]);
 
 	/*  ######################################################################################## */
 
@@ -101,22 +123,32 @@ const Board = () => {
 							showSearch={false}
 							options={sprintOptions}
 							buttonClassName="border"
-							defaultValue={appProfileInfo?.board?.selected_sprint}
-							onValueChange={(value) => dispatch(setBoardSprint(value))}
+							defaultValue={boardInfo?.selected_sprint}
+							onValueChange={(value) => dispatch(setBoardData(value, "selected_sprint"))}
 						/>
 					</div>
 					<div className="flex gap-2">
-						<HYCombobox unSelectable={false} label={"Tasks"} defaultValue="all" options={[{ label: "All", value: "all" }, { label: "My Tasks", value: "my_tasks" }]} />
-						<HYCombobox unSelectable={false} label={"Types"} defaultValue="all" options={[
-							{ label: "All", value: "all" },
-							{ label: "Story", value: "story" },
-							{ label: "Task", value: "task" },
-							{ label: "Bug", value: "bug" },
-						]} />
-						<HYCombobox unSelectable={false} defaultValue="hp" options={[
-							{ label: "Highest Points", value: "hp" },
-							{ label: "Lowest Points", value: "lp" },
-						]} />
+						<HYCombobox
+							label={"Tasks"}
+							unSelectable={false}
+							options={taskFilterOptions}
+							defaultValue={boardInfo?.task_filter_value}
+							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
+						/>
+						<HYCombobox
+							label={"Type"}
+							unSelectable={false}
+							options={typeFilterOptions}
+							defaultValue={boardInfo?.type_filter_value}
+							onValueChange={(value) => dispatch(setBoardData(value, "type_filter_value"))}
+						/>
+						<HYCombobox
+							label={"Points"}
+							unSelectable={false}
+							options={pointsFilterData}
+							defaultValue={boardInfo?.points_filter_value}
+							onValueChange={(value) => dispatch(setBoardData(value, "points_filter_value"))}
+						/>
 						<HYSearch />
 					</div>
 				</div>

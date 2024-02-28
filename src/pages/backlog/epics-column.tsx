@@ -77,7 +77,7 @@ const EpicsColumn = () => {
 	useEffect(() => {
 		getReleases();
 		getEpics();
-	}, []);
+	}, [appProfileInfo?.project_id]);
 
 	/*  ######################################################################################## */
 
