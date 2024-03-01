@@ -29,9 +29,8 @@ export const NavItemDropdown = ({ onClick, show, ...prop }: any) => {
 				>
 					{prop?.item?.icon && (
 						<div
-							className={` ${
-								isActive ? "text-accent" : "dark:text-white"
-							} aspect-square w-7 transform-gpu rounded-[4px] p-[2px] transition-all ease-in group-hover:w-7 group-hover:text-accent`}
+							className={` ${isActive ? "text-accent" : "dark:text-white"
+								} aspect-square w-7 transform-gpu rounded-[4px] p-[2px] transition-all ease-in group-hover:w-7 group-hover:text-accent`}
 						>
 							{prop?.item.icon}
 						</div>
@@ -44,9 +43,8 @@ export const NavItemDropdown = ({ onClick, show, ...prop }: any) => {
 				</div>
 				{!prop?.minimize && (
 					<div
-						className={` text-gray-400 transition-transform  duration-300 ease-in-out ${
-							show ? " rotate-90" : " rotate-0"
-						} h-5 w-5 dark:text-white/70`}
+						className={` text-gray-400 transition-transform  duration-300 ease-in-out ${show ? " rotate-90" : " rotate-0"
+							} h-5 w-5 dark:text-white/70`}
 					>
 						{/* <ChevronRightIcon /> */}
 					</div>
@@ -54,9 +52,8 @@ export const NavItemDropdown = ({ onClick, show, ...prop }: any) => {
 				<div className=" absolute left-0 h-4 w-[4px] rounded-r-[3px] group-hover:bg-accent"></div>
 			</div>
 			<div
-				className={`origin-top transform-gpu transition-all duration-300 origin-top-start ${
-					show ? ` ${itemH}` : "h-0"
-				} mt-3 flex flex-col gap-1 overflow-hidden text-black dark:text-white/90`}
+				className={`origin-top transform-gpu transition-all duration-300 origin-top-start ${show ? ` ${itemH}` : "h-0"
+					} mt-3 flex flex-col gap-1 overflow-hidden text-black dark:text-white/90`}
 			>
 				{prop?.item?.items?.map((item: any, index: number) => {
 					const isString = typeof item === "string";
@@ -64,9 +61,9 @@ export const NavItemDropdown = ({ onClick, show, ...prop }: any) => {
 					const name = isString
 						? item.substring(path?.lastIndexOf("/") + 1)
 						: item?.name ||
-						  item?.path?.substring(
-								item?.path?.lastIndexOf("/") + 1
-						  );
+						item?.path?.substring(
+							item?.path?.lastIndexOf("/") + 1
+						);
 					const itemPath = parentPath ? parentPath + path : path;
 					const isActive = itemPath === currentPath;
 					const subTitle = name?.replaceAll(/[-_]/g, " ") || "";
@@ -79,17 +76,15 @@ export const NavItemDropdown = ({ onClick, show, ...prop }: any) => {
 								path &&
 								navigate(parentPath ? parentPath + path : path)
 							}
-							className={`${
-								prop?.minimize ? "ml-1" : "ml-9"
-							} group flex cursor-pointer select-none items-center rounded px-2 py-1 capitalize hover:bg-accent/20`}
+							className={`${prop?.minimize ? "ml-1" : "ml-9"
+								} group flex cursor-pointer select-none items-center rounded px-2 py-1 capitalize hover:bg-accent/20`}
 						>
 							{!prop?.minimize && (
 								<a
-									className={` ${
-										isActive
-											? " font-normal text-accent"
-											: " font-normal"
-									} text-xs font-light capitalize group-hover:text-accent`}
+									className={` ${isActive
+										? " font-normal text-accent"
+										: " font-normal"
+										} text-xs font-light capitalize group-hover:text-accent`}
 								>
 									{subTitle}
 								</a>
@@ -122,15 +117,13 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 				navigate(prop?.item?.path || "/");
 				onClick();
 			}}
-			className={` no-select group relative flex h-12 cursor-pointer items-center gap-2 pl-6 pr-4 ${
-				isActive && "dark:bg-[#222428]  border-primary border-r-2"
-			}   dark:text-white/90`}
+			className={` no-select group relative flex h-12 cursor-pointer items-center gap-2 pl-6 pr-4 ${isActive && "dark:bg-[#222428]  border-primary border-r-2"
+				}   dark:text-white/90`}
 		>
 			{prop?.item?.icon && (
 				<div
-					className={` ${
-						isActive ? "text-primary" : "group-hover:text-primary"
-					} aspect-square  transform-gpu  rounded-[4px]  transition-all ease-in`}
+					className={` ${isActive ? "text-primary" : "group-hover:text-primary"
+						} aspect-square  transform-gpu  rounded-[4px]  transition-all ease-in`}
 				>
 					{prop?.item?.icon}
 				</div>
@@ -138,11 +131,10 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 
 			{!prop?.minimize && (
 				<a
-					className={`${
-						isActive
-							? "font-medium "
-							: "font-normal group-hover:text-primary"
-					} select-none transform-gpu transition-all ease-in text-xs md:text-sm  capitalize `}
+					className={`${isActive
+						? "font-medium "
+						: "font-normal group-hover:text-primary"
+						} select-none transform-gpu transition-all ease-in text-xs md:text-sm  capitalize `}
 				>
 					{title}
 				</a>

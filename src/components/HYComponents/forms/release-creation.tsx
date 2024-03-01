@@ -32,6 +32,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 	const [openForm, setOpenForm] = useState(false);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -43,7 +44,8 @@ const ReleaseCreationForm = ({ children }: any) => {
 		to_date: z.date().optional().nullable(),
 		priority: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
-		project_id: z.string()
+		project_id: z.string(),
+		org_id: z.string()
 	});
 
 	const formDefaultValues = {
@@ -51,7 +53,8 @@ const ReleaseCreationForm = ({ children }: any) => {
 		status: "planning",
 		description: "",
 		priority: null,
-		project_id: appProfileInfo?.project_id
+		project_id: appProfileInfo?.project_id,
+		org_id: authInfo?.user?.org_id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -61,7 +64,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
-	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleReleaseCreation = async (values: z.infer<typeof formSchema>) => {
 		const getReleases = (prams?: string) => {
 			let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 			if (prams) {
@@ -88,7 +91,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 					<DialogTitle>Add Release</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleEpicCreation)}>
+					<form onSubmit={form.handleSubmit(handleReleaseCreation)}>
 						<FormField
 							control={form.control}
 							name="name"

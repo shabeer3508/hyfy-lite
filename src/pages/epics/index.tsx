@@ -60,7 +60,7 @@ const EpicScreen = () => {
 
     const releaseOptions =
         releaseList?.data?.items?.map((relse) => ({
-            value: relse?.id,
+            value: relse?._id,
             label: relse?.name,
         })) ?? [];
 
@@ -99,15 +99,15 @@ const EpicScreen = () => {
                     <div>
                         <HiOutlineInbox className="text-primary h-20 w-20 " />
                     </div>
-                    <div className="text-primary text-3xl font-semibold">
+                    <div className="text-primary text-4xl font-semibold">
                         Nothing here!
                     </div>
-                    <div className="dark:text-foreground">
+                    <div className="dark:text-foreground text-xl">
                         Create an epic from the backlog to start working!
                     </div>
                     <div className='my-3'>
                         <EpicCreationForm>
-                            <Button className='text-white'>Create an Epic</Button>
+                            <Button className='text-white text-sm'>Create an Epic</Button>
                         </EpicCreationForm>
                     </div>
                 </div>
@@ -115,10 +115,10 @@ const EpicScreen = () => {
 
 
             {filteredEpics?.length > 0 && (<Tabs defaultValue="list" className="px-6">
-                <div className="flex items-center justify-between my-4">
+                <div className="flex items-center justify-between ">
                     <div className="flex items-center gap-8">
                         <div className="text-xl">Epics</div>
-                        <TabsList>
+                        <TabsList className='hidden'>
                             <TabsTrigger value="list" className="flex gap-1">
                                 <HiMiniListBullet className="w-4 h-4" />
                                 List
@@ -172,7 +172,7 @@ const EpicScreen = () => {
                                 {filteredEpics.map((epic, i) => {
 
                                     const epicIssues = issuesItems?.filter(
-                                        (issue) => issue?.epic === epic?.id
+                                        (issue) => issue?.epic === epic?._id
                                     );
 
                                     const pieceWidth = 100 / epicIssues?.length;

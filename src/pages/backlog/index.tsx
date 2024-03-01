@@ -13,11 +13,11 @@ const Backlog = () => {
 		<div className="dark:text-foreground h-screen">
 			<ResizablePanelGroup
 				direction="horizontal"
-				className=" rounded-lg "
+				className="rounded-lg "
 			>
-				<ResizablePanel defaultSize={30} maxSize={30} minSize={20}>
+				{/* <ResizablePanel defaultSize={30} maxSize={30} minSize={20}>
 					<EpicsColumn />
-				</ResizablePanel>
+				</ResizablePanel> */}
 				{/* <ResizableHandle /> */}
 				<ResizablePanel defaultSize={70}>
 					<ResizablePanelGroup

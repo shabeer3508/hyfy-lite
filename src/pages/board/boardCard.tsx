@@ -1,18 +1,32 @@
-import { HiDatabase, HiOutlineUser } from "react-icons/hi";
+import { useSelector } from "react-redux";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
 import HYDialog from "@/components/HYComponents/HYDialog";
+import { HiDatabase, HiOutlineUser } from "react-icons/hi";
+import { reducerNameFromUrl } from "@/redux/actions/AppActions";
 import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-view";
 
 const BoardCard = ({ data }: any) => {
 
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const userItems = usersList?.data?.items
+
+	const logoColors = [
+		"bg-[#71A4FF]",
+		"bg-[#4C4878]",
+		"bg-[#A4599A]",
+		"bg-[#E2A766]",
+		"bg-[#389C98]",
+		"bg-[#FF6481]",
+	];
 
 	return (
 
 		<Card
 			draggable
 			onDragStart={(e) => {
-				e.dataTransfer.setData("id", data?.id);
+				e.dataTransfer.setData("id", data?._id);
 			}}
 			className={`cursor-grab dark:bg-[#151619] card-gradient`}
 		>
@@ -41,13 +55,15 @@ const BoardCard = ({ data }: any) => {
 						</div>
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
-								{data?.assign_to?.map(usr =>
-									<HYAvatar
-										className="cursor-default"
+								{data?.assign_to?.map((usr, i) => {
+									const currentUser = userItems?.find((u) => u?._id === usr)
+									return <HYAvatar
+										className="cursor-default first:ml-0 -ml-2 border text-white"
 										url=""
-										name="Shad D"
-										color="bg-purple-400"
+										name={currentUser?.name}
+										color={`${logoColors[i]}`}
 									/>
+								}
 								)}
 
 								{data?.assign_to?.length === 0 &&
@@ -55,7 +71,7 @@ const BoardCard = ({ data }: any) => {
 										onClick={(e) => e?.stopPropagation()}
 										title="Unassigned"
 										className="cursor-default aspect-square border rounded-full flex justify-center items-center size-8 bg-gray-500" >
-										<HiOutlineUser />
+										<HiOutlineUser className="text-white" />
 									</div>
 								}
 							</div>

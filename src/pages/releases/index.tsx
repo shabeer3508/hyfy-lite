@@ -16,6 +16,7 @@ import {
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { HiViewBoards } from "react-icons/hi";
 import { BiDirections } from "react-icons/bi";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 
 
 
@@ -59,10 +60,10 @@ const Releases = () => {
 	return (
 		<div className=" flex flex-col h-full">
 			<Tabs defaultValue="board" className=" px-6">
-				<div className="flex items-center justify-between my-4">
+				<div className="flex items-center justify-between">
 					<div className="flex items-center gap-8">
 						<div className="text-xl">Releases</div>
-						<TabsList>
+						<TabsList className="hidden">
 							<TabsTrigger value="board" className="flex gap-1">
 								<HiViewBoards className="w-4 h-4" />
 								Board
@@ -79,14 +80,9 @@ const Releases = () => {
 				</div>
 				<TabsContent value="board">
 					<div className="flex gap-2">
-						<HYSelect
-							id=""
-							options={["Recent", "Old"]}
-						/>
-						<HYSelect
-							id=""
-							options={["done", "in-progress", "pending", "open"]}
-						/>
+						<HYCombobox defaultValue="recent" options={[{ label: "Recent", value: "recent" }, { label: "Old", value: "old" }]} />
+						<HYCombobox defaultValue="hp" options={[{ label: "Highest Points", value: "hp" }, { label: "Lowest Points", value: "lp" }]} />
+
 						<HYSearch />
 					</div>
 					<div className="h-full">
@@ -99,11 +95,11 @@ const Releases = () => {
 								}}
 								className="space-y-2"
 							>
-								<p className="text-lg">Planing</p>
+								<p className="text-base">Planing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("planning")?.map((item: any) => (
-											<ReleaseCard key={`${item?.id}`} item={item} />
+											<ReleaseCard key={`${item?._id}`} item={item} />
 										))}
 									</div>
 								</ScrollArea>
@@ -116,11 +112,11 @@ const Releases = () => {
 								}}
 								className="space-y-2"
 							>
-								<p className="text-lg">Ongoing</p>
+								<p className="text-base">Ongoing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("ongoing")?.map((item: any) => (
-											<ReleaseCard key={`${item?.id}`} item={item} />
+											<ReleaseCard key={`${item?._id}`} item={item} />
 										))}
 									</div>
 								</ScrollArea>
@@ -133,11 +129,11 @@ const Releases = () => {
 								}}
 								className="space-y-2"
 							>
-								<p className="text-lg">Released</p>
+								<p className="text-base">Released</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
 										{getReleasesByStatus("released")?.map((item: any) => (
-											<ReleaseCard key={`${item?.id}`} item={item} />
+											<ReleaseCard key={`${item?._id}`} item={item} />
 										))}
 									</div>
 								</ScrollArea>

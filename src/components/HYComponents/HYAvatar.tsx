@@ -20,7 +20,7 @@ function getInitials(name) {
 const HYAvatar = ({ url, name, className, color }: HYAvatarProps) => {
 	const initials = getInitials(name);
 	return (
-		<Avatar className={`size-8 ${className}`}>
+		<Avatar className={`size-8 ${className}`} title={name}>
 			<AvatarImage src={url} alt="@shadcn" draggable={false} />
 			<AvatarFallback className={`text-xs uppercase ${color}`}>
 				{initials}

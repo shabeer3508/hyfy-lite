@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Dialog,
 	DialogContent,
@@ -23,18 +25,14 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import {
-	getAction,
-	postAction,
-	reducerNameFromUrl,
-} from "@/redux/actions/AppActions";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const EpicCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
+	const authInfo = useSelector((state: any) => state.UserReducer);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
@@ -56,21 +54,26 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		dependency_type: z.string().optional().nullable(),
 		priority: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
-		project_id: z.string()
+		project_id: z.string(),
+		org_id: z.string(),
 	});
+
+
+	const formDefaultValues = {
+		name: "",
+		status: "blocking",
+		release: undefined,
+		dependency: undefined,
+		dependency_type: undefined,
+		priority: undefined,
+		description: undefined,
+		project_id: appProfileInfo.project_id,
+		org_id: authInfo?.user?.org_id
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			name: "",
-			status: "blocking",
-			release: null,
-			dependency: null,
-			dependency_type: null,
-			priority: null,
-			description: null,
-			project_id: appProfileInfo.project_id
-		},
+		defaultValues: formDefaultValues,
 	});
 
 	/*  ######################################################################################## */
@@ -105,6 +108,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		const success = resp.payload.status == 200;
 
 		if (success) {
+			form.reset(formDefaultValues)
 			setOpenForm(false);
 			getEpics();
 		}
@@ -114,15 +118,34 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 
 	const releaseOptions =
 		releaseList?.data?.items?.map((relse) => ({
-			value: relse?.id,
+			value: relse?._id,
 			label: relse?.name,
 		})) ?? [];
 
 	const epicOptions =
 		epicItems?.map((epic) => ({
-			value: epic?.id,
+			value: epic?._id,
 			label: epic?.name,
 		})) ?? [];
+
+
+	const statusOptions = [
+		{ label: "Open", value: "open" },
+		{ label: "In progress", value: "in-progress" },
+		{ label: "Pending", value: "pending" },
+		{ label: "Done", value: "done" },
+	]
+
+	const dependencyTypeOptions = [
+		{ label: "Blocking", value: "blocking" }
+	]
+
+	const priorityOptions = [
+		{ label: "Low", value: "low" },
+		{ label: "Medium", value: "medium" },
+		{ label: "High", value: "high" },
+		{ label: "Critical", value: "critical" },
+	]
 
 	/*  ######################################################################################## */
 
@@ -164,27 +187,10 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 								<FormItem className="flex flex-col my-3">
 									<FormLabel>Status</FormLabel>
 									<HYCombobox
-										buttonClassName="w-full"
 										id="status"
 										form={form}
-										options={[
-											{
-												label: "Open",
-												value: "open",
-											},
-											{
-												label: "In progress",
-												value: "in-progress",
-											},
-											{
-												label: "Pending",
-												value: "pending",
-											},
-											{
-												label: "Done",
-												value: "done",
-											},
-										]}
+										options={statusOptions}
+										buttonClassName="w-full"
 									/>
 									<FormMessage />
 								</FormItem>
@@ -230,15 +236,10 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 									<FormItem>
 										<FormLabel>Dependency Type</FormLabel>
 										<HYCombobox
-											id="dependency_type"
 											form={form}
-											options={[
-												{
-													label: "Blocking",
-													value: "blocking",
-												},
-											]}
+											id="dependency_type"
 											buttonClassName="w-full"
+											options={dependencyTypeOptions}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -254,24 +255,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 									<HYCombobox
 										id="priority"
 										form={form}
-										options={[
-											{
-												label: "Critical",
-												value: "critical",
-											},
-											{
-												label: "Heigh",
-												value: "heigh",
-											},
-											{
-												label: "Medium",
-												value: "medium",
-											},
-											{
-												label: "Low",
-												value: "low",
-											},
-										]}
+										options={priorityOptions}
 										buttonClassName="w-full"
 									/>
 									<FormMessage />

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Dialog,
 	DialogContent,
@@ -23,11 +24,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import {
-	getAction,
-	postAction,
-	reducerNameFromUrl,
-} from "@/redux/actions/AppActions";
 
 const ProjectCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
@@ -35,6 +31,8 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -47,14 +45,18 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
 		status: z.string(),
+		org_id: z.string()
 	});
+
+	const defaultFormValues = {
+		title: "",
+		status: "open",
+		org_id: authInfo?.user?.org_id
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			title: "",
-			status: "open",
-		},
+		defaultValues: defaultFormValues,
 	});
 
 	/*  ######################################################################################## */
@@ -67,19 +69,16 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
-	const handleProjectCreation = async (
-		values: z.infer<typeof formSchema>
-	) => {
+	const handleProjectCreation = async (values: z.infer<typeof formSchema>) => {
 		const getProjects = (prams?: string) => {
 			let query = "?expand=owner";
-			if (prams) {
-				query = query + prams;
-			}
+			if (prams) { query = query + prams; }
 			dispatch(getAction({ project: Urls.project + query }));
 		};
 		const resp = (await dispatch(postAction(Urls.project, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
+			form.reset(defaultFormValues);
 			setOpenForm(false);
 			getProjects();
 		}
@@ -89,8 +88,8 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
-			value: user?.id,
-			label: user?.name,
+			value: user?._id,
+			label: user?.user_name,
 		})) ?? [];
 
 	/*  ######################################################################################## */
@@ -118,7 +117,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 									<FormLabel>Project Title</FormLabel>
 									<Input
 										placeholder="title"
-										className="w-full outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="w-full outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />
@@ -134,7 +133,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 									<FormLabel>Description</FormLabel>
 									<Input
 										type="text"
-										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />

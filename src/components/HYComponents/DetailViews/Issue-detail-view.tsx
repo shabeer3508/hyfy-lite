@@ -30,7 +30,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 	/*  ######################################################################################## */
 
-	const filteredComments = commentsItems?.filter(comment => comment?.issue_id === data?.id)?.map(comment => ({ ...comment, ...comment?.expand }))
+	const filteredComments = commentsItems?.filter(comment => comment?.issue_id === data?._id)?.map(comment => ({ ...comment, ...comment?.expand }))
 
 
 	const statusOptions = [
@@ -164,10 +164,10 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="space-y-3">
 					<div className="space-y-2">
 						<div>Comments</div>
-						<CommentCreation issueId={data?.id} />
+						<CommentCreation issueId={data?._id} />
 					</div>
 					<div className="space-y-3 py-2">
-						{filteredComments?.map((comment, i) => <CommentCard key={`${comment?.id}_${i}`} data={comment} />)}
+						{filteredComments?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
 					</div>
 				</div>
 			</ScrollArea>

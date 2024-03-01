@@ -60,7 +60,7 @@ const EpicsColumn = () => {
 
 	const releaseOptions =
 		releaseList?.data?.items?.map((relse) => ({
-			value: relse?.id,
+			value: relse?._id,
 			label: relse?.name,
 		})) ?? [];
 
@@ -145,7 +145,7 @@ const EpicsColumn = () => {
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 px-6 space-y-2">
 							{filteredEpicsItems.map((epic, i) => (
-								<EpicCard epic={epic} key={epic?.id} index={i} />
+								<EpicCard epic={epic} key={epic?._id} index={i} />
 							))}
 						</div>
 					</ScrollArea>
@@ -197,8 +197,8 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 
 	return (
 		<Card
-			key={epic?.id}
-			onClick={() => setSearchParams({ selected_epic: epic?.id })}
+			key={epic?._id}
+			onClick={() => setSearchParams({ selected_epic: epic?._id })}
 			className={`dark:bg-[#151619] border  rounded card-gradient cursor-pointer ${searchParams.get("selected_epic") === epic.id ? "border-primary" : ""}`}
 		>
 			<HYDialog

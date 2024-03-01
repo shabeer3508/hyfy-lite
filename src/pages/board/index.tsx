@@ -9,7 +9,7 @@ import HYSearch from "@/components/HYComponents/HYSearch";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { getAction, patchAction, setBoardData } from "@/redux/actions/AppActions";
+import { getAction, patchAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
 
 const Board = () => {
 	const dispatch = useDispatch();
@@ -18,8 +18,13 @@ const Board = () => {
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueListItems = issuesListData?.data?.items
 
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const userItems = usersList?.data?.items
+
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
+	const authInfo = useSelector((state: any) => state.UserReducer);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const boardInfo = appProfileInfo?.board
 
@@ -31,6 +36,14 @@ const Board = () => {
 			query = query + prams;
 		}
 		dispatch(getAction({ sprints: Urls.sprints + query }));
+	};
+
+	const getUsers = (prams?: string) => {
+		let query = "";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ users: Urls.users + query }));
 	};
 
 	const getIssues = (prams?: string) => {
@@ -70,20 +83,21 @@ const Board = () => {
 
 	const sprintOptions =
 		sprintListData?.data?.items?.map((sprnt) => ({
-			value: sprnt?.id,
+			value: sprnt?._id,
 			label: sprnt?.name,
 		})) ?? [];
 
 	const selectedSprintInfo = sprintListData?.data?.items?.find(
-		(sprnt) => sprnt?.id === boardInfo?.selected_sprint
+		(sprnt) => sprnt?._id === boardInfo?.selected_sprint
 	);
 
 
-	const taskFilterOptions = [
-		{ label: "All", value: "all" },
-		{ label: "My Tasks", value: "my_tasks" },
-		{ label: "Unassigned", value: "unassigned" }
-	]
+
+	const taskFilterOptions = userItems?.map(usr => {
+		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.name })
+	}) || []
+
+
 
 	const typeFilterOptions = [
 		{ label: "All", value: "all" },
@@ -103,6 +117,7 @@ const Board = () => {
 
 	useEffect(() => {
 		getSprints();
+		getUsers();
 	}, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
@@ -129,9 +144,9 @@ const Board = () => {
 					</div>
 					<div className="flex gap-2">
 						<HYCombobox
-							label={"Tasks"}
+							label={"Assignee"}
 							unSelectable={false}
-							options={taskFilterOptions}
+							options={[{ label: "All", value: "all" }, ...taskFilterOptions]}
 							defaultValue={boardInfo?.task_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
 						/>
@@ -186,7 +201,7 @@ const Board = () => {
 								<ScrollArea className="h-[calc(100vh-220px)] ">
 									<div className="flex flex-col px-5 py-2 gap-3">
 										{getIssuesByTypes("todo")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?.id} />
+											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
 										)}
 									</div>
 								</ScrollArea>
@@ -212,7 +227,7 @@ const Board = () => {
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
 										{getIssuesByTypes("ongoing")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?.id} />
+											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
 										)}
 									</div>
 								</ScrollArea>
@@ -237,7 +252,7 @@ const Board = () => {
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
 										{getIssuesByTypes("pending")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?.id} />
+											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
 										)}
 									</div>
 								</ScrollArea>
@@ -262,7 +277,7 @@ const Board = () => {
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
 										{getIssuesByTypes("done")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?.id} />
+											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
 										)}
 									</div>
 								</ScrollArea>

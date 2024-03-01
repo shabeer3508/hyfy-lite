@@ -1,5 +1,15 @@
+import { z } from "zod";
 import { useState } from "react";
+import HYSelect from "../HYSelect";
+import Urls from "@/redux/actions/Urls";
+import { useForm } from "react-hook-form";
+import { HYCombobox } from "../HYCombobox";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import { HiDatabase, HiOutlineClock } from "react-icons/hi";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import {
 	Dialog,
 	DialogContent,
@@ -8,14 +18,6 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { HiDatabase, HiOutlineClock } from "react-icons/hi";
-import HYSelect from "../HYSelect";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
 import {
 	Form,
 	FormControl,
@@ -29,9 +31,6 @@ import {
 	postAction,
 	reducerNameFromUrl,
 } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { HYCombobox } from "../HYCombobox";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
@@ -42,6 +41,7 @@ const IssueCreationForm = ({ children }: any) => {
 	const epicItems = epicsListData?.data?.items;
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
@@ -66,7 +66,8 @@ const IssueCreationForm = ({ children }: any) => {
 		estimated_hours: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
 		sub_tasks: z.string().optional().nullable(),
-		project_id: z.string()
+		project_id: z.string(),
+		org_id: z.string()
 	});
 
 	const defaultFormValues = {
@@ -75,7 +76,8 @@ const IssueCreationForm = ({ children }: any) => {
 		status: "backlog",
 		points: "5",
 		type: "story",
-		project_id: appProfileInfo.project_id
+		project_id: appProfileInfo.project_id,
+		org_id: authInfo?.user?.org_id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -106,13 +108,13 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const epicOptions =
 		epicItems?.filter(epic => epic.project_id === appProfileInfo.project_id)?.map((epic) => ({
-			value: epic?.id,
+			value: epic?._id,
 			label: epic?.name,
 		})) ?? [];
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
-			value: user?.id,
+			value: user?._id,
 			label: user?.name,
 		})) ?? [];
 
@@ -120,7 +122,7 @@ const IssueCreationForm = ({ children }: any) => {
 		issueItems
 			?.filter((issue) => issue?.type === "story" && issue.project_id === appProfileInfo.project_id)
 			?.map((issue) => ({
-				value: issue?.id,
+				value: issue?._id,
 				label: issue?.name,
 			})) ?? [];
 
@@ -159,6 +161,8 @@ const IssueCreationForm = ({ children }: any) => {
 		{ label: "Pending", value: "pending" },
 		{ label: "Done", value: "done" },
 	];
+
+	/*  ######################################################################################## */
 
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>

@@ -41,7 +41,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
     };
 
     const updateSprintInfo = async (key: string | number, value: string | boolean) => {
-        const resp = (await dispatch(patchAction({ sprints: Urls.sprints }, { [key]: value }, data?.id))) as any
+        const resp = (await dispatch(patchAction({ sprints: Urls.sprints }, { [key]: value }, data?._id))) as any
         const success = resp.payload.status == 200;
         if (success) {
             getSprints();
@@ -51,7 +51,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
     /*  ######################################################################################## */
 
     const filteredIssues = issueListItems?.filter(
-        (sprnt) => sprnt?.sprint === data?.id
+        (sprnt) => sprnt?.sprint === data?._id
     );
 
 
@@ -158,7 +158,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
             <ScrollArea className="max-h-[40vh] h-auto w-full pr-5">
                 <div className="space-y-2 text-xs">
                     {filteredIssues?.map((issue) => {
-                        return <IssueMiniCard data={issue} key={issue?.id} />;
+                        return <IssueMiniCard data={issue} key={issue?._id} />;
                     })}
                 </div>
             </ScrollArea>

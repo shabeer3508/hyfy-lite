@@ -19,7 +19,6 @@ const Profile = () => {
 	const orgList = useSelector((state: any) => state?.[orgReducerName]);
 	const orgItems = orgList?.data?.items
 
-
 	/*  ######################################################################################## */
 
 	const getOrganizations = (prams?: string) => {
@@ -39,7 +38,7 @@ const Profile = () => {
 
 	const handleOrganizationChange = async (orgId: string) => {
 		const resp = (await dispatch(
-			patchAction({ users: Urls.users }, { current_organization: orgId, }, authInfo?.user?.id)
+			patchAction({ users: Urls.users }, { current_organization: orgId, }, authInfo?.user?._id)
 		)) as any;
 
 		const success = resp.payload.status == 200;
@@ -66,9 +65,9 @@ const Profile = () => {
 					<HYAvatar
 						className="size-32"
 						url="https://github.com/shadcn.png"
-						name={authInfo?.user?.name}
+						name={authInfo?.user?.user_name}
 					/>
-					<h1 className="text-2xl font-bold mt-6">{authInfo?.user?.name}</h1>
+					<h1 className="text-2xl font-bold mt-6">{authInfo?.user?.user_name}</h1>
 					<p className="text-sm text-gray-500 mt-1 capitalize">
 						{authInfo?.user?.role}
 					</p>
@@ -86,14 +85,14 @@ const Profile = () => {
 						{orgItems?.map((org) =>
 							<Card
 								className="p-7 flex justify-between items-center cursor-pointer"
-								onClick={() => authInfo?.user?.current_organization !== org?.id && handleOrganizationChange(org?.id)}
+								onClick={() => authInfo?.user?.current_organization !== org?._id && handleOrganizationChange(org?._id)}
 							>
 								<div>
 									<div className="text-sm">{org?.name}</div>
 									<div className="text-xs">{org?.email}</div>
 								</div>
 								<div>
-									{authInfo?.user?.current_organization === org?.id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
+									{authInfo?.user?.current_organization === org?._id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
 								</div>
 							</Card>
 						)}

@@ -6,21 +6,22 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
+import { ScrollArea, } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import HYSelect from "@/components/HYComponents/HYSelect";
 import HYTooltip from "@/components/HYComponents/HYTooltip";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import ProjectCreationForm from "@/components/HYComponents/forms/project-creation";
 import ProjectDetailView from "@/components/HYComponents/DetailViews/Project-detail-view";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 
 const Project = () => {
 	const dispatch = useDispatch();
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const itemsRes = useSelector((state: any) => state?.[reducerName]);
+
+	/*  ######################################################################################## */
 
 	const getProjects = (prams?: string) => {
 		let query = "?expand=owner";
@@ -30,30 +31,41 @@ const Project = () => {
 		dispatch(getAction({ project: Urls.project + query }));
 	}
 
+	/*  ######################################################################################## */
+
 	const items = itemsRes?.data?.items?.map((val: any) => ({
 		...val,
 		...val?.expand,
 	}));
 
 
+	const statusOptions = [
+		{ label: "Done", value: "done" },
+		{ label: "In-progress", value: "in-progress" },
+		{ label: "Pending", value: "pending" },
+		{ label: "Open", value: "open" }]
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
 		getProjects();
 	}, []);
 
+	/*  ######################################################################################## */
+
 	return (
-		<div className=" flex flex-col h-full">
-			<div className=" flex justify-between items-end mx-6">
+		<div className="flex flex-col h-full">
+			<div className="flex justify-between items-center mx-6">
 				<div className="flex flex-col gap-4">
-					<p className=" text-xl ">Projects</p>
-					<ProjectCreationForm>
-						<Button size="sm" className="text-white">Create Project</Button>
-					</ProjectCreationForm>
+					<p className="text-xl">Projects</p>
 				</div>
 				<div className="flex gap-2">
+					<HYCombobox defaultValue="recent" options={[{ label: "Recent", value: "recent" }, { label: "Old", value: "old" }]} />
+					<HYCombobox label="Status" defaultValue="all" options={[{ label: "All", value: "all" }, ...statusOptions]} />
 					<HYSearch />
-					<div className="">
-						<HYSelect id="" label="Status" options={["done", "in-progress", "pending", "open"]} />
-					</div>
+					<ProjectCreationForm>
+						<Button className="text-white">Create Project</Button>
+					</ProjectCreationForm>
 				</div>
 			</div>
 			<ScrollArea className="mt-4">
@@ -75,7 +87,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	const issuesItems = issuesListData?.data?.items;
 
 	const projectIssues = issuesItems?.filter(
-		(issue) => issue?.project_id === data?.id
+		(issue) => issue?.project_id === data?._id
 	);
 
 	const pieceWidth = 100 / projectIssues?.length;
@@ -115,7 +127,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 					</div>
 					<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
 						{projectIssues?.map((itm => (
-							<HYTooltip message={itm?.status} className='capitalize'>
+							<HYTooltip key={itm?._id} message={itm?.status} className='capitalize'>
 								<div
 									className={`
                                          ${itm?.status === "done" && "bg-[#56972E]"}

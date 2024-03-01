@@ -108,7 +108,7 @@ export function patchAction(
 ) {
 	const method = "PATCH";
 	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
-	url = url + `/${id}/${lastPath ? lastPath : ""}`;
+	url = url + `/${id}${lastPath ? `/${lastPath}` : ""}`;
 	const type = actionTypeFromUrl(url, method);
 	return {
 		type,

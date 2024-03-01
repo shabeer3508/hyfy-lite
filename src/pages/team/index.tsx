@@ -53,7 +53,7 @@ const Team = () => {
 						<Label className="" htmlFor="team">
 							Teams
 						</Label>
-						<TabsList>
+						<TabsList className="hidden">
 							<TabsTrigger value="members">Members</TabsTrigger>
 							<TabsTrigger value="performance">Performance</TabsTrigger>
 						</TabsList>
@@ -80,11 +80,11 @@ const Team = () => {
 						<div className=" ">
 							<ScrollArea className="flex flex-col gap-5 space-y-5  h-[calc(100vh-200px)] items-center 2xl:w-2/3">
 								{userItems?.map(user => (
-									<Card key={user?.id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] first:my-0 my-3" >
+									<Card key={user?._id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] first:my-0 my-3" >
 										<div className="flex items-center">
 											<HYAvatar className="size-12 ml-6 " url="https://github.com/shadcn.png" />
 											<CardHeader className="gap-y-0 p-3">
-												<CardTitle className="text-base">{user?.name}</CardTitle>
+												<CardTitle className="text-base">{user?.user_name}</CardTitle>
 												<CardDescription className="capitalize">{user?.role}</CardDescription>
 											</CardHeader>
 										</div>

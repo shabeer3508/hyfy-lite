@@ -7,21 +7,21 @@ const Urls = {
 	upload: "/",
 	imgBaseUrl: "/",
 	host: `${domain}/`,
-	baseUrl: `${domain}/api/collections`,
+	baseUrl: `${domain}/api`,
 
-	authenticate: "/users/auth-with-password",
+	authenticate: "/login",
 
-	users: "/users/records",
-	profile: "/profile/records",
-	organization: "/organization/records",
+	users: "/users",
+	profile: "/profile",
+	organization: "/organizations",
 
-	project: "/project/records",
-	epic: "/epic/records",
-	issues: "/issues/records",
-	release: "/release/records",
-	sprints: "/sprints/records",
+	project: "/projects",
+	epic: "/epics",
+	issues: "/issues",
+	release: "/release",
+	sprints: "/sprints",
 
-	comments: "/comments/records",
+	comments: "/comments",
 };
 
 export default Urls;

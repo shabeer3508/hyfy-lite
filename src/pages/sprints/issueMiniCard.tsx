@@ -15,14 +15,14 @@ const IssueMiniCard = ({ data }: any) => {
 	/*  ######################################################################################## */
 
 	const upadateIssueByType = (value: string | number, key: string) => {
-		dispatch(patchAction({ issues: Urls.issues }, { [key]: value }, data?.id))
+		dispatch(patchAction({ issues: Urls.issues }, { [key]: value }, data?._id))
 	}
 
 	/*  ######################################################################################## */
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
-			value: user?.id,
+			value: user?._id,
 			label: user?.name,
 		})) ?? [];
 
@@ -73,7 +73,7 @@ const IssueMiniCard = ({ data }: any) => {
 						label={<HiDatabase />}
 						options={pointsOptions}
 						buttonClassName="w-full"
-						defaultValue={data?.points}
+						defaultValue={data?.points?.toString()}
 						onValueChange={(value) => upadateIssueByType(value, "points")}
 					/>
 				</div>

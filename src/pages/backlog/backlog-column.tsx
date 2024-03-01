@@ -3,7 +3,7 @@ import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import { HiOutlineArrowsUpDown, HiCheck } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
@@ -26,14 +26,18 @@ import {
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
+
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueItems = issuesListData?.data?.items;
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 
-	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
+	const epicItems = epicsListData?.data?.items;
 
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
@@ -53,6 +57,14 @@ const BacklogColumn = () => {
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
+	const getEpics = (prams?: string) => {
+		let query = `?perPage=300&expand=releases,project_id`;
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ epic: Urls.epic + query }));
+	};
+
 	const updateIssueToBacklog = async (issueId: string) => {
 		const resp = (await dispatch(
 			patchAction({ issues: Urls.issues }, { sprint: "", status: "backlog" }, issueId)
@@ -70,9 +82,14 @@ const BacklogColumn = () => {
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
-			value: user?.id,
-			label: user?.name,
+			value: user?._id,
+			label: user?.user_name,
 		})) ?? [];
+
+	const epicsOptions = epicItems?.map((epc) => ({
+		value: epc?._id,
+		label: epc?.title,
+	})) ?? []
 
 	/*  ######################################################################################## */
 
@@ -89,19 +106,21 @@ const BacklogColumn = () => {
 	useEffect(() => {
 		getIssues();
 		getUsers();
-	}, []);
+		getEpics();
+	}, [appProfileInfo?.project_id]);
 
 	/*  ######################################################################################## */
 
 	return (
 		<div className="flex flex-col h-full border-r">
 			<div className="flex items-center justify-between w-full px-6">
-				<div className="mr-3">Backlog</div>
+				<div className="mr-3 text-xl">Backlog</div>
 				<div className="flex gap-3">
 					<HYSearch />
 					<IssueCreationForm>
-						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-							<HiPlus className="h-8 w-8 " />
+						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm">
+							Add Story
+							<HiPlus className="h-5 w-5 " />
 						</div>
 					</IssueCreationForm>
 				</div>
@@ -128,11 +147,19 @@ const BacklogColumn = () => {
 							</Button>
 						</HYDropdownMenuCheckbox>
 					</div>
-					<div className="">
+					<div className="flex gap-2">
 						<HYCombobox
-							label="Assigned to "
+							defaultValue="all"
+							label="Assigned to"
 							options={[{ label: "All", value: "all" }, ...usersOptions]}
 						/>
+						<HYCombobox
+							defaultValue="all"
+							label="Epic"
+							options={[{ label: "All", value: "all" }, ...epicsOptions]}
+						/>
+
+						<div className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer" ><HiCheck className="h-5 w-5 text-[#707173]" /></div>
 					</div>
 				</div>
 			</div>
@@ -153,7 +180,7 @@ const BacklogColumn = () => {
 					<ScrollArea className="h-[calc(100vh-250px)] w-full">
 						<div className="py-4 px-6 space-y-2">
 							{backlogIssues.map((issue, i) => (
-								<IssueCard index={i} issue={issue} key={issue?.id} />
+								<IssueCard index={i} issue={issue} key={issue?._id} />
 							))}
 						</div>
 					</ScrollArea>
@@ -163,7 +190,7 @@ const BacklogColumn = () => {
 					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
-								2
+								1
 							</div>
 							<div className="text-primary font-bold text-xl">
 								Add your stories here
@@ -196,8 +223,8 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 		<Card
 			draggable
 			key={issue.id}
-			onDragStart={(e) => e.dataTransfer.setData("id", issue?.id)}
-			className=" border border-[#696B70] rounded card-gradient cursor-pointer dark:bg-[#151619]"
+			onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
+			className=" border  rounded card-gradient cursor-pointer dark:bg-[#151619]"
 		>
 			<HYDialog
 				className="max-w-6xl"

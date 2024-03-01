@@ -12,12 +12,13 @@ import { Button } from "@/components/ui/button";
 import { postAction, setCurrentUser } from "@/redux/actions/AppActions";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const { register, handleSubmit } = useForm();
 	const [isLoading, setIsLoading] = useState(false);
+
+	const { register, handleSubmit, formState: { errors }, } = useForm();  // TODO : update  form using shadcn form
+
 
 	const login = async (data) => {
 		setIsLoading(true);
@@ -25,14 +26,14 @@ const Login = () => {
 		try {
 			(dispatch(postAction(Urls.authenticate, data)) as any).then((res: any) => {
 				setIsLoading(false);
-
-				const success = res.payload.status == 200;
+				const res_data = res?.payload?.data
+				const success = res?.payload?.status == 200;
 
 				if (success) {
-					Cookies.set('hyfy_auth_token', res?.payload?.data?.token, { expires: 7 })
-					dispatch(setCurrentUser(res?.payload?.data?.record));
+					Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 7, secure: true })
+					dispatch(setCurrentUser(res_data?.data?.user));
 
-					if (res?.payload?.data?.record?.role === "employee") navigate("/board");
+					if (res_data?.data?.user?.role === "employee") navigate("/board");
 					else navigate("/backlog");
 				}
 			});
@@ -70,18 +71,20 @@ const Login = () => {
 						<div className="flex flex-col space-y-1.5 mt-3">
 							<Label className="text-xs dark:text-foreground">Enter Secure password</Label>
 							<Input
-								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border dark:border-[#FFFFFF1A] border-border"
+								required
 								type="password"
 								id="password"
+								minLength={8}
 								placeholder="- - - - - - - -"
-								required
 								{...register("password")}
+								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border dark:border-[#FFFFFF1A] border-border"
 							/>
 						</div>
 						<Button
 							type="submit"
 							disabled={isLoading}
 							className="w-full hover:bg-primary mt-5 dark:text-foreground"
+							onClick={() => { }}
 						>
 							{isLoading ? "Loading..." : "Login"}
 						</Button>

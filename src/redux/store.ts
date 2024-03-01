@@ -61,10 +61,6 @@ const middleware = axiosMiddleware(client, {
 					return Promise.resolve(res);
 				},
 				error: function (actions: any, error: any) {
-					console.log(
-						`ErrorManager,  : error?.response `,
-						error?.response
-					);
 					ErrorManager.handle(error);
 					return Promise.reject(error);
 				},

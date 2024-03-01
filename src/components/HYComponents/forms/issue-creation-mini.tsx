@@ -16,12 +16,15 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const authInfo = useSelector((state: any) => state.UserReducer);
+
 	const [postData, setPostData] = useState({
 		name: "",
 		status: "backlog",
-		type: "task",
+		type: "story",
 		points: "5",
-		project_id: appProfileInfo?.project_id
+		project_id: appProfileInfo?.project_id,
+		org_id: authInfo?.user?.org_id
 	});
 
 	/*  ######################################################################################## */
@@ -48,6 +51,16 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 				const success = res.payload.status == 200;
 				if (success) {
 					getIssues();
+					setPostData(
+						{
+							name: "",
+							status: "backlog",
+							type: "story",
+							points: "5",
+							project_id: appProfileInfo?.project_id,
+							org_id: authInfo?.user?.org_id
+						}
+					)
 				}
 			});
 		}
@@ -56,12 +69,13 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	/*  ######################################################################################## */
 
 	return (
-		<div className="flex items-center bg-background pr-3 w-full rounded border">
+		<div className="flex items-center bg-background pr-3 w-full rounded border" >
 			<Input
+				value={postData?.name}
 				placeholder="Add Story"
 				onKeyDown={handleIssueCreation}
 				onChange={({ target }) => setPostData((prev) => ({ ...prev, name: target.value }))}
-				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0"
+				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 text-sm"
 			/>
 			<Select
 				defaultValue="story"

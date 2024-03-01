@@ -33,7 +33,7 @@ const ProjectDetailView = ({ data }: { data: any }) => {
         { label: "Pending", value: "pending" }, { label: "Done", value: "done" }
     ]
 
-    const filteredComments = commentsItems?.filter(comment => comment?.project_id === data?.id)?.map(comment => ({ ...comment, ...comment?.expand }))
+    const filteredComments = commentsItems?.filter(comment => comment?.project_id === data?._id)?.map(comment => ({ ...comment, ...comment?.expand }))
 
     /*  ######################################################################################## */
 
@@ -103,10 +103,10 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                 <div className="space-y-3">
                     <div className="space-y-2">
                         <div>Comments</div>
-                        <CommentCreation projectId={data?.id} />
+                        <CommentCreation projectId={data?._id} />
                     </div>
                     <div className="space-y-3">
-                        {filteredComments?.map((comment, i) => <CommentCard key={`${comment?.id}_${i}`} data={comment} />)}
+                        {filteredComments?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
                     </div>
                 </div>
             </ScrollArea>

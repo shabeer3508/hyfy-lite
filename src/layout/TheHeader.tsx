@@ -22,6 +22,7 @@ const TheHeader = () => {
 	const projectList = useSelector((state: any) => state?.[reducerName]);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -37,7 +38,7 @@ const TheHeader = () => {
 
 	const projectOptions =
 		projectList?.data?.items?.map((prjct) => ({
-			value: prjct?.id,
+			value: prjct?._id,
 			label: prjct?.title,
 		})) ?? [];
 
@@ -80,7 +81,7 @@ const TheHeader = () => {
 						<HYAvatar
 							className="size-6 "
 							url="https://github.com/shadcn.png"
-							name={"John Doe"}
+							name={authInfo?.user?.user_name}
 						/>
 					</Button>
 				</div>

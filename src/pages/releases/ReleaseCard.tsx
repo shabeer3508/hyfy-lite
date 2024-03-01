@@ -1,9 +1,9 @@
-import HYAvatar from "@/components/HYComponents/HYAvatar";
 import { Card } from "@/components/ui/card";
+import { HiRocketLaunch } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
+import HYAvatar from "@/components/HYComponents/HYAvatar";
 
 interface ReleaseCardProps {
-	// TODO
 	item?: any;
 }
 
@@ -11,32 +11,21 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 	return (
 		<Card
-			onDragStart={(e) => {
-				e.dataTransfer.setData("id", item?.id);
-			}}
 			draggable={true}
+			onDragStart={(e) => { e.dataTransfer.setData("id", item?._id) }}
 			className="flex flex-col justify-between rounded-lg hover:cursor-grab dark:bg-[#151619] card-gradient"
 		>
 			<div className="flex gap-3 items-center h-16 px-4">
-				<img src="/release_icon.svg" alt="Project" />
+				<HiRocketLaunch className="w-6 h-6 text-[#707173]" />
 				<div className="capitalize ">{item?.name}</div>
 			</div>
 			<Separator className=" w-full" />
 			<div className="p-4 space-y-2">
 				<div className="text-base">{item?.description}</div>
 				<div className="text-base">
-					<span className=" text-xs text-[#737377]">From</span>{" "}
+					<span className=" text-xs text-[#737377] mr-2">Release Date </span>{" "}
 					<span className="">
-						{item?.from_date
-							? formatter.format(new Date(item?.from_date))
-							: "_"}
-					</span>
-					{"  "}
-					<span className=" text-xs text-[#737377]">To</span>{" "}
-					<span className="">
-						{item?.to_date
-							? formatter.format(new Date(item?.to_date))
-							: "_"}
+						{item?.to_date && formatter.format(new Date(item?.to_date))}
 					</span>
 				</div>
 			</div>

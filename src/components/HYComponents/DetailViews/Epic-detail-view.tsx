@@ -51,7 +51,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 
 	const releaseOptions =
 		releaseList?.data?.items?.map((release) => ({
-			value: release?.id,
+			value: release?._id,
 			label: release?.name,
 		})) ?? [];
 
@@ -108,7 +108,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 			<ScrollArea className="max-h-[calc(100vh-500px)] h-full w-full">
 				<div className="pr-5 space-y-2 text-xs">
 					{filterIssueByEpic?.map((sprint) => {
-						return <IssueMiniCard data={sprint} key={sprint?.id} />;
+						return <IssueMiniCard data={sprint} key={sprint?._id} />;
 					})}
 				</div>
 			</ScrollArea>

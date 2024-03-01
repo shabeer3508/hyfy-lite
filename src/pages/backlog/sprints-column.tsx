@@ -91,12 +91,13 @@ const SprintsColumn = () => {
 	return (
 		<div className="flex flex-col h-full">
 			<div className="flex items-center justify-between w-full px-6">
-				<div className="mr-3">Sprints</div>
+				<div className="mr-3 text-xl">Sprints</div>
 				<div className="flex gap-3">
 					<HYSearch />
 					<SprintCreationForm>
-						<div className="flex justify-center items-center border p-2 rounded aspect-square h-10 w-10 border-primary text-primary cursor-pointer">
-							<HiPlus className="h-8 w-8 " />
+						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm">
+							Add Sprint
+							<HiPlus className="h-5 w-5" />
 						</div>
 					</SprintCreationForm>
 				</div>
@@ -116,6 +117,7 @@ const SprintsColumn = () => {
 					</div>
 					<div className="">
 						<HYCombobox
+							defaultValue="all"
 							label="Status "
 							options={[
 								{ label: "All", value: "all" },
@@ -135,15 +137,15 @@ const SprintsColumn = () => {
 							{filteredSprints.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(
-									(issue) => issue?.sprint === sprint?.id
+									(issue) => issue?.sprint === sprint?._id
 								);
 
 								return (
 									<div
-										key={sprint.id}
+										key={sprint?._id}
 										onDrop={(e) => {
 											e.preventDefault();
-											updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?.id)
+											updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?._id)
 										}}
 										onDragOver={(e) => e.preventDefault()}
 										className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer"
@@ -206,7 +208,7 @@ const SprintsColumn = () => {
 													{sprintIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
 
 													<IssueCreationCardMini
-														sprintId={sprint?.id}
+														sprintId={sprint?._id}
 													/>
 												</AccordionContent>
 											</AccordionItem>
@@ -221,7 +223,7 @@ const SprintsColumn = () => {
 					<div className="flex justify-center h-[calc(100vh-200px)] items-center mt-[30px]">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
-								3
+								2
 							</div>
 							<div className="text-primary font-bold text-xl">
 								Add sprints here

@@ -51,13 +51,16 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		project_id: z.string(),
 		created_by: z.string(),
 		issues: z.string().optional().nullable(),
+		org_id: z.string(),
 	});
 
 	const defaultFormValues = {
 		name: "",
 		status: "backlog",
 		project_id: appProfileInfo?.project_id,
-		created_by: authInfo?.user?.id
+		created_by: authInfo?.user?._id,
+		org_id: authInfo?.user?.org_id,
+		description: ""
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -67,7 +70,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 
 	/*  ######################################################################################## */
 
-	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleSprintCreation = async (values: z.infer<typeof formSchema>) => {
 		const getSprints = (prams?: string) => {
 			let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
 			if (prams) {
@@ -102,7 +105,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 					<DialogTitle>Add Sprint</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleEpicCreation)}>
+					<form onSubmit={form.handleSubmit(handleSprintCreation)}>
 						<FormField
 							control={form.control}
 							name="name"

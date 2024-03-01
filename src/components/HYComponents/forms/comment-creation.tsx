@@ -13,7 +13,7 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
         message: "",
         issue_id: issueId,
         project_id: projectId,
-        created_by: authInfo?.user?.id,
+        created_by: authInfo?.user?._id,
     });
 
     /*  ######################################################################################## */
@@ -33,7 +33,7 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
                     message: "",
                     issue_id: issueId,
                     project_id: projectId,
-                    created_by: authInfo?.user?.id,
+                    created_by: authInfo?.user?._id,
                 })
                 getComments()
             }
