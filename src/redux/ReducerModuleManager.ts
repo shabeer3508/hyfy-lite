@@ -15,10 +15,6 @@ const ReducerModuleManger: any = {
 			//
 			const detailReducerName = reducerNameFromUrl(apiName, "GET", true);
 			const detailActionType = actionTypeFromUrl(apiName, "GET", true);
-			///GET__VEHICLE_DETAIL_SUCCESS
-			// console.log(`ReducerModuleManger,  : ${detailActionType} apiName`, apiNameCap);
-			// console.log(`ReducerModuleManger,  : ${detailActionType} GetName`, GetName);
-			// console.log(`ReducerModuleManger,  : ${detailActionType} detailReducerName`, detailReducerName);
 			return {
 				...prv,
 				...{
