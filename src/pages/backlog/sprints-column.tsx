@@ -148,7 +148,7 @@ const SprintsColumn = () => {
 											updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?._id)
 										}}
 										onDragOver={(e) => e.preventDefault()}
-										className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer"
+										className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer dark:bg-background bg-[#F7F8F9]"
 									>
 										<Accordion
 											type="single"

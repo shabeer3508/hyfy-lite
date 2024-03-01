@@ -93,7 +93,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	const pieceWidth = 100 / projectIssues?.length;
 
 	const logoColors = [
-		"text-[#FFFFFF]",
+		// "text-[#FFFFFF]",
 		"text-[#71A4FF]",
 		"text-[#FF6481]",
 		"text-[#4C4878]",
@@ -109,7 +109,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 		{ label: "Open", value: "open" }]
 
 
-	return <Card className="dark:bg-[#151619]">
+	return <Card className="dark:bg-[#151619] bg-[#F7F8F9]">
 		<HYDialog
 			className="max-w-6xl"
 			content={<ProjectDetailView data={data} />}

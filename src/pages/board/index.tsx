@@ -170,10 +170,10 @@ const Board = () => {
 				<div className="px-6 flex my-5">
 					<div>
 						{selectedSprintInfo?.start_date
-							&& formatter.format(new Date(selectedSprintInfo?.start_date))}
-						{" "}-{" "}
+							&& `${formatter.format(new Date(selectedSprintInfo?.start_date))}`}
+
 						{selectedSprintInfo?.end_date
-							&& formatter.format(new Date(selectedSprintInfo?.end_date))}
+							&& ` - ${formatter.format(new Date(selectedSprintInfo?.end_date))}`}
 					</div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
@@ -184,7 +184,7 @@ const Board = () => {
 					>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center dark:bg-[#131417] rounded mx-1"
+								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -210,7 +210,7 @@ const Board = () => {
 						{/* <ResizableHandle /> */}
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center dark:bg-[#131417] rounded mx-1"
+								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -235,7 +235,7 @@ const Board = () => {
 						</ResizablePanel>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className=" text-center dark:bg-[#131417] rounded mx-1"
+								className=" text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
@@ -260,7 +260,7 @@ const Board = () => {
 						</ResizablePanel>
 						<ResizablePanel defaultSize={25}>
 							<div
-								className="text-center dark:bg-[#131417] rounded mx-1"
+								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();

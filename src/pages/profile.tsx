@@ -60,7 +60,7 @@ const Profile = () => {
 
 	return (
 		<div className="dark:text-foreground flex flex-col h-full items-center px-6 pb-5 ">
-			<Card className="w-full flex-1 flex py-14 dark:bg-[#16181D]">
+			<Card className="w-full flex-1 flex py-14 dark:bg-[#16181D] bg-[#F7F8F9]">
 				<div className="w-1/3 flex flex-col justify-center items-center flex-1 border-r">
 					<HYAvatar
 						className="size-32"

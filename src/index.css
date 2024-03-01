@@ -92,7 +92,7 @@ body {
 	cursor: pointer;
 }
 
-.card-gradient:hover {
+.dark .card-gradient:hover {
 	background: radial-gradient(
 			50% 50% at 48.12% 100%,
 			rgba(255, 255, 255, 0.04) 0%,

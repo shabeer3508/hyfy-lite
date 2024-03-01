@@ -85,15 +85,16 @@ const Releases = () => {
 
 						<HYSearch />
 					</div>
+
 					<div className="h-full">
-						<div className="grid grid-cols-3 gap-6 mt-4">
+						<div className="grid grid-cols-3 gap-5 mt-4">
 							<div
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
 									updateItemStatus(e?.dataTransfer?.getData("id"), "planning");
 								}}
-								className="space-y-2"
+								className="space-y-2 dark:bg-[#131417] bg-[#F7F8F9] p-2 rounded"
 							>
 								<p className="text-base">Planing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
@@ -104,13 +105,14 @@ const Releases = () => {
 									</div>
 								</ScrollArea>
 							</div>
+
 							<div
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
 									updateItemStatus(e?.dataTransfer?.getData("id"), "ongoing");
 								}}
-								className="space-y-2"
+								className="space-y-2 dark:bg-[#131417] bg-[#F7F8F9] p-2 rounded"
 							>
 								<p className="text-base">Ongoing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
@@ -121,13 +123,14 @@ const Releases = () => {
 									</div>
 								</ScrollArea>
 							</div>
+
 							<div
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
 									updateItemStatus(e?.dataTransfer?.getData("id"), "released");
 								}}
-								className="space-y-2"
+								className="space-y-2 dark:bg-[#131417] bg-[#F7F8F9] p-2 rounded"
 							>
 								<p className="text-base">Released</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">

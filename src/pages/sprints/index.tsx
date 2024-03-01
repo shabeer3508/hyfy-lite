@@ -72,7 +72,7 @@ const Sprints = () => {
 				</div>
 			</div>
 			<ScrollArea className="h-[calc(100vh-200px)] w-full my-3">
-				<div className="px-5 space-y-2">
+				<div className="px-6 space-y-2">
 					{filteredSprints?.map((sprint) => {
 
 						const sprintIssues = issueListItems?.filter(
@@ -81,7 +81,7 @@ const Sprints = () => {
 
 						return <div
 							key={sprint?._id}
-							className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer"
+							className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer dark:bg-background bg-[#F7F8F9]"
 						>
 							<Accordion
 								type="single"

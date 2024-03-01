@@ -224,7 +224,7 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 			draggable
 			key={issue.id}
 			onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
-			className=" border  rounded card-gradient cursor-pointer dark:bg-[#151619]"
+			className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
 		>
 			<HYDialog
 				className="max-w-6xl"

@@ -80,7 +80,7 @@ const Team = () => {
 						<div className=" ">
 							<ScrollArea className="flex flex-col gap-5 space-y-5  h-[calc(100vh-200px)] items-center 2xl:w-2/3">
 								{userItems?.map(user => (
-									<Card key={user?._id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] first:my-0 my-3" >
+									<Card key={user?._id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] bg-[#F7F8F9] first:my-0 my-3" >
 										<div className="flex items-center">
 											<HYAvatar className="size-12 ml-6 " url="https://github.com/shadcn.png" />
 											<CardHeader className="gap-y-0 p-3">

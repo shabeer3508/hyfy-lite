@@ -179,8 +179,8 @@ const EpicScreen = () => {
 
                                     return (
                                         <div
-                                            key={epic.id}
-                                            className="flex gap-3 justify-between items-center text-sm border  rounded card-gradient "
+                                            key={epic?._id}
+                                            className="flex gap-3 justify-between items-center text-sm border rounded card-gradient dark:bg-[#131417] bg-[#F7F8F9]"
                                         >
                                             <Accordion
                                                 type="single"
@@ -193,7 +193,9 @@ const EpicScreen = () => {
                                                 >
                                                     <div className="flex justify-between items-center w-full">
                                                         <div className="mr-1">
-                                                            <Button type="button" variant="ghost" className="p-0 hover:bg-background" ><AccordionTrigger className="p-3" /></Button>
+                                                            <Button type="button" variant="ghost" className="p-0 hover:bg-background" >
+                                                                <AccordionTrigger className="p-3" />
+                                                            </Button>
                                                         </div>
                                                         <div className="flex justify-between items-center w-full">
                                                             <div className="flex gap-1 items-center">
@@ -203,7 +205,7 @@ const EpicScreen = () => {
                                                                     content={<EpicDetailView data={epic} />}
                                                                 >
                                                                     <div className="sm:w-[100px] md:w-[120px] 2xl:w-[200px] capitalize truncate cursor-pointer">
-                                                                        {epic.name}
+                                                                        {epic?.name}
                                                                     </div>
                                                                 </HYDialog>
                                                             </div>
