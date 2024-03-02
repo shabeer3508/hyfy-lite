@@ -1,5 +1,5 @@
-import { Suspense, lazy } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Suspense, lazy, } from "react";
+import { Route, Routes, } from "react-router-dom";
 import { Toaster } from "./components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -22,9 +22,8 @@ const App = () => {
 			<Suspense fallback={loading()}>
 				<Routes>
 					<Route path="/login" element={<Login />} />
-					<Route path="/signup" element={<SignUp />} />
+					<Route path="/signup/*" element={<SignUp />} />
 					<Route path="/*" element={<TheLayout />} />
-					<Route path="*" element={<NotFound />} />
 				</Routes>
 			</Suspense>
 			<Toaster />

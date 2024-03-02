@@ -1,5 +1,5 @@
 import Urls from "@/redux/actions/Urls";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LuMoreVertical } from "react-icons/lu";
@@ -20,12 +20,6 @@ const Team = () => {
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items
-
-	const [memberInfo, setMemberInfo] = useState({
-		showSideBar: false,
-		showAddMembers: false,
-		showManageMembers: false,
-	});
 
 	/*  ######################################################################################## */
 
@@ -49,10 +43,10 @@ const Team = () => {
 		<div className="dark:text-foreground mx-6 h-screen">
 			<div className="gap-3">
 				<Tabs defaultValue="members" className=" ">
-					<div className="flex items-center justify-between">
-						<Label className="" htmlFor="team">
+					<div className="flex items-center justify-between min-h-10">
+						<div className="text-xl" >
 							Teams
-						</Label>
+						</div>
 						<TabsList className="hidden">
 							<TabsTrigger value="members">Members</TabsTrigger>
 							<TabsTrigger value="performance">Performance</TabsTrigger>

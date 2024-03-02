@@ -86,7 +86,7 @@ export function HYCombobox({
 							{label}
 						</span>
 					)}
-					<span className="w-1/2 truncate capitalize">
+					<span className="w-1/2 truncate capitalize text-start">
 						{value
 							? options.find((opt) => opt.value === value)?.label
 							: `Select ${name ?? ""}..`}

@@ -33,12 +33,6 @@ const ErrorManager = {
 			/* ############################# Client error response ############################# */
 
 			if (error?.response?.status == 400) {
-				console.log(
-					"🚀 ~ handle ~ error?.response?.status:",
-					error?.response?.data,
-					error?.response?.data?.error?.issues
-				);
-
 				const codeMsg =
 					HttpCodeMessages[error?.response?.status] || "Bad Request";
 

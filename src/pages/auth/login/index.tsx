@@ -1,7 +1,6 @@
 import Cookies from "js-cookie"
 import { toast } from "sonner";
 import { useState } from "react";
-import { HiMail } from "react-icons/hi";
 import Urls from "@/redux/actions/Urls";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -10,15 +9,16 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { postAction, setCurrentUser } from "@/redux/actions/AppActions";
+import { HiLockClosed, HiMail, HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 
-	const { register, handleSubmit, formState: { errors }, } = useForm();  // TODO : update  form using shadcn form
-
+	const { register, handleSubmit, formState: { errors }, } = useForm();  // TODO : convert to shadcn form
 
 	const login = async (data) => {
 		setIsLoading(true);
@@ -63,35 +63,41 @@ const Login = () => {
 								type="email"
 								id="identity"
 								required
-								autoComplete="off"
+								// autoComplete="off"
 								placeholder="Email"
 								{...register("identity")}
 							/>
 						</div>
 						<div className="flex flex-col space-y-1.5 mt-3">
 							<Label className="text-xs dark:text-foreground">Enter Secure password</Label>
-							<Input
-								required
-								type="password"
-								id="password"
-								minLength={8}
-								placeholder="- - - - - - - -"
-								{...register("password")}
-								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border dark:border-[#FFFFFF1A] border-border"
-							/>
+							<div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+								<HiLockClosed className="mr-2" />
+								<Input
+									required
+									type={showPassword ? "text" : "password"}
+									id="password"
+									minLength={8}
+									placeholder="- - - - - - - -"
+									{...register("password")}
+									className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border-0 dark:border-[#FFFFFF1A]"
+								/>
+								{showPassword
+									? <HiOutlineEyeOff className="cursor-pointer text-[#707173] h-5 w-5 select-none" onClick={() => setShowPassword((prev) => !prev)} />
+									: <HiOutlineEye className="cursor-pointer text-[#707173] h-5 w-5 select-none" onClick={() => setShowPassword((prev) => !prev)} />
+								}
+							</div>
 						</div>
 						<Button
 							type="submit"
 							disabled={isLoading}
 							className="w-full hover:bg-primary mt-5 dark:text-foreground"
-							onClick={() => { }}
 						>
 							{isLoading ? "Loading..." : "Login"}
 						</Button>
 					</form>
 				</CardContent>
 			</Card>
-		</div>
+		</div >
 	);
 };
 

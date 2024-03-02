@@ -1,6 +1,7 @@
 import { Suspense, memo } from "react";
 import { Route, Routes } from "react-router-dom";
 import routes from "../routes";
+import NotFound from "@/pages/not-found/NotFound";
 
 const loading = (
 	<div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -18,6 +19,7 @@ const TheContent = () => {
 							return <Route key={idx} path={route.path} element={route.component} />;
 						}
 					})}
+					<Route path="/*" element={<NotFound />} />
 				</Routes>
 			</Suspense>
 		</main>
