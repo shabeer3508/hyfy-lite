@@ -9,11 +9,15 @@ const Projects = lazy(() => import("@/pages/projects/index"));
 const Teams = lazy(() => import("@/pages/team/index"));
 const Settings = lazy(() => import("@/pages/settings/index"));
 const Profile = lazy(() => import("@/pages/profile"));
-const Notification = lazy(() => import("@/pages/notification"))
+const Notification = lazy(() => import("@/pages/notification"));
 
 export { Backlog, Projects };
 
 const defultRoutes = [
+	{
+		path: "/",
+		component: <Board />,
+	},
 	{
 		path: "/board",
 		component: <Board />,
