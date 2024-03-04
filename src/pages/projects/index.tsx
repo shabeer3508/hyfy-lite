@@ -11,33 +11,31 @@ import HYDialog from "@/components/HYComponents/HYDialog";
 import HYSearch from "@/components/HYComponents/HYSearch";
 import HYTooltip from "@/components/HYComponents/HYTooltip";
 import { HYCombobox } from "@/components/HYComponents/HYCombobox";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import ProjectCreationForm from "@/components/HYComponents/forms/project-creation";
 import ProjectDetailView from "@/components/HYComponents/DetailViews/Project-detail-view";
+import { getAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 
 const Project = () => {
 	const dispatch = useDispatch();
-	const reducerName = reducerNameFromUrl("project", "GET");
-	const itemsRes = useSelector((state: any) => state?.[reducerName]);
+
+	const projectReducerName = reducerNameFromUrl("project", "GET");
+	const projectListResponse = useSelector((state: any) => state?.[projectReducerName]);
+	const projectsData = projectListResponse?.data?.items
+
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const projectPageInfo = appProfileInfo.projects
 
 	/*  ######################################################################################## */
 
 	const getProjects = (prams?: string) => {
 		let query = "?expand=owner";
-		if (prams) {
-			query = query + prams;
-		}
+		if (prams) { query = query + prams }
 		dispatch(getAction({ project: Urls.project + query }));
 	}
 
 	/*  ######################################################################################## */
-
-	const items = itemsRes?.data?.items?.map((val: any) => ({
-		...val,
-		...val?.expand,
-	}));
-
 
 	const statusOptions = [
 		{ label: "Done", value: "done" },
@@ -45,11 +43,16 @@ const Project = () => {
 		{ label: "Pending", value: "pending" },
 		{ label: "Open", value: "open" }]
 
+	const orderFilterOption = [
+		{ label: "Recent", value: "recent" },
+		{ label: "Old", value: "old" }
+	]
+
 	/*  ######################################################################################## */
 
 	useEffect(() => {
 		getProjects();
-	}, []);
+	}, [projectPageInfo]);
 
 	/*  ######################################################################################## */
 
@@ -60,17 +63,30 @@ const Project = () => {
 					<p className="text-xl">Projects</p>
 				</div>
 				<div className="flex gap-2">
-					<HYCombobox defaultValue="recent" options={[{ label: "Recent", value: "recent" }, { label: "Old", value: "old" }]} />
-					<HYCombobox label="Status" defaultValue="all" options={[{ label: "All", value: "all" }, ...statusOptions]} />
+					<HYCombobox
+						label="Order"
+						unSelectable={false}
+						options={orderFilterOption}
+						defaultValue={projectPageInfo?.order_filter_value}
+						onValueChange={(value) => dispatch(setProjectData(value, "order_filter_value"))}
+					/>
+					<HYCombobox
+						label="Status"
+						unSelectable={false}
+						defaultValue={projectPageInfo?.status_filter_value}
+						options={[{ label: "All", value: "all" }, ...statusOptions]}
+						onValueChange={(value) => dispatch(setProjectData(value, "status_filter_value"))}
+					/>
 					<HYSearch />
 					<ProjectCreationForm>
 						<Button className="text-white">Create Project</Button>
 					</ProjectCreationForm>
 				</div>
 			</div>
+
 			<ScrollArea className="mt-4">
 				<div className="flex flex-col gap-3 px-6 py-3">
-					{items?.map((item: any, index: number) => (
+					{projectsData?.map((item: any, index: number) => (
 						<ProjectCard data={item} key={index} index={index} />
 					))}
 				</div>
@@ -123,23 +139,25 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 					<HYCombobox unSelectable={false} defaultValue={data?.status} options={statusOptions} />
 					<div className="flex items-center gap-4 w-[200px] truncate">
 						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.name} />
-						<a title={data?.expand?.owner?.name}>{data?.expand?.owner?.name}</a>
+						<a title={data?.owner?.name}>{data?.owner?.name}</a>
 					</div>
-					<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
-						{projectIssues?.map((itm => (
-							<HYTooltip key={itm?._id} message={itm?.status} className='capitalize'>
-								<div
-									className={`
+					{projectIssues?.length > 0 &&
+						<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
+							{projectIssues?.map((itm => (
+								<HYTooltip key={itm?._id} message={itm?.status} className='capitalize'>
+									<div
+										className={`
                                          ${itm?.status === "done" && "bg-[#56972E]"}
                                          ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
                                          ${itm?.status === "ongoing" && "bg-cyan-500"} 
                                          ${itm?.status === "todo" && "bg-[#006EEF]"} 
                                          ${itm?.status === "pending" && "bg-[#D63B00]"} `}
-									style={{ width: `${pieceWidth}%` }}>
-								</div>
-							</HYTooltip>
-						)))}
-					</div>
+										style={{ width: `${pieceWidth}%` }}>
+									</div>
+								</HYTooltip>
+							)))}
+						</div>
+					}
 					<Button variant="ghost" size="sm">
 						<MoreVertical />
 					</Button>

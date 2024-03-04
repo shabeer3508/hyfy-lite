@@ -119,7 +119,7 @@ const BacklogColumn = () => {
 					<HYSearch />
 					<IssueCreationForm>
 						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm">
-							Add Story
+							Add Issue
 							<HiPlus className="h-5 w-5 " />
 						</div>
 					</IssueCreationForm>
@@ -159,7 +159,9 @@ const BacklogColumn = () => {
 							options={[{ label: "All", value: "all" }, ...epicsOptions]}
 						/>
 
-						<div className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer" ><HiCheck className="h-5 w-5 text-[#707173]" /></div>
+						<div className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer" >
+							<HiCheck className="h-5 w-5 text-[#707173]" />
+						</div>
 					</div>
 				</div>
 			</div>

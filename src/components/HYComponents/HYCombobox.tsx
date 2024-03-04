@@ -33,7 +33,7 @@ export function HYCombobox({
 	buttonClassName,
 	optionsClassName,
 	showSearch = false,
-	unSelectable = true,
+	unSelectable = false,
 }: {
 	id?: string;
 	label?: any;
@@ -82,7 +82,7 @@ export function HYCombobox({
 					className={`w-[200px] px-3 justify-between dark:bg-[#111215] border-border text-xs  ${buttonClassName} `}
 				>
 					{label && (
-						<span className="whitespace-nowrap text-[#9499A5]">
+						<span className="whitespace-nowrap text-[#9499A5] mr-2">
 							{label}
 						</span>
 					)}

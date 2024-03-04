@@ -1,6 +1,12 @@
 import Actions from "./ActionTypes";
 import { capitalizeFirstLetter } from "../../utils/utils";
-import { BoardStates, SprintStates } from "../reducers/AppProfileReducer";
+import {
+	BoardStates,
+	ProjectStates,
+	ReleaseStates,
+	SprintStates,
+	TeamsStates,
+} from "../reducers/AppProfileReducer";
 
 const AppActions = {};
 
@@ -170,14 +176,35 @@ export function setProject(projectId: string) {
 
 export function setBoardData(data: any, data_key: keyof BoardStates) {
 	return {
-		type: Actions.SET_BOARD_DATA,
+		type: Actions.SET_BOARD_PAGE_DATA,
 		payload: { data: data, key: data_key },
 	};
 }
 
 export function setSprintsData(data: any, data_key: keyof SprintStates) {
 	return {
-		type: Actions.SET_SPRINTS_DATA,
+		type: Actions.SET_SPRINTS_PAGE_DATA,
+		payload: { data: data, key: data_key },
+	};
+}
+
+export function setProjectData(data: any, data_key: keyof ProjectStates) {
+	return {
+		type: Actions.SET_PROJECT_PAGE_DATA,
+		payload: { data: data, key: data_key },
+	};
+}
+
+export function setReleasePageData(data: any, data_key: keyof ReleaseStates) {
+	return {
+		type: Actions.SET_RELEASE_PAGE_DATA,
+		payload: { data: data, key: data_key },
+	};
+}
+
+export function setTeamsData(data: any, data_key: keyof TeamsStates) {
+	return {
+		type: Actions.SET_TEAMS_PAGE_DATA,
 		payload: { data: data, key: data_key },
 	};
 }

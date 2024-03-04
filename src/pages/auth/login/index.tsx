@@ -63,7 +63,6 @@ const Login = () => {
 								type="email"
 								id="identity"
 								required
-								// autoComplete="off"
 								placeholder="Email"
 								{...register("identity")}
 							/>

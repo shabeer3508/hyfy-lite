@@ -92,6 +92,15 @@ body {
 	cursor: pointer;
 }
 
+/* Input Autocomplte UI */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+	transition: background-color 600000s 0s, color 600000s 0s;
+}
+input[data-autocompleted] {
+	background-color: transparent !important;
+}
+
 .dark .card-gradient:hover {
 	background: radial-gradient(
 			50% 50% at 48.12% 100%,

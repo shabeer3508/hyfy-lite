@@ -72,7 +72,7 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 		<div className="flex items-center bg-background pr-3 w-full rounded border" >
 			<Input
 				value={postData?.name}
-				placeholder="Add Story"
+				placeholder="Create issue"
 				onKeyDown={handleIssueCreation}
 				onChange={({ target }) => setPostData((prev) => ({ ...prev, name: target.value }))}
 				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 text-sm"

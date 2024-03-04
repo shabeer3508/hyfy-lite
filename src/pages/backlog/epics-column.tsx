@@ -130,7 +130,7 @@ const EpicsColumn = () => {
 					<Checkbox
 						id="terms"
 						checked={!searchParams.get("selected_epic")}
-						onCheckedChange={() => { setSearchParams({}) }}
+						onCheckedChange={() => setSearchParams({})}
 					/>
 					<label
 						htmlFor="terms"

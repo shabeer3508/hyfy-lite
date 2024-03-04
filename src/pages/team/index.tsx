@@ -1,17 +1,18 @@
-import Urls from "@/redux/actions/Urls";
 import { useEffect } from "react";
+import Urls from "@/redux/actions/Urls";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LuMoreVertical } from "react-icons/lu";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/HYComponents/HYSearch";
-import HYSelect from "@/components/HYComponents/HYSelect";
 import HYAvatar from "@/components/HYComponents/HYAvatar";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MemberCreationForm from "@/components/HYComponents/forms/member-creation";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getAction, reducerNameFromUrl, setTeamsData } from "@/redux/actions/AppActions";
 
 const Team = () => {
 
@@ -21,21 +22,35 @@ const Team = () => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items
 
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const teamsPageInfo = appProfileInfo?.teams
+
 	/*  ######################################################################################## */
 
 	const getUsers = (prams?: string) => {
 		let query = "";
-		if (prams) {
-			query = query + prams;
-		}
+		if (prams) { query = query + prams }
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
 	/*  ######################################################################################## */
 
+	const orderFilterOption = [
+		{ label: "Recent", value: "recent" },
+		{ label: "Old", value: "old" }
+	]
+
+	const userRolesOptions = [
+		{ label: "Admin", value: "admin" },
+		{ label: "Manager", value: "manager" },
+		{ label: "Employee", value: "employee" },
+	]
+
+	/*  ######################################################################################## */
+
 	useEffect(() => {
 		getUsers();
-	}, []);
+	}, [teamsPageInfo, appProfileInfo.project_id]);
 
 	/*  ######################################################################################## */
 
@@ -56,12 +71,19 @@ const Team = () => {
 					<TabsContent value="members">
 						<div className="flex justify-between items-center my-3 2xl:w-2/3">
 							<div className="flex flex-row gap-3 w-1/3 tems-center">
-								<HYSelect className="w-full" label="Recent" options={["Recent", "Old"]} id={"filter"} />
-								<HYSelect
-									className="w-full"
-									label="Roles"
-									options={["all", "admin", "manager", "employee"]}
-									id={"user"}
+								<HYCombobox
+									label={"Order"}
+									unSelectable={false}
+									options={orderFilterOption}
+									defaultValue={teamsPageInfo?.order_filter_value}
+									onValueChange={(value) => dispatch(setTeamsData(value, "order_filter_value"))}
+								/>
+								<HYCombobox
+									label={"Role"}
+									unSelectable={false}
+									defaultValue={teamsPageInfo?.role_filter_value}
+									options={[{ label: "All", value: "all" }, ...userRolesOptions]}
+									onValueChange={(value) => dispatch(setTeamsData(value, "role_filter_value"))}
 								/>
 							</div>
 

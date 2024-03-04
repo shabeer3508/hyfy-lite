@@ -169,7 +169,7 @@ const IssueCreationForm = ({ children }: any) => {
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="max-w-2xl h-[75vh] ">
 				<DialogHeader>
-					<DialogTitle>Add Story</DialogTitle>
+					<DialogTitle>Add Issue</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(handleEpicCreation)} className="overflow-auto pr-3">

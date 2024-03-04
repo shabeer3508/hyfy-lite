@@ -6,7 +6,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 const TheLayout = lazy(() => import("./layout/TheLayout"));
 const Login = lazy(() => import("./pages/auth/login/index"));
 const SignUp = lazy(() => import("./pages/auth/signup/index"));
-const NotFound = lazy(() => import("./pages/not-found/NotFound"));
 
 const loading = () => {
 	return (

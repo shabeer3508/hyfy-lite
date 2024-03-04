@@ -70,9 +70,7 @@ const Board = () => {
 
 
 	const updateItemStatus = async (id: string, stage: string) => {
-		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues }, { status: stage }, id)
-		)) as any;
+		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: stage }, id))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
 			getIssues();
