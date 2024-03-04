@@ -9,21 +9,8 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-	Form,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const ProjectCreationForm = ({ children }: { children: any }) => {
@@ -34,7 +21,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
-	const authInfo = useSelector((state: any) => state.UserReducer);
+	// const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -42,7 +29,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		title: z.string().min(2, {
 			message: "Username must be at least 2 characters.",
 		}),
-		owner: z.string(),
+		// owner: z.string(),
 		end_date: z.date().optional().nullable(),
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
@@ -54,7 +41,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		title: "",
 		status: "open",
 		// org_id: authInfo?.user?.org_id
-	}
+	};
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -74,7 +61,9 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	const handleProjectCreation = async (values: z.infer<typeof formSchema>) => {
 		const getProjects = (prams?: string) => {
 			let query = "?perPage=300&expand=owner";
-			if (prams) { query = query + prams; }
+			if (prams) {
+				query = query + prams;
+			}
 			dispatch(getAction({ project: Urls.project + query }));
 		};
 		const resp = (await dispatch(postAction({ project: Urls.project }, values))) as any;
@@ -82,17 +71,17 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		if (success) {
 			form.reset(defaultFormValues);
 			setOpenForm(false);
-			getProjects();
+			// getProjects();
 		}
 	};
 
 	/*  ######################################################################################## */
 
-	const usersOptions =
-		usersList?.data?.items?.map((user) => ({
-			value: user?._id,
-			label: user?.user_name,
-		})) ?? [];
+	// const usersOptions =
+	// 	usersList?.data?.items?.map((user) => ({
+	// 		value: user?._id,
+	// 		label: user?.user_name,
+	// 	})) ?? [];
 
 	/*  ######################################################################################## */
 
@@ -168,7 +157,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 							/>
 						</div>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="owner"
 							render={({ field }) => (
@@ -184,17 +173,19 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<DialogFooter className="mt-5">
-							<Button
-								type="reset"
-								variant="outline"
-								onClick={() => setOpenForm(false)}
-							>
+							<Button type="reset" variant="outline" onClick={() => setOpenForm(false)}>
 								Cancel
 							</Button>
-							<Button type="submit" className="text-white">Add</Button>
+							<Button
+								onClick={form.handleSubmit(handleProjectCreation)}
+								type="submit"
+								className="text-white"
+							>
+								Add
+							</Button>
 						</DialogFooter>
 					</form>
 				</Form>
