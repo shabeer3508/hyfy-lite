@@ -39,7 +39,7 @@ const EpicsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getEpics = (prams?: string) => {
-		let query = `?expand=releases,project_id`;
+		let query = `?expand=release_id,project_id`;
 		if (prams) {
 			query = query + prams;
 		}

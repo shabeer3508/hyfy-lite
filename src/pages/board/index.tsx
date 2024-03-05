@@ -31,7 +31,7 @@ const Board = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = (prams?: string) => {
-		let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
+		let query = `?filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -48,8 +48,8 @@ const Board = () => {
 
 	const getIssues = (prams?: string) => {
 		let query = `?perPage=300
-				&filter=(sprint='${boardInfo?.selected_sprint}'
-				${boardInfo?.type_filter_value !== "all" ? `%26%26type='${boardInfo?.type_filter_value}'` : ""})
+				&filter=sprint_id=${boardInfo?.selected_sprint}
+				${boardInfo?.type_filter_value !== "all" ? `%26%26type=${boardInfo?.type_filter_value}` : ""}
 				${boardInfo?.points_filter_value !== "all" ? `&sort=${boardInfo.points_filter_value}` : ""}`;
 
 		if (prams) {
@@ -65,7 +65,7 @@ const Board = () => {
 	};
 
 	const getIssuesByTypes = (issueStatus: "todo" | "ongoing" | "pending" | "done") => {
-		return issueListItems?.filter((issue) => issue?.status === issueStatus && boardInfo?.selected_sprint && issue?.sprint === boardInfo?.selected_sprint);
+		return issueListItems?.filter((issue) => issue?.status === issueStatus && boardInfo?.selected_sprint && issue?.sprint_id === boardInfo?.selected_sprint);
 	};
 
 

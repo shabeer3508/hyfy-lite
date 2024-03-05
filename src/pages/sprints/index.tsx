@@ -35,7 +35,7 @@ const Sprints = () => {
 	};
 
 	const getSprints = (prams?: string) => {
-		let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
+		let query = `?filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

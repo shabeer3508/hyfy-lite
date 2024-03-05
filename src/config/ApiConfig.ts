@@ -6,6 +6,9 @@ const ApiConfig: { [key: string]: string } = {
 	organization: Urls.organization,
 	project: Urls.project,
 
+	//signup
+	signupSendEmail: Urls.signup_send_email,
+
 	epic: Urls.epic,
 	release: Urls.release,
 	issues: Urls.issues,

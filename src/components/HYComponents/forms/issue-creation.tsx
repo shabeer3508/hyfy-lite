@@ -89,7 +89,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getIssues = (prams?: string) => {
-			let query = `?expand=release_id,project_id&perPage=300&filter=project_id="${appProfileInfo?.project_id}"`;
+			let query = `?expand=release_id,project_id&perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 			if (prams) {
 				query = query + prams;
 			}

@@ -58,7 +58,7 @@ const BacklogColumn = () => {
 	};
 
 	const getEpics = (prams?: string) => {
-		let query = `?perPage=300&expand=releases,project_id`;
+		let query = `?perPage=300&expand=release_id,project_id`;
 		if (prams) {
 			query = query + prams;
 		}

@@ -87,7 +87,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	};
 
 	const getEpics = (prams?: string) => {
-		let query = `?expand=releases,project_id&filter=project_id="${appProfileInfo.project_id}"`;
+		let query = `?expand=release_id,project_id&filter=project_id="${appProfileInfo.project_id}"`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -96,7 +96,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getEpics = (prams?: string) => {
-			let query = `?expand=releases,project_id&filter=project_id="${appProfileInfo.project_id}"`;
+			let query = `?expand=release_id,project_id&filter=project_id="${appProfileInfo.project_id}"`;
 			if (prams) {
 				query = query + prams;
 			}

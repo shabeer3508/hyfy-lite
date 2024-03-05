@@ -14,7 +14,7 @@ localforage.config({
 	driver: localforage.INDEXEDDB,
 	name: "Hyfy",
 	version: 1.0,
-	size: 100000000, // 100MB // Size of database, in bytes. WebSQL-only for now.
+	size: 100000000, // 100MB // Size of database, in bytes.
 	storeName: "hyfy", // Should be alphanumeric, with underscores.
 	description: "Hyfy project management tool",
 });

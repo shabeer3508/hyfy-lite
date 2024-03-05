@@ -36,7 +36,12 @@ const ErrorManager = {
 				const codeMsg =
 					HttpCodeMessages[error?.response?.status] || "Bad Request";
 
+				const errorMessageSingle = error?.response?.data?.message;
 				const errorIssues = error?.response?.data?.error?.issues;
+
+				if (errorMessageSingle) {
+					toast.error(`${errorMessageSingle}`);
+				}
 
 				if (errorIssues?.length > 0) {
 					errorIssues.forEach((issue) => {

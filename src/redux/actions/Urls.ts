@@ -9,7 +9,12 @@ const Urls = {
 	host: `${domain}/`,
 	baseUrl: `${domain}/api`,
 
+	// login
 	authenticate: "/login",
+
+	// Signup
+	signup_send_email: "/email",
+	signup_verify_email: "/verifyEmail",
 
 	users: "/users",
 	profile: "/profile",

@@ -22,7 +22,7 @@ const ProjectDetailView = ({ data }: { data: any }) => {
     /*  ######################################################################################## */
 
     const getComments = () => {
-        let query = "?expand=created_by&sort=-created";
+        let query = "?expand=created_by&sort=-createdAt";
         dispatch(getAction({ comments: Urls.comments + query }));
     }
 

@@ -2,24 +2,22 @@ import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 
 const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?: string }) => {
     const dispatch = useDispatch();
-    const authInfo = useSelector((state: any) => state.UserReducer);
 
     const [postData, setPostData] = useState({
         message: "",
         issue_id: issueId,
         project_id: projectId,
-        created_by: authInfo?.user?._id,
     });
 
     /*  ######################################################################################## */
 
     const getComments = () => {
-        let query = "?expand=created_by&sort=-created";
+        let query = "?expand=created_by&sort=-createdAt";
         dispatch(getAction({ comments: Urls.comments + query }));
     }
 
@@ -33,7 +31,6 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
                     message: "",
                     issue_id: issueId,
                     project_id: projectId,
-                    created_by: authInfo?.user?._id,
                 })
                 getComments()
             }
