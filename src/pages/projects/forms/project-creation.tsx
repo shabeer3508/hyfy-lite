@@ -75,8 +75,8 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 			if (prams) { query = query + prams; }
 			dispatch(getAction({ project: Urls.project + query }));
 		};
-		const resp = (await dispatch(postAction(Urls.project, values))) as any;
-		const success = resp.payload.status == 200;
+		const resp = (await dispatch(postAction({ project: Urls.project }, values))) as any;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);
 			setOpenForm(false);

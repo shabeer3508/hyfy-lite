@@ -77,7 +77,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 			}
 			dispatch(getAction({ sprints: Urls.sprints + query }));
 		};
-		const resp = (await dispatch(postAction(Urls.sprints, values))) as any;
+		const resp = (await dispatch(postAction({ sprints: Urls.sprints }, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);

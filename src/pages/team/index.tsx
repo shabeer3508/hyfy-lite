@@ -3,17 +3,17 @@ import Urls from "@/redux/actions/Urls";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LuMoreVertical } from "react-icons/lu";
+import InviteUsers from "./forms/invite-members";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYDialog from "@/components/hy-components/HYDialog";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAction, reducerNameFromUrl, setTeamsData } from "@/redux/actions/AppActions";
-import HYDialog from "@/components/hy-components/HYDialog";
-import InviteUsers from "./forms/invite-members";
 
 const Team = () => {
 
@@ -93,7 +93,7 @@ const Team = () => {
 
 							<div className="flex gap-3">
 								<HYSearch />
-								<HYDialog title={"Add members"} content={<InviteUsers />}><Button className="text-white">Invite Member</Button></HYDialog>
+								<HYDialog title={"Add members"} className="dark:bg-[#23252A]" content={<InviteUsers />}><Button className="text-white">Invite Member</Button></HYDialog>
 							</div>
 						</div>
 

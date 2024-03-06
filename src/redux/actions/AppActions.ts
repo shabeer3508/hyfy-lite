@@ -55,12 +55,11 @@ export const actionTypeFromUrl = (
  * @param params oprtinal query params
  * @returns redux action
  */
-export function getAction(apiUrl: string | object, params?: any) {
+export function getAction(apiUrl: object) {
 	const method = "GET";
-	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
-	url = params ? url + `?${params}` : url;
-	const typeName =
-		typeof apiUrl === "string" ? apiUrl : Object.keys(apiUrl)[0];
+	let url = Object.values(apiUrl)[0];
+	const typeName = Object.keys(apiUrl)[0];
+
 	const type = actionTypeFromUrl(typeName, method);
 	return {
 		type,
@@ -95,11 +94,12 @@ export function getDetailAction(apiurl: string | object, id: any) {
  * @param params url query parameters if any
  * @returns Redux Action
  */
-export function postAction(apiUrl: string, data: any, params = "") {
+export function postAction(apiUrl: object, data: any) {
 	const method = "POST";
-	let url = apiUrl;
-	url = params ? `${url}?${params}` : url;
-	const type = actionTypeFromUrl(apiUrl, method);
+	let url = Object.values(apiUrl)[0];
+	const typeName = Object.keys(apiUrl)[0];
+
+	const type = actionTypeFromUrl(typeName, method);
 	return {
 		type,
 		payload: { request: { url, data, method } },

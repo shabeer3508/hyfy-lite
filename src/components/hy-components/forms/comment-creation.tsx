@@ -24,8 +24,8 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        (dispatch(postAction(Urls.comments, postData)) as any).then((res) => {
-            const success = res.payload.status == 200;
+        (dispatch(postAction({ comments: Urls.comments }, postData)) as any).then((res) => {
+            const success = res.payload?.status == 200;
             if (success) {
                 setPostData({
                     message: "",

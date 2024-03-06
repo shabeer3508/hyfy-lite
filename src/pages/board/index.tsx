@@ -92,7 +92,7 @@ const Board = () => {
 
 
 	const taskFilterOptions = userItems?.map(usr => {
-		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.name })
+		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.user_name })
 	}) || []
 
 

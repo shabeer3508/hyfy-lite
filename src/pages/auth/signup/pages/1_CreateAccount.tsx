@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+import HYRadioGroup from "@/components/hy-components/HYRadioGroup";
 import { postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { Form, FormField, FormItem, FormMessage, } from "@/components/ui/form";
 import { HiOutlineEye, HiOutlineEyeOff, HiLockClosed, HiMail } from "react-icons/hi";
@@ -18,15 +19,16 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import HYRadioGroup from "@/components/hy-components/HYRadioGroup";
 
 const CreateAccountPage: React.FC = () => {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState({ initialPassword: false, confirmPassword: false });
+
+    const signupSendEmailReducerName = reducerNameFromUrl("signupSendEmail", "POST");
+    const postSignupInfoInfo = useSelector((state: any) => state?.[signupSendEmailReducerName]);
 
     /*  ######################################################################################## */
 
@@ -57,16 +59,13 @@ const CreateAccountPage: React.FC = () => {
     /*  ######################################################################################## */
 
     const handleSendEmailVerification = async (data: z.infer<typeof formSchema>) => {
-        setIsLoading(true);
-        (dispatch(postAction(Urls.signup_send_email, data)) as any).then(res => {
+        (dispatch(postAction({ signupSendEmail: Urls.signup_send_email }, data)) as any).then(res => {
             if (res.payload?.status === 200) {
                 toast.success(`${res.payload?.data?.message}`)
                 navigate("/signup/verify_email", { state: { authInfo: data } })
             }
-            setIsLoading(false);
         })
     }
-
 
     /*  ######################################################################################## */
 
@@ -74,6 +73,9 @@ const CreateAccountPage: React.FC = () => {
         { label: "Individual", value: "employee" },
         { label: "Organization", value: "owner" }
     ]
+
+    /*  ######################################################################################## */
+
 
     return <div className="flex justify-center h-screen items-center dark:bg-background">
         <Card className="w-[500px] dark:bg-[#23252A]">
@@ -183,7 +185,7 @@ const CreateAccountPage: React.FC = () => {
                                     </FormItem>
                                 )}
                             />
-                            <Button disabled={isLoading} className="w-full text-white hover:bg-primary">
+                            <Button disabled={postSignupInfoInfo?.loading} className="w-full text-white hover:bg-primary">
                                 Continue
                             </Button>
                         </div>

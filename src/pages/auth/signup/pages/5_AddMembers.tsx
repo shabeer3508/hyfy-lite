@@ -16,7 +16,7 @@ const AddMembersPage: React.FC = () => {
                     <CardTitle className="text-primary mb-5">Hyfy</CardTitle>
                     <CardDescription className="">Add Members</CardDescription>
                 </CardHeader>
-                <CardContent className="">
+                <CardContent>
                     <InviteUsers />
                 </CardContent>
                 <CardFooter className="flex flex-col gap-1 ">

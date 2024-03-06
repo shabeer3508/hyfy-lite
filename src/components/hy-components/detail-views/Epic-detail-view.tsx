@@ -18,9 +18,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 	const issueListItems = issueListData?.data?.items;
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector(
-		(state: any) => state?.[releaseReducerName]
-	);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
 	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {

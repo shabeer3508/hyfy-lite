@@ -1,11 +1,11 @@
 import { toast } from "sonner";
 import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { postAction } from "@/redux/actions/AppActions";
+import { postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
 	Card,
@@ -20,22 +20,25 @@ const VerifyEmailPage: React.FC = () => {
 	const dispatch = useDispatch()
 	const { state } = useLocation()
 
-	const [isLoading, setIsLoading] = useState(false);
 	const { register, handleSubmit } = useForm()
 
-	const handleVerifyEmail = (value) => {
-		const postData = { email: state?.authInfo?.email, code: value?.code }
+	const signupVerifyEmailReducerName = reducerNameFromUrl("signupVerifyEmail", "POST");
+	const postSignupInfoInfo = useSelector((state: any) => state?.[signupVerifyEmailReducerName]);
 
-		setIsLoading(true);
-		(dispatch(postAction(Urls.signup_verify_email, postData)) as any).then(res => {
+	/*  ######################################################################################## */
+
+	const handleVerifyEmail = (value) => {
+		const postData = { email: state?.authInfo?.email, code: value?.code };
+
+		(dispatch(postAction({ signupVerifyEmail: Urls.signup_verify_email }, postData)) as any).then(res => {
 			if (res.payload?.status === 200) {
-				toast.success(`${res.payload?.data?.message}`)
+				toast.success(`${res.payload?.data?.message}`);
 				navigate("/signup/setup_account", { state: { authInfo: res.payload?.data } })
 			}
-			setIsLoading(false);
 		})
 	}
 
+	/*  ######################################################################################## */
 
 	return <div className="flex justify-center h-screen items-center dark:bg-background">
 		<Card className="w-[500px] dark:bg-[#23252A]">
@@ -59,7 +62,7 @@ const VerifyEmailPage: React.FC = () => {
 								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
 							/>
 						</div>
-						<Button disabled={isLoading} className="w-full text-white hover:bg-primary">
+						<Button disabled={postSignupInfoInfo.loading} className="w-full text-white hover:bg-primary">
 							Verify
 						</Button>
 					</div>

@@ -96,7 +96,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	};
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-		const resp = (await dispatch(postAction(Urls.epic, values))) as any;
+		const resp = (await dispatch(postAction({ epic: Urls.epic }, values))) as any;
 
 		const success = resp.payload.status == 200;
 

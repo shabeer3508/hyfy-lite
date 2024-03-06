@@ -93,7 +93,7 @@ const IssueCreationForm = ({ children }: any) => {
 			dispatch(getAction({ issues: Urls.issues + query }));
 		};
 
-		const resp = (await dispatch(postAction(Urls.issues, values))) as any;
+		const resp = (await dispatch(postAction({ issues: Urls.issues }, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);

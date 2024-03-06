@@ -2,30 +2,31 @@ import Cookies from "js-cookie"
 import { toast } from "sonner";
 import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
-import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { postAction, setCurrentUser } from "@/redux/actions/AppActions";
+import { useDispatch, useSelector } from "react-redux";
 import { HiLockClosed, HiMail, HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+import { postAction, reducerNameFromUrl, setCurrentUser } from "@/redux/actions/AppActions";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
 const Login = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	const [isLoading, setIsLoading] = useState(false);
 	const [showPassword, setShowPassword] = useState(false);
 
-	const { register, handleSubmit, formState: { errors }, } = useForm();  // TODO : convert to shadcn form
+	// TODO : convert to shadcn form
+	const { register, handleSubmit, formState: { errors }, } = useForm();
+
+	const loginReducerName = reducerNameFromUrl("login", "POST");
+	const postLoginInfo = useSelector((state: any) => state?.[loginReducerName]);
+
 
 	const login = async (data) => {
-		setIsLoading(true);
-
 		try {
-			(dispatch(postAction(Urls.authenticate, data)) as any).then((res: any) => {
-				setIsLoading(false);
+			(dispatch(postAction({ login: Urls.authenticate }, data)) as any).then((res: any) => {
 				const res_data = res?.payload?.data
 				const success = res?.payload?.status == 200;
 
@@ -35,6 +36,8 @@ const Login = () => {
 
 					if (res_data?.data?.user?.role === "employee") navigate("/board");
 					else navigate("/backlog");
+
+					toast.success("Successfully Logged");
 				}
 			});
 		} catch (e) {
@@ -88,10 +91,10 @@ const Login = () => {
 						</div>
 						<Button
 							type="submit"
-							disabled={isLoading}
+							disabled={postLoginInfo?.loading}
 							className="w-full hover:bg-primary mt-5 dark:text-foreground"
 						>
-							{isLoading ? "Loading..." : "Login"}
+							{postLoginInfo?.loading ? "Loading..." : "Login"}
 						</Button>
 					</form>
 				</CardContent>

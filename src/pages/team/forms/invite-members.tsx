@@ -1,33 +1,29 @@
+import { toast } from "sonner";
 import { useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { HiMail } from "react-icons/hi";
+import Urls from "@/redux/actions/Urls";
 import { HiMiniXMark } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
+import { postAction } from "@/redux/actions/AppActions";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import { toast } from "sonner";
-import { postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
 
 
-interface InviteUserProps {
-    setModalOpen?: any
-}
+interface InviteUserProps { }
 
 
-const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
+const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
 
     const { state } = useLocation();
     const dispatch = useDispatch();
     const authInfo = useSelector((state: any) => state.UserReducer);
     const [formData, setFormData] = useState({ inputUser: { email: "", role: "employee" }, inviteList: [] })
 
-    // const inviteReducername = reducerNameFromUrl(Urls.invite_user, "POST")
-
-
+    /*  ######################################################################################## */
 
     const handleAddMembers = (e) => {
         e?.preventDefault()
@@ -50,23 +46,21 @@ const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
     }
 
     const handleInviteUsers = () => {
-
         const postData = {
             user_id: authInfo?.user?._id ?? state?.authInfo?.user?._id,
             members: formData?.inviteList?.map((user) => ({ email: user.email, role: user.role }))
         }
-
-        // console.log("🚀 ~ formData:", postData)
-
         if (postData?.members?.length == 0) {
             toast.error("Please add atleast one member details")
         } else {
-            (dispatch(postAction(Urls.invite_user, postData)) as any).then((res) => {
-                console.log("🚀 ~ res:", res)
+            (dispatch(postAction({ invite: Urls.invite_user }, postData)) as any).then((res) => {
+                const success = res.payload?.status == 200;
+                if (success) {
+                    toast.error("Invitations sent successfully!")
+                    setFormData({ inputUser: { email: "", role: "employee" }, inviteList: [] })
+                }
             })
         }
-
-
     }
 
 
@@ -81,11 +75,11 @@ const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
 
 
     return (
-        <div>
+        <div className="">
             <form onSubmit={handleAddMembers}>
                 <div className="flex flex-col gap-3">
                     <div className="flex w-full justify-between items-center gap-2">
-                        <div className="flex items-center dark:bg-background flex-1 rounded px-3 border dark:border-[#FFFFFF1A] border-border ">
+                        <div className="flex items-center dark:bg-[#23252A] flex-1 rounded px-3 border dark:border-[#FFFFFF1A] border-border ">
                             <HiMail className="mr-2" />
                             <Input
                                 required
@@ -94,7 +88,7 @@ const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
                                 autoComplete="off"
                                 placeholder="Email"
                                 value={formData?.inputUser?.email}
-                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0  dark:bg-background h-[38px]"
+                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A] h-[38px]"
                                 onChange={({ target }) => setFormData((prevData) => ({ ...prevData, inputUser: { ...prevData?.inputUser, email: target.value } }))}
                             />
                         </div>
@@ -103,11 +97,11 @@ const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
                             unSelectable={false}
                             options={rolesOptions}
                             defaultValue={formData?.inputUser?.role}
-                            buttonClassName="dark:bg-background  dark:border-[#FFFFFF1A]   border w-1/3"
+                            buttonClassName="dark:bg-[#23252A]  dark:border-[#FFFFFF1A]   border w-1/3"
                             onValueChange={(value) => setFormData((prevData) => ({ ...prevData, inputUser: { ...prevData?.inputUser, role: value } }))}
                         />
 
-                        <Button type="submit" className="text-primary dark:bg-background border-primary border" variant="outline">Add</Button>
+                        <Button type="submit" className="text-primary dark:bg-[#23252A] border-primary border" variant="outline">Add</Button>
                     </div>
 
                     {formData?.inviteList?.length > 0 &&
@@ -125,11 +119,13 @@ const InviteUsers: React.FC<InviteUserProps> = ({ setModalOpen }) => {
                                                 unSelectable={false}
                                                 options={rolesOptions}
                                                 defaultValue={user?.role}
-                                                buttonClassName="dark:bg-background dark:border-[#FFFFFF1A]"
+                                                buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
                                                 onValueChange={(value) => handleUserRoleChange(user?.id, value)}
                                             />
                                         </div>
-                                        <div className="px-2 text-red-500 cursor-pointer"><HiMiniXMark onClick={() => handleDeleteUser(user?.id)} /></div>
+                                        <div className="px-2 text-red-500 cursor-pointer">
+                                            <HiMiniXMark onClick={() => handleDeleteUser(user?.id)} />
+                                        </div>
                                     </div>
                                 </div>
                             })}

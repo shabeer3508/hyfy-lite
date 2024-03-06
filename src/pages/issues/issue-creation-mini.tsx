@@ -47,8 +47,8 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 		}
 
 		if (event.key === "Enter") {
-			(dispatch(postAction(Urls.issues, postData)) as any).then((res) => {
-				const success = res.payload.status == 200;
+			(dispatch(postAction({ issues: Urls.issues }, postData)) as any).then((res) => {
+				const success = res.payload?.status == 200;
 				if (success) {
 					getIssues();
 					setPostData(

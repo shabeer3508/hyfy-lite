@@ -72,8 +72,8 @@ const ReleaseCreationForm = ({ children }: any) => {
 			}
 			dispatch(getAction({ release: Urls.release + query }));
 		};
-		const resp = (await dispatch(postAction(Urls.release, values))) as any;
-		const success = resp.payload.status == 200;
+		const resp = (await dispatch(postAction({ release: Urls.release }, values))) as any;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(formDefaultValues);
 			setOpenForm(false);
