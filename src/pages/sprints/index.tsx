@@ -7,11 +7,11 @@ import { IssueCard } from "../backlog/backlog-column";
 import { useDispatch, useSelector } from "react-redux";
 import { getAction } from "@/redux/actions/AppActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import HYDialog from "@/components/HYComponents/HYDialog";
+import HYSearch from "@/components/hy-components/HYSearch";
+import HYDialog from "@/components/hy-components/HYDialog";
+import IssueCreationCardMini from "../issues/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import SprintDetailView from "@/components/HYComponents/DetailViews/Sprint-detail-view";
-import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
+import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Sprints = () => {
@@ -35,7 +35,7 @@ const Sprints = () => {
 	};
 
 	const getSprints = (prams?: string) => {
-		let query = `?filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

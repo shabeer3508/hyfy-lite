@@ -5,17 +5,17 @@ import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineArrowsUpDown, HiCheck } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYDialog from "@/components/HYComponents/HYDialog";
-import HYSearch from "@/components/HYComponents/HYSearch";
+import HYDialog from "@/components/hy-components/HYDialog";
+import HYSearch from "@/components/hy-components/HYSearch";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYDropDown from "@/components/hy-components/HYDropDown";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import IssueCreationForm from "@/components/HYComponents/forms/issue-creation";
-import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
-import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-view";
-import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
+import IssueCreationForm from "@/pages/issues/issue-creation";
+import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
+import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
+import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	HiPlus,
@@ -58,7 +58,7 @@ const BacklogColumn = () => {
 	};
 
 	const getEpics = (prams?: string) => {
-		let query = `?perPage=300&expand=release_id,project_id`;
+		let query = `?perPage=300&expand=release_id,project_id&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

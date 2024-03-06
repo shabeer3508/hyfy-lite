@@ -5,8 +5,8 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import {
     Card,
     CardContent,

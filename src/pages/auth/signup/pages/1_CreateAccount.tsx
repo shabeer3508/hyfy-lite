@@ -18,7 +18,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import HYRadioGroup from "@/components/HYComponents/HYRadioGroup";
+import HYRadioGroup from "@/components/hy-components/HYRadioGroup";
 
 const CreateAccountPage: React.FC = () => {
 

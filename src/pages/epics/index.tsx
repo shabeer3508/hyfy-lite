@@ -5,18 +5,18 @@ import { Button } from '@/components/ui/button'
 import { IssueCard } from '../backlog/backlog-column';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import HYSearch from '@/components/HYComponents/HYSearch'
-import HYDialog from '@/components/HYComponents/HYDialog';
-import HYTooltip from '@/components/HYComponents/HYTooltip';
-import HYDropDown from '@/components/HYComponents/HYDropDown';
-import { HYCombobox } from '@/components/HYComponents/HYCombobox';
+import HYSearch from '@/components/hy-components/HYSearch'
+import HYDialog from '@/components/hy-components/HYDialog';
+import HYTooltip from '@/components/hy-components/HYTooltip';
+import HYDropDown from '@/components/hy-components/HYDropDown';
+import EpicCreationForm from '@/pages/epics/forms/epic-creation';
+import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
 import { getAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
-import EpicCreationForm from '@/components/HYComponents/forms/epic-creation';
 import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import HYDropdownMenuCheckbox from '@/components/HYComponents/HYCheckboxDropDown';
-import EpicDetailView from '@/components/HYComponents/DetailViews/Epic-detail-view';
+import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
+import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
 import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -47,7 +47,7 @@ const EpicScreen = () => {
     };
 
     const getEpics = (prams?: string) => {
-        let query = "?perPage=300";
+        let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
         if (prams) {
             query = query + prams;
         }
@@ -55,8 +55,6 @@ const EpicScreen = () => {
     };
 
     /*  ######################################################################################## */
-
-    const filteredEpics = epicItems?.filter(sprnt => sprnt.project_id === appProfileInfo.project_id)
 
     const releaseOptions =
         releaseList?.data?.items?.map((relse) => ({
@@ -94,7 +92,7 @@ const EpicScreen = () => {
     return (
         <div className=" flex flex-col h-full">
 
-            {filteredEpics?.length === 0 && (<div className="dark:text-foreground flex justify-center h-full items-center">
+            {epicItems?.length === 0 && (<div className="dark:text-foreground flex justify-center h-full items-center">
                 <div className="flex flex-col justify-center items-center text-center gap-3">
                     <div>
                         <HiOutlineInbox className="text-primary h-20 w-20 " />
@@ -114,7 +112,7 @@ const EpicScreen = () => {
             </div>)}
 
 
-            {filteredEpics?.length > 0 && (<Tabs defaultValue="list" className="px-6">
+            {epicItems?.length > 0 && (<Tabs defaultValue="list" className="px-6">
                 <div className="flex items-center justify-between ">
                     <div className="flex items-center gap-8">
                         <div className="text-xl">Epics</div>
@@ -169,7 +167,7 @@ const EpicScreen = () => {
                         <ScrollArea className="h-[calc(100vh-200px)] w-full">
 
                             <div className="py-4 pr-4 space-y-2">
-                                {filteredEpics.map((epic, i) => {
+                                {epicItems.map((epic, i) => {
 
                                     const epicIssues = issuesItems?.filter(
                                         (issue) => issue?.epic === epic?._id

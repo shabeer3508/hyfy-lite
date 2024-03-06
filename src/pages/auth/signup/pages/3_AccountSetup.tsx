@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import {
     Card,
     CardContent,

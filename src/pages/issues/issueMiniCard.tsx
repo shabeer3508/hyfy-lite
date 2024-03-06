@@ -2,9 +2,9 @@ import Urls from "@/redux/actions/Urls";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { Card, CardContent } from "@/components/ui/card";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
+import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const IssueMiniCard = ({ data }: any) => {

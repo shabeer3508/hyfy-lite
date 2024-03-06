@@ -1,10 +1,10 @@
 import { useSelector } from "react-redux";
 import { Card, CardContent } from "@/components/ui/card";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
-import HYDialog from "@/components/HYComponents/HYDialog";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYDialog from "@/components/hy-components/HYDialog";
 import { HiDatabase, HiOutlineUser } from "react-icons/hi";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
-import IssueDetailView from "@/components/HYComponents/DetailViews/Issue-detail-view";
+import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
 
 const BoardCard = ({ data }: any) => {
 

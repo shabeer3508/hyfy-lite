@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import HYSelect from '@/components/HYComponents/HYSelect'
-import HYSearch from '@/components/HYComponents/HYSearch'
+import HYSelect from '@/components/hy-components/HYSelect'
+import HYSearch from '@/components/hy-components/HYSearch'
 import comments from '@/assets/icons/header-icons/comments.svg'
 import taskdone from '@/assets/icons/header-icons/taskdone.svg'
 import repeatblue from '@/assets/icons/header-icons/repeatblue.svg'

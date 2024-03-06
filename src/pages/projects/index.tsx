@@ -5,15 +5,15 @@ import { MoreVertical } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
+import HYAvatar from "@/components/hy-components/HYAvatar";
 import { ScrollArea, } from "@/components/ui/scroll-area";
-import HYDialog from "@/components/HYComponents/HYDialog";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import HYTooltip from "@/components/HYComponents/HYTooltip";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYDialog from "@/components/hy-components/HYDialog";
+import HYSearch from "@/components/hy-components/HYSearch";
+import HYTooltip from "@/components/hy-components/HYTooltip";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import ProjectCreationForm from "@/components/HYComponents/forms/project-creation";
-import ProjectDetailView from "@/components/HYComponents/DetailViews/Project-detail-view";
+import ProjectCreationForm from "@/pages/projects/forms/project-creation";
+import ProjectDetailView from "@/components/HYComponents/detail-views/Project-detail-view";
 import { getAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 
@@ -30,7 +30,7 @@ const Project = () => {
 	/*  ######################################################################################## */
 
 	const getProjects = (prams?: string) => {
-		let query = "?expand=owner";
+		let query = "?perPage=300&expand=owner";
 		if (prams) { query = query + prams }
 		dispatch(getAction({ project: Urls.project + query }));
 	}
@@ -137,9 +137,9 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 				</div>
 				<div className="flex gap-4 items-center">
 					<HYCombobox unSelectable={false} defaultValue={data?.status} options={statusOptions} />
-					<div className="flex items-center gap-4 w-[200px] truncate">
-						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.name} />
-						<a title={data?.owner?.name}>{data?.owner?.name}</a>
+					<div className="flex items-center gap-4 w-[200px] truncate text-base">
+						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.[0]?.user_name} />
+						<div className="truncate" title={data?.owner?.[0]?.user_name}>{data?.owner?.[0]?.user_name}</div>
 					</div>
 					{projectIssues?.length > 0 &&
 						<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">

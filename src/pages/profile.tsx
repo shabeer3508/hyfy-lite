@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineCheckCircle } from "react-icons/hi2";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
+import HYAvatar from "@/components/hy-components/HYAvatar";
 import { clearUser, getAction, patchAction, reducerNameFromUrl, resetAppInfo, setCurrentUser } from "@/redux/actions/AppActions";
 
 const Profile = () => {

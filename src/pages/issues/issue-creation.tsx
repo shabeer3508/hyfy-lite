@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { useState } from "react";
-import HYSelect from "../HYSelect";
+import HYSelect from "@/components/hy-components/HYSelect";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../HYCombobox";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";

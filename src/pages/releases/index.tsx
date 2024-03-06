@@ -6,11 +6,11 @@ import { BiDirections } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYSearch from "@/components/hy-components/HYSearch";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import ReleaseCreationForm from "@/components/HYComponents/forms/release-creation";
+import ReleaseCreationForm from "@/pages/releases/forms/release-creation";
 import {
 	getAction,
 	patchAction,

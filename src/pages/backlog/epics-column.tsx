@@ -7,15 +7,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import HYDialog from "@/components/HYComponents/HYDialog";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYSearch from "@/components/hy-components/HYSearch";
+import HYDialog from "@/components/hy-components/HYDialog";
+import HYDropDown from "@/components/hy-components/HYDropDown";
+import EpicCreationForm from "@/pages/epics/forms/epic-creation";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import EpicCreationForm from "@/components/HYComponents/forms/epic-creation";
-import HYDropdownMenuCheckbox from "@/components/HYComponents/HYCheckboxDropDown";
-import EpicDetailView from "@/components/HYComponents/DetailViews/Epic-detail-view";
+import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
+import EpicDetailView from "@/components/hy-components/detail-views/Epic-detail-view";
 import {
 	HiPlus,
 	HiFilter,
@@ -39,7 +39,7 @@ const EpicsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getEpics = (prams?: string) => {
-		let query = `?expand=release_id,project_id`;
+		let query = `?perPage=300&expand=release_id,project_id&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

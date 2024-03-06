@@ -7,15 +7,15 @@ import { HiPlus, HiDatabase } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYDialog from "@/components/HYComponents/HYDialog";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import HYDropDown from "@/components/HYComponents/HYDropDown";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYDialog from "@/components/hy-components/HYDialog";
+import HYSearch from "@/components/hy-components/HYSearch";
+import HYDropDown from "@/components/hy-components/HYDropDown";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { getAction, patchAction } from "@/redux/actions/AppActions";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import SprintCreationForm from "@/components/HYComponents/forms/sprint-creation";
-import IssueCreationCardMini from "@/components/HYComponents/forms/issue-creation-mini";
-import SprintDetailView from "@/components/HYComponents/DetailViews/Sprint-detail-view";
+import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
+import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
+import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import {
 	Accordion,
 	AccordionContent,
@@ -37,7 +37,7 @@ const SprintsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = (prams?: string) => {
-		let query = "";
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

@@ -6,9 +6,10 @@ import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
-import IssueMiniCard from "@/pages/sprints/issueMiniCard";
+import IssueMiniCard from "@/pages/issues/issueMiniCard";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const SprintDetailView = ({ data }: { data: any }) => {
@@ -17,6 +18,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
     const [sprintData, setSprintData] = useState()
 
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+    const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
     const issuesReducerName = reducerNameFromUrl("issues", "GET");
     const issueListData = useSelector((state: any) => state?.[issuesReducerName]);
@@ -33,7 +35,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
     };
 
     const getSprints = (prams?: string) => {
-        let query = "";
+        let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
         if (prams) {
             query = query + prams;
         }

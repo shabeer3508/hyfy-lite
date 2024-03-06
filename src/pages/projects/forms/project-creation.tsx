@@ -1,8 +1,8 @@
 import { z } from "zod";
 import Urls from "@/redux/actions/Urls";
-import HYInputDate from "../HYInputDate";
+import HYInputDate from "../../../components/hy-components/HYInputDate";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../HYCombobox";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -71,7 +71,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 
 	const handleProjectCreation = async (values: z.infer<typeof formSchema>) => {
 		const getProjects = (prams?: string) => {
-			let query = "?expand=owner";
+			let query = "?perPage=300&expand=owner";
 			if (prams) { query = query + prams; }
 			dispatch(getAction({ project: Urls.project + query }));
 		};

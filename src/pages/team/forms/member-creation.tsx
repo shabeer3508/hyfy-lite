@@ -3,7 +3,7 @@ import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
 import { useDispatch, } from "react-redux";
-import { HYCombobox } from "../HYCombobox";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";

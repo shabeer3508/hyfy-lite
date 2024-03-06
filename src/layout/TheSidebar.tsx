@@ -1,7 +1,7 @@
 import _nav from "./_nav";
 import { memo, useState } from "react";
 import logo from "../assets/hyfy_logo.svg";
-import { NavItem } from "./SidebarNavItems/NavItems";
+import { NavItem } from "./sidebar-nav-items/NavItems";
 import { useDispatch, useSelector } from "react-redux";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 

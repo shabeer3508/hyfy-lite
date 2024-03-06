@@ -5,8 +5,8 @@ import { HiDatabase } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYSearch from "@/components/hy-components/HYSearch";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { getAction, patchAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
@@ -31,7 +31,7 @@ const Board = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = (prams?: string) => {
-		let query = `?filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

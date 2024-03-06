@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, } from "react-router-dom";
 import ModeToggle from "@/components/mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
-import HYSearch from "@/components/HYComponents/HYSearch";
-import { HYCombobox } from "@/components/HYComponents/HYCombobox";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYSearch from "@/components/hy-components/HYSearch";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 import { HiBell } from "react-icons/hi";
@@ -27,10 +27,8 @@ const TheHeader = () => {
 	/*  ######################################################################################## */
 
 	const getProjects = (prams?: string) => {
-		let query = "?expand=owner";
-		if (prams) {
-			query = query + prams;
-		}
+		let query = "?perPage=300&expand=owner";
+		if (prams) { query = query + prams }
 		dispatch(getAction({ project: Urls.project + query }));
 	};
 

@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { HiRocketLaunch } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
-import HYAvatar from "@/components/HYComponents/HYAvatar";
+import HYAvatar from "@/components/hy-components/HYAvatar";
 
 interface ReleaseCardProps {
 	item?: any;

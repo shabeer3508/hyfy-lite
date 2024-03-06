@@ -5,7 +5,7 @@ import { HYCombobox } from "../HYCombobox";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import IssueMiniCard from "@/pages/sprints/issueMiniCard";
+import IssueMiniCard from "@/pages/issues/issueMiniCard";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 

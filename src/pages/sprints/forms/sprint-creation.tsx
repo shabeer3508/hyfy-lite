@@ -9,7 +9,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import HYSelect from "../HYSelect";
+import HYSelect from "../../../components/hy-components/HYSelect";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,9 +23,8 @@ import {
 } from "@/components/ui/form";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 import Urls from "@/redux/actions/Urls";
-import { Checkbox } from "@/components/ui/checkbox";
-import HYInputDate from "../HYInputDate";
-import { HYCombobox } from "../HYCombobox";
+import HYInputDate from "../../../components/hy-components/HYInputDate";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const SprintCreationForm = ({ children }: { children: any }) => {
@@ -72,7 +71,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 
 	const handleSprintCreation = async (values: z.infer<typeof formSchema>) => {
 		const getSprints = (prams?: string) => {
-			let query = `?filter=project_id=${appProfileInfo?.project_id}`;
+			let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 			if (prams) {
 				query = query + prams;
 			}
@@ -160,7 +159,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 								</FormItem>
 							)}
 						/>
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="exclude_days"
 							render={({ field }) => (
@@ -175,8 +174,8 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
-						<FormField
+						/> */}
+						{/* <FormField
 							control={form.control}
 							name="exclude_public_holiday"
 							render={({ field }) => (
@@ -188,7 +187,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 						<div className="grid grid-cols-2 gap-4 py-4 ">
 							<FormField
 								control={form.control}

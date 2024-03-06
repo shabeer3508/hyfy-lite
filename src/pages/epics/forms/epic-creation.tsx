@@ -1,7 +1,7 @@
 import { z } from "zod";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../HYCombobox";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -87,7 +87,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	};
 
 	const getEpics = (prams?: string) => {
-		let query = `?expand=release_id,project_id&filter=project_id="${appProfileInfo.project_id}"`;
+		let query = `?perPage=300&expand=release_id,project_id&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -95,14 +95,6 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 	};
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-		const getEpics = (prams?: string) => {
-			let query = `?expand=release_id,project_id&filter=project_id="${appProfileInfo.project_id}"`;
-			if (prams) {
-				query = query + prams;
-			}
-			dispatch(getAction({ epic: Urls.epic + query }));
-		};
-
 		const resp = (await dispatch(postAction(Urls.epic, values))) as any;
 
 		const success = resp.payload.status == 200;
