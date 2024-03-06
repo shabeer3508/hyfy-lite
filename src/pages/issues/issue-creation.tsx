@@ -1,15 +1,16 @@
 import { z } from "zod";
 import { useState } from "react";
-import HYSelect from "@/components/hy-components/HYSelect";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
+import HYSelect from "@/components/hy-components/HYSelect";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Dialog,
 	DialogContent,
@@ -26,11 +27,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import {
-	getAction,
-	postAction,
-	reducerNameFromUrl,
-} from "@/redux/actions/AppActions";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
@@ -89,12 +85,14 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const getIssues = (prams?: string) => {
-			let query = `?expand=release_id,project_id&perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
-			if (prams) {
-				query = query + prams;
-			}
+			let query = `?perPage=300
+				&expand=release_id,project_id
+				&filter=project_id=${appProfileInfo?.project_id}`;
+
+			if (prams) { query = query + prams }
 			dispatch(getAction({ issues: Urls.issues + query }));
 		};
+
 		const resp = (await dispatch(postAction(Urls.issues, values))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {

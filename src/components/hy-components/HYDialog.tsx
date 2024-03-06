@@ -23,7 +23,7 @@ const HYDialog = ({
 	content?: any;
 }) => {
 	return (
-		<Dialog>
+		<Dialog >
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className={`max-w-2xl ${className} max-h-[80vh]`}>
 				{title && (

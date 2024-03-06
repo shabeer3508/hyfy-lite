@@ -8,6 +8,7 @@ const ApiConfig: { [key: string]: string } = {
 
 	//signup
 	signupSendEmail: Urls.signup_send_email,
+	invite: Urls.invite_user,
 
 	epic: Urls.epic,
 	release: Urls.release,

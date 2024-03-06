@@ -19,6 +19,7 @@ const Urls = {
 	users: "/users",
 	profile: "/profile",
 	organization: "/organizations",
+	invite_user: "/sendInvitation",
 
 	project: "/projects",
 	epic: "/epics",

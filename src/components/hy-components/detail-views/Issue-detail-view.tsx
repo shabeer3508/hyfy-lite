@@ -24,14 +24,11 @@ const IssueDetailView = ({ data }: { data: any }) => {
 	/*  ######################################################################################## */
 
 	const getComments = () => {
-		let query = "?expand=created_by&sort=-createdAt";
+		let query = `?expand=created_by&sort=-createdAt&filter=issue_id=${data?._id}`;
 		dispatch(getAction({ comments: Urls.comments + query }));
 	}
 
 	/*  ######################################################################################## */
-
-	const filteredComments = commentsItems?.filter(comment => comment?.issue_id === data?._id)?.map(comment => ({ ...comment, ...comment?.expand }))
-
 
 	const statusOptions = [
 		{ value: "todo", label: "Todo" },
@@ -44,7 +41,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 	useEffect(() => {
 		getComments()
-	}, [])
+	}, [data?._id])
 
 	/*  ######################################################################################## */
 
@@ -167,7 +164,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 						<CommentCreation issueId={data?._id} />
 					</div>
 					<div className="space-y-3 py-2">
-						{filteredComments?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
+						{commentsItems?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
 					</div>
 				</div>
 			</ScrollArea>
@@ -185,12 +182,12 @@ export const CommentCard = ({ data }: { data: any }) => {
 					<div className="flex gap-2">
 						<HYAvatar
 							url="https://github.com/shadcn.png"
-							name={data?.created_by?.name}
+							name={data?.created_by?.[0]?.user_name}
 						/>
 						<div className="flex flex-col capitalize">
-							<a className="text-xs">{data?.created_by?.name}</a>
+							<a className="text-xs">{data?.created_by?.[0]?.user_name}</a>
 							<a className="text-xs text-[#9499A5]">
-								{data?.created_by?.role}
+								{data?.created_by?.[0]?.role}
 							</a>
 						</div>
 					</div>
@@ -199,7 +196,7 @@ export const CommentCard = ({ data }: { data: any }) => {
 					</div>
 				</div>
 				<div className="my-1">{data?.message}</div>
-				<div className="text-[#9499A5]">On  {dayjs(data?.created).format("DD/MM/YYYY")}</div>
+				<div className="text-[#9499A5]">On  {dayjs(data?.createdAt).format("DD/MM/YYYY")}</div>
 			</CardContent>
 		</Card>
 	);

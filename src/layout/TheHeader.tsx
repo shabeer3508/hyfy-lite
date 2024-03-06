@@ -27,7 +27,9 @@ const TheHeader = () => {
 	/*  ######################################################################################## */
 
 	const getProjects = (prams?: string) => {
-		let query = "?perPage=300&expand=owner";
+		let query = `?perPage=300
+			&expand=owner`;
+
 		if (prams) { query = query + prams }
 		dispatch(getAction({ project: Urls.project + query }));
 	};

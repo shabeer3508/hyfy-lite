@@ -1,21 +1,20 @@
 export interface userDataTypes {
-	id: string;
-	name: string;
+	_id: string;
+	user_name: string;
 	role: "owner" | "admin" | "manager" | "employee";
 
 	avatar?: string;
 	collectionId?: string;
 	collectionName?: string;
-	created?: Date;
+	createdAt?: Date;
 	updated?: Date;
 	email?: string;
 	emailVisibility?: boolean;
-	username?: string;
 	verified?: boolean;
 }
 
 export interface ProjectDataType {
-	id: string;
+	_id: string;
 	title: string;
 	status: "done" | "in-progress" | "pending" | "open";
 
@@ -29,7 +28,7 @@ export interface ProjectDataType {
 }
 
 export interface EpicDataTypes {
-	id: string;
+	_id: string;
 	name: string;
 	status: "done" | "in-progress" | "pending" | "open";
 	priority: "critical" | "heigh" | "medium" | "low";
@@ -43,7 +42,7 @@ export interface EpicDataTypes {
 }
 
 export interface IssueDataTypes {
-	id: string;
+	_id: string;
 	name: string;
 	points: number;
 	project_id: string;
@@ -66,7 +65,7 @@ export interface IssueDataTypes {
 }
 
 export interface SprintDataTypes {
-	id: string;
+	_id: string;
 	name: string;
 	status: "backlog" | "retro" | "in-progress";
 	project_id: string;
@@ -83,7 +82,7 @@ export interface SprintDataTypes {
 }
 
 export interface ReleaseDataTypes {
-	id: string;
+	_id: string;
 	name: string;
 	project_id: string;
 
@@ -98,7 +97,7 @@ export interface ReleaseDataTypes {
 }
 
 export interface CommentsDataTypes {
-	id: string;
+	_id: string;
 	message: string;
 	created_by: string;
 	project_id?: string;

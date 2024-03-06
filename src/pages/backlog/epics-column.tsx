@@ -39,18 +39,19 @@ const EpicsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getEpics = (prams?: string) => {
-		let query = `?perPage=300&expand=release_id,project_id&filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
+		let query = `?perPage=300
+			&expand=release_id,project_id
+			&filter=project_id=${appProfileInfo.project_id}`;
+
+		if (prams) { query = query + prams }
 		dispatch(getAction({ epic: Urls.epic + query }));
 	};
 
 	const getReleases = (prams?: string) => {
-		let query = `?filter=project_id="${appProfileInfo.project_id}"`;
-		if (prams) {
-			query = query + prams;
-		}
+		let query = `?perPage=300
+			&filter=project_id=${appProfileInfo.project_id}`;
+
+		if (prams) { query = query + prams }
 		dispatch(getAction({ release: Urls.release + query }));
 	};
 

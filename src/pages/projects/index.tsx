@@ -13,7 +13,7 @@ import HYTooltip from "@/components/hy-components/HYTooltip";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import ProjectCreationForm from "@/pages/projects/forms/project-creation";
-import ProjectDetailView from "@/components/HYComponents/detail-views/Project-detail-view";
+import ProjectDetailView from "@/components/hy-components/detail-views/Project-detail-view";
 import { getAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 

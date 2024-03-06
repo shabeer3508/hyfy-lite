@@ -12,6 +12,8 @@ import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAction, reducerNameFromUrl, setTeamsData } from "@/redux/actions/AppActions";
+import HYDialog from "@/components/hy-components/HYDialog";
+import InviteUsers from "./forms/invite-members";
 
 const Team = () => {
 
@@ -91,7 +93,7 @@ const Team = () => {
 
 							<div className="flex gap-3">
 								<HYSearch />
-								<Button className="text-white">Add Member</Button>
+								<HYDialog title={"Add members"} content={<InviteUsers />}><Button className="text-white">Invite Member</Button></HYDialog>
 							</div>
 						</div>
 

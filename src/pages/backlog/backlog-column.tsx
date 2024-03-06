@@ -43,25 +43,24 @@ const BacklogColumn = () => {
 
 	const getIssues = (prams?: string) => {
 		let query = "?perPage=300";
-		if (prams) {
-			query = query + prams;
-		}
+
+		if (prams) { query = query + prams }
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
 	const getUsers = (prams?: string) => {
 		let query = "?perPage=300";
-		if (prams) {
-			query = query + prams;
-		}
+
+		if (prams) { query = query + prams }
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
 	const getEpics = (prams?: string) => {
-		let query = `?perPage=300&expand=release_id,project_id&filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
+		let query = `?perPage=300
+			&expand=release_id,project_id
+			&filter=project_id=${appProfileInfo.project_id}`;
+
+		if (prams) { query = query + prams }
 		dispatch(getAction({ epic: Urls.epic + query }));
 	};
 
