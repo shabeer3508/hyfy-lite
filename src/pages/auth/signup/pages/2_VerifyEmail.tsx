@@ -1,11 +1,11 @@
+import Cookies from "js-cookie"
 import { toast } from "sonner";
-import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { postAction, reducerNameFromUrl, setCurrentUser } from "@/redux/actions/AppActions";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
 	Card,
@@ -32,10 +32,36 @@ const VerifyEmailPage: React.FC = () => {
 
 		(dispatch(postAction({ signupVerifyEmail: Urls.signup_verify_email }, postData)) as any).then(res => {
 			if (res.payload?.status === 200) {
+
 				toast.success(`${res.payload?.data?.message}`);
-				navigate("/signup/setup_account", { state: { authInfo: res.payload?.data } })
+				dispatch(setCurrentUser(res.payload?.data?.data?.user));
+				Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 7, secure: true })
+
+				handleNavigation(res.payload?.data?.data?.user)
+
 			}
 		})
+	}
+
+	const handleNavigation = (userInfo) => {
+		if (userInfo?.user_type === "organization") {
+			switch (userInfo?.stage) {
+				case "organization":
+					navigate("/signup/setup_organization", { state: { authInfo: userInfo } })
+					break;
+				case "purchase":
+					navigate("/signup/purchase", { state: { authInfo: userInfo } })
+					break;
+				case "invitations":
+					navigate("/signup/invite-members", { state: { authInfo: userInfo } })
+					break;
+				default:
+					navigate("/board", { state: { authInfo: userInfo } })
+					break;
+			}
+		} else {
+			navigate("/signup/accept-invites", { state: { authInfo: userInfo } })
+		}
 	}
 
 	/*  ######################################################################################## */

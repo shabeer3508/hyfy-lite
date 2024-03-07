@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import HYRadioGroup from "@/components/hy-components/HYRadioGroup";
 import { postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { Form, FormField, FormItem, FormMessage, } from "@/components/ui/form";
-import { HiOutlineEye, HiOutlineEyeOff, HiLockClosed, HiMail } from "react-icons/hi";
+import { Form, FormField, FormItem, FormLabel, FormMessage, } from "@/components/ui/form";
+import { HiOutlineEye, HiOutlineEyeOff, HiLockClosed, HiMail, HiUser } from "react-icons/hi";
 import {
     Card,
     CardContent,
@@ -34,7 +34,7 @@ const CreateAccountPage: React.FC = () => {
 
     const formSchema = z.object({
         user_type: z.string(),
-        name: z.string(),
+        user_name: z.string(),
         email: z.string().email(),
         password: z.string()
             .min(8, { message: "Password must contain 8 characters" })
@@ -46,7 +46,7 @@ const CreateAccountPage: React.FC = () => {
     const formDefaultValues = {
         email: "",
         password: "",
-        name: "",
+        user_name: "",
         confirmPassword: "",
         user_type: "employee"
     }
@@ -71,7 +71,7 @@ const CreateAccountPage: React.FC = () => {
 
     const radioGroups = [
         { label: "Individual", value: "employee" },
-        { label: "Organization", value: "owner" }
+        { label: "Organization", value: "organization" }
     ]
 
     /*  ######################################################################################## */
@@ -87,12 +87,34 @@ const CreateAccountPage: React.FC = () => {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(handleSendEmailVerification)}>
                         <div className="grid w-full items-center gap-3">
+                            <FormLabel className="mb-2">Signing up as</FormLabel>
                             <FormField
                                 control={form.control}
                                 name="user_type"
                                 render={({ field }) => (
                                     <FormItem>
                                         <HYRadioGroup className="flex gap-3" defaultValue={field.value} radioGroups={radioGroups} onChange={field.onChange} />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="user_name"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+                                            <HiUser className="mr-2" />
+                                            <Input
+                                                required
+                                                autoFocus
+                                                {...field}
+                                                autoComplete="off"
+                                                placeholder="Name"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+                                            />
+                                        </div>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -106,7 +128,6 @@ const CreateAccountPage: React.FC = () => {
                                             <HiMail className="mr-2" />
                                             <Input
                                                 required
-                                                autoFocus
                                                 {...field}
                                                 id="identity"
                                                 autoComplete="off"

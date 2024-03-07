@@ -24,6 +24,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const ProjectCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
@@ -31,6 +32,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const authInfo = useSelector((state: any) => state.UserReducer);
 
@@ -45,13 +47,13 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
 		status: z.string(),
-		org_id: z.string()
+		// org_id: z.string()
 	});
 
 	const defaultFormValues = {
 		title: "",
 		status: "open",
-		org_id: authInfo?.user?.org_id
+		// org_id: authInfo?.user?.org_id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -62,7 +64,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	/*  ######################################################################################## */
 
 	const getUsers = (prams?: string) => {
-		let query = "";
+		let query = `?perPage=300`;
 		if (prams) {
 			query = query + prams;
 		}

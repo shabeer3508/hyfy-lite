@@ -39,7 +39,7 @@ const Board = () => {
 	};
 
 	const getUsers = (prams?: string) => {
-		let query = "";
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}

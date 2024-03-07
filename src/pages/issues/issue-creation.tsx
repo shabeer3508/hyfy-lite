@@ -1,12 +1,13 @@
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { HiDatabase, HiOutlineClock } from "react-icons/hi";
+import { HiDatabase, HiOutlineClock, HiOutlineDotsVertical } from "react-icons/hi";
+import { HiMiniXMark } from "react-icons/hi2";
 import HYSelect from "@/components/hy-components/HYSelect";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
@@ -27,10 +28,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { HYUserSelect } from "@/components/hy-components/HYUserSelect";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
+	const [selectedUsers, setUsersInfo] = useState([]);
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET")
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
@@ -52,10 +56,9 @@ const IssueCreationForm = ({ children }: any) => {
 			message: "Username must be at least 2 characters.",
 		}),
 		type: z.string(),
-		status: z.string(),
+		status: z.string().optional(),
 		epic: z.string().optional().nullable(),
 		points: z.string().optional().nullable(),
-		assign_to: z.string().optional().nullable(),
 		dependency: z.string().optional().nullable(),
 		dependency_type: z.string().optional().nullable(),
 		priority: z.string().optional().nullable(),
@@ -68,8 +71,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const defaultFormValues = {
 		name: "",
-		dependency: null,
-		status: "backlog",
+		// status: "backlog", // TODO: Add _id of the backlog status
 		points: "5",
 		type: "story",
 		project_id: appProfileInfo.project_id,
@@ -83,17 +85,21 @@ const IssueCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
+	const getIssues = (prams?: string) => {
+		let query = `?perPage=300
+			&expand=release_id,project_id
+			&filter=project_id=${appProfileInfo?.project_id}`;
+
+		if (prams) { query = query + prams }
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
+
+
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-		const getIssues = (prams?: string) => {
-			let query = `?perPage=300
-				&expand=release_id,project_id
-				&filter=project_id=${appProfileInfo?.project_id}`;
 
-			if (prams) { query = query + prams }
-			dispatch(getAction({ issues: Urls.issues + query }));
-		};
+		const postData = { ...values, assign_to: selectedUsers?.map((user) => user?._id) || [] }
 
-		const resp = (await dispatch(postAction({ issues: Urls.issues }, values))) as any;
+		const resp = (await dispatch(postAction({ issues: Urls.issues }, postData))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);
@@ -102,18 +108,24 @@ const IssueCreationForm = ({ children }: any) => {
 		}
 	};
 
+	const handleUserSelection = (user) => {
+		if (user && !selectedUsers?.find(u => u._id == user?._id)) {
+			setUsersInfo((prev) => ([...prev, user]))
+		}
+	}
+
+	const handleUserDelete = (userId) => {
+		if (userId) {
+			setUsersInfo((prev) => (prev?.filter(u => u._id !== userId)))
+		}
+	}
+
 	/*  ######################################################################################## */
 
 	const epicOptions =
 		epicItems?.filter(epic => epic.project_id === appProfileInfo.project_id)?.map((epic) => ({
 			value: epic?._id,
 			label: epic?.name,
-		})) ?? [];
-
-	const usersOptions =
-		usersList?.data?.items?.map((user) => ({
-			value: user?._id,
-			label: user?.name,
 		})) ?? [];
 
 	const issueOptions =
@@ -133,10 +145,10 @@ const IssueCreationForm = ({ children }: any) => {
 	];
 
 	const priorityOptions = [
-		{ label: "Critical", value: "critical" },
-		{ label: "Heigh", value: "heigh" },
-		{ label: "Medium", value: "medium" },
 		{ label: "Low", value: "low" },
+		{ label: "Medium", value: "medium" },
+		{ label: "High", value: "high" },
+		{ label: "Critical", value: "critical" },
 	];
 
 	const estimatedHours = [
@@ -152,6 +164,7 @@ const IssueCreationForm = ({ children }: any) => {
 		{ label: "Story", value: "story" },
 	];
 
+	//TODO: update status list using api response
 	const statusOptions = [
 		{ label: "Backlog", value: "backlog" },
 		{ label: "Todo", value: "todo" },
@@ -162,10 +175,18 @@ const IssueCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
+	useEffect(() => {
+		form?.reset(defaultFormValues)
+		setUsersInfo([])
+	}, [openForm])
+
+	/*  ######################################################################################## */
+
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="max-w-2xl h-[75vh] ">
+			<DialogContent className="max-w-4xl h-[75vh] dark:bg-[#23252A]">
 				<DialogHeader>
 					<DialogTitle>Add Issue</DialogTitle>
 				</DialogHeader>
@@ -177,10 +198,10 @@ const IssueCreationForm = ({ children }: any) => {
 								name="name"
 								render={({ field }) => (
 									<FormItem className="col-span-2">
-										<FormLabel>Story Title</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Story Title</FormLabel>
 										<Input
-											placeholder="title"
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
+											placeholder="Title"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-[#36363A] dark:bg-[#23252A]"
 											{...field}
 										/>
 										<FormMessage />
@@ -192,10 +213,10 @@ const IssueCreationForm = ({ children }: any) => {
 								name="type"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Type</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Type</FormLabel>
 										<HYCombobox
 											defaultValue="story"
-											buttonClassName="w-full"
+											buttonClassName="w-full dark:bg-[#23252A] dark:border-[#36363A]"
 											id="type"
 											form={form}
 											options={typeOptions}
@@ -212,11 +233,11 @@ const IssueCreationForm = ({ children }: any) => {
 								name="epic"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
-										<FormLabel className="my-1">
+										<FormLabel className="my-1 text-xs text-[#9499A5]">
 											Epic
 										</FormLabel>
 										<HYCombobox
-											buttonClassName="w-full"
+											buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
 											id="epic"
 											form={form}
 											options={epicOptions}
@@ -230,11 +251,11 @@ const IssueCreationForm = ({ children }: any) => {
 								name="points"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Points</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Points</FormLabel>
 										<HYCombobox
 											defaultValue="5"
 											label={<HiDatabase />}
-											buttonClassName="w-full"
+											buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
 											id="points"
 											form={form}
 											options={pointOptions}
@@ -244,122 +265,140 @@ const IssueCreationForm = ({ children }: any) => {
 								)}
 							/>
 						</div>
-						<FormField
-							control={form.control}
-							name="status"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel>Status</FormLabel>
 
-									<HYCombobox
-										defaultValue="backlog"
-										buttonClassName="w-full"
-										id="status"
-										form={form}
-										options={statusOptions}
-									/>
 
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							disabled
-							control={form.control}
-							name="assign_to"
-							render={({ field }) => (
-								<FormItem className="my-3">
-									<FormLabel>Assign To</FormLabel>
-									<HYCombobox
-										buttonClassName="w-full"
-										id="assign_to"
-										form={form}
-										options={usersOptions}
+						<div className=" w-full flex gap-4">
+							<div className="w-1/2 ">
+
+
+								<FormField
+									control={form.control}
+									name="status"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel className="text-xs text-[#9499A5]">Status</FormLabel>
+
+											<HYCombobox
+												defaultValue="backlog"
+												buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+												id="status"
+												form={form}
+												options={statusOptions}
+											/>
+
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<div className="grid grid-cols-2 gap-3 my-2">
+									<FormField
+										control={form.control}
+										name="dependency"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-[#9499A5]">Dependency</FormLabel>
+												<HYCombobox
+													buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+													id="dependency"
+													form={form}
+													options={issueOptions}
+												/>
+												<FormMessage />
+											</FormItem>
+										)}
 									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<div className="grid grid-cols-2 gap-3">
-							<FormField
-								control={form.control}
-								name="dependency"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Dependency</FormLabel>
-										<HYCombobox
-											buttonClassName="w-full"
-											id="dependency"
-											form={form}
-											options={issueOptions}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-							<FormField
-								control={form.control}
-								name="dependency_type"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Depedency Type</FormLabel>
-										<HYSelect
-											field={field}
-											id="dependency_type"
-											className="w-full"
-											options={["blocking"]}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+									<FormField
+										control={form.control}
+										name="dependency_type"
+										render={({ field }) => (
+											<FormItem>
+												<FormLabel className="text-xs text-[#9499A5]">Depedency Type</FormLabel>
+												<HYSelect
+													field={field}
+													id="dependency_type"
+													className="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+													options={["blocking"]}
+												/>
+												<FormMessage />
+											</FormItem>
+										)}
+									/>
+								</div>
+
+								<FormField
+									control={form.control}
+									name="priority"
+									render={({ field }) => (
+										<FormItem className="flex flex-col my-2">
+											<FormLabel className="text-xs text-[#9499A5]">Priority</FormLabel>
+											<HYCombobox
+												buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+												id="priority"
+												form={form}
+												options={priorityOptions}
+											/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+								<FormField
+									control={form.control}
+									name="estimated_hours"
+									render={({ field }) => (
+										<FormItem className="my-1">
+											<FormLabel className="text-xs text-[#9499A5]">Estimated Hours</FormLabel>
+											<HYCombobox
+												label={<HiOutlineClock />}
+												buttonClassName="w-full dark:bg-[#23252A] dark:border-[#36363A]"
+												id="estimated_hours"
+												form={form}
+												options={estimatedHours}
+											/>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+
+							</div>
+							<div className="w-1/2 text-xs flex flex-col">
+								<div className="flex flex-col justify-between pt-1">
+									<div className="text-[#9499A5]">Assign to</div>
+									<HYUserSelect showSearch buttonClassName="w-full my-3 dark:bg-[#23252A] dark:border-[#36363A]" onValueChange={handleUserSelection} />
+								</div>
+								<div className="border dark:border-[#36363A] h-[210px] my-2 rounded p-1 flex flex-col gap-1 overflow-auto">
+
+									{selectedUsers?.map(user => {
+										return (<div className="border dark:border-[#36363A] p-1 rounded flex justify-between items-center">
+											<div className="flex gap-2 items-center">
+												<div><HYAvatar name={user?.user_name || user?.name} /></div>
+												<div>
+													<div className="capitalize">{user?.user_name || user?.name}</div>
+													<div className="text-[10px] text-[#9499A5]">{user?.role}</div>
+												</div>
+											</div>
+											<Button type="button" variant="ghost" size="icon" onClick={() => handleUserDelete(user?._id)}>
+												<HiMiniXMark />
+											</Button>
+										</div>)
+									})}
+
+								</div>
+							</div>
 						</div>
 
-						<FormField
-							control={form.control}
-							name="priority"
-							render={({ field }) => (
-								<FormItem className="flex flex-col my-2">
-									<FormLabel>Priority</FormLabel>
-									<HYCombobox
-										buttonClassName="w-full"
-										id="priority"
-										form={form}
-										options={priorityOptions}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-
-						<FormField
-							control={form.control}
-							name="estimated_hours"
-							render={({ field }) => (
-								<FormItem className="my-1">
-									<FormLabel>Estimated Hours</FormLabel>
-									<HYCombobox
-										label={<HiOutlineClock />}
-										buttonClassName="w-full"
-										id="estimated_hours"
-										form={form}
-										options={estimatedHours}
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						<FormField
 							control={form.control}
 							name="description"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Description</FormLabel>
+									<FormLabel className="text-xs text-[#9499A5]">Description</FormLabel>
 									<FormControl>
 										<Input
 											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] dark:border-[#36363A]"
 											{...field}
 										/>
 									</FormControl>
@@ -373,12 +412,12 @@ const IssueCreationForm = ({ children }: any) => {
 							name="sub_tasks"
 							render={({ field }) => (
 								<FormItem className="my-1">
-									<FormLabel>Sub Tasks</FormLabel>
+									<FormLabel className="text-xs text-[#9499A5]">Sub Tasks</FormLabel>
 									<FormControl>
 										<Input
 											disabled
 											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] dark:border-[#36363A]"
 											{...field}
 										/>
 									</FormControl>
@@ -387,10 +426,11 @@ const IssueCreationForm = ({ children }: any) => {
 							)}
 						/>
 
-						<DialogFooter className="mt-5 pt-3 sticky bottom-0 bg-background border-t">
+						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-[#23252A] dark:border-[#36363A]">
 							<Button
 								type="reset"
 								variant="outline"
+								className="dark:bg-[#23252A] dark:border-primary text-primary"
 								onClick={() => setOpenForm(false)}
 							>
 								Cancel

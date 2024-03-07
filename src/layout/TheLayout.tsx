@@ -10,13 +10,18 @@ const TheLayout = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
+	const token = Cookies.get("hyfy_auth_token");
 	const sidebar = useSelector((state: any) => state.SidebarReducer);
 
 	useEffect(() => {
-		const token = Cookies.get("hyfy_auth_token");
-		if (!token) { navigate("/login") }
+		if (!token) {
+			navigate("/login");
+		}
 	}, [])
 
+	if (!token) {
+		return <></>
+	}
 
 	return (
 		<div className="flex h-screen transform-gpu scrollbar-hide dark:bg-[#111215] ">

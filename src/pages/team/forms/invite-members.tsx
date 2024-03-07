@@ -5,32 +5,35 @@ import { HiMail } from "react-icons/hi";
 import Urls from "@/redux/actions/Urls";
 import { HiMiniXMark } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
-import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { postAction } from "@/redux/actions/AppActions";
 import HYAvatar from "@/components/hy-components/HYAvatar";
+import { useLocation, useNavigate } from "react-router-dom";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
-
 
 interface InviteUserProps { }
 
+const InviteUsers: React.FC<InviteUserProps> = () => {
 
-const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
-
-    const { state } = useLocation();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { state, pathname } = useLocation();
+
     const authInfo = useSelector((state: any) => state.UserReducer);
     const [formData, setFormData] = useState({ inputUser: { email: "", role: "employee" }, inviteList: [] })
 
     /*  ######################################################################################## */
 
-    const handleAddMembers = (e) => {
-        e?.preventDefault()
-        setFormData((prevData) => ({
-            inputUser: { email: "", role: "employee" },
-            inviteList: [...prevData?.inviteList, { id: uuidv4(), email: prevData?.inputUser?.email, role: prevData?.inputUser?.role }]
-        }))
+    const handleAddMembers = () => {
+        if (formData?.inputUser?.email == "") {
+            toast.error("Enter email address")
+        } else {
+            setFormData((prevData) => ({
+                inputUser: { email: "", role: "employee" },
+                inviteList: [...prevData?.inviteList, { id: uuidv4(), email: prevData?.inputUser?.email, role: prevData?.inputUser?.role }]
+            }))
+        }
     }
 
     const handleDeleteUser = (id: string) => {
@@ -45,7 +48,9 @@ const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
         setFormData(prevState => ({ ...prevState, inviteList: updatedInviteList }));
     }
 
-    const handleInviteUsers = () => {
+    const handleInviteUsers = (e) => {
+        e.preventDefault();
+
         const postData = {
             user_id: authInfo?.user?._id ?? state?.authInfo?.user?._id,
             members: formData?.inviteList?.map((user) => ({ email: user.email, role: user.role }))
@@ -58,6 +63,9 @@ const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
                 if (success) {
                     toast.error("Invitations sent successfully!")
                     setFormData({ inputUser: { email: "", role: "employee" }, inviteList: [] })
+                    if (pathname === "/signup/invite-members") {
+                        navigate("/board")
+                    }
                 }
             })
         }
@@ -76,13 +84,12 @@ const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
 
     return (
         <div className="">
-            <form onSubmit={handleAddMembers}>
+            <form onSubmit={handleInviteUsers}>
                 <div className="flex flex-col gap-3">
                     <div className="flex w-full justify-between items-center gap-2">
                         <div className="flex items-center dark:bg-[#23252A] flex-1 rounded px-3 border dark:border-[#FFFFFF1A] border-border ">
                             <HiMail className="mr-2" />
                             <Input
-                                required
                                 autoFocus
                                 type="email"
                                 autoComplete="off"
@@ -101,7 +108,14 @@ const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
                             onValueChange={(value) => setFormData((prevData) => ({ ...prevData, inputUser: { ...prevData?.inputUser, role: value } }))}
                         />
 
-                        <Button type="submit" className="text-primary dark:bg-[#23252A] border-primary border" variant="outline">Add</Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => handleAddMembers()}
+                            className="text-primary dark:bg-[#23252A] border-primary border"
+                        >
+                            Add
+                        </Button>
                     </div>
 
                     {formData?.inviteList?.length > 0 &&
@@ -133,13 +147,13 @@ const InviteUsers: React.FC<InviteUserProps> = ({ }) => {
                         </div>
                     }
                     <Button
-                        type="button"
-                        className="w-full text-white hover:bg-primary"
-                        onClick={() => handleInviteUsers()}>
+                        className="w-full text-white hover:bg-primary">
+                        {/* // onClick={() => handleInviteUsers()}> */}
                         Invite Members
                     </Button>
                 </div>
-            </form></div>
+            </form >
+        </div >
     )
 }
 

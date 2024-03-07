@@ -34,17 +34,18 @@ export function HYCombobox({
 	optionsClassName,
 	showSearch = false,
 	unSelectable = false,
+	disable = false,
 }: {
 	id?: string;
 	label?: any;
-	options: MenuOption[];
+	disable?: boolean;
 	name?: string;
+	options: MenuOption[];
 	buttonClassName?: string;
 	optionsClassName?: string;
 	onValueChange?: any;
 	showSearch?: boolean;
 	defaultValue?: string;
-	disableUnSelect?: boolean;
 	form?: UseFormReturn<any>;
 	updateList?: () => void; // TODO: use this for updating the paginated list
 	unSelectable?: boolean;
@@ -75,6 +76,7 @@ export function HYCombobox({
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
+					disabled={disable}
 					variant="outline"
 					role="combobox"
 					aria-expanded={open}

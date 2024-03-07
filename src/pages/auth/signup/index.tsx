@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { signupRoutes } from "./routes";
 import { loading } from "@/layout/TheContent";
 import { Route, Routes, } from "react-router-dom";
-import NotFound from "@/pages/not-found/NotFound";
+import NotFound from "@/pages/empty-screens/NotFound";
 
 
 const Signup = () => {

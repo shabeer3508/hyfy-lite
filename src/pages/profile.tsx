@@ -84,6 +84,7 @@ const Profile = () => {
 					<div className="flex flex-col gap-3 max-h-[50vh] overflow-auto pr-2">
 						{orgItems?.map((org) =>
 							<Card
+								key={`ORG_${org?._id}`}
 								className="p-7 flex justify-between items-center cursor-pointer"
 								onClick={() => authInfo?.user?.current_organization !== org?._id && handleOrganizationChange(org?._id)}
 							>

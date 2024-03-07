@@ -1,7 +1,7 @@
 import { Suspense, memo } from "react";
 import { Route, Routes } from "react-router-dom";
 import routes from "../routes";
-import NotFound from "@/pages/not-found/NotFound";
+import NotFound from "@/pages/empty-screens/NotFound";
 
 export const loading = (
 	<div className="w-full h-full bg-transparent flex items-center justify-center">

@@ -15,6 +15,7 @@ const Urls = {
 	// Signup
 	signup_send_email: "/email",
 	signup_verify_email: "/verifyEmail",
+	signup_verify_coupon: "/subscriptions",
 
 	users: "/users",
 	profile: "/profile",
