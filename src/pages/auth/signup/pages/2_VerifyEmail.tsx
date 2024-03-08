@@ -35,7 +35,7 @@ const VerifyEmailPage: React.FC = () => {
 
 				toast.success(`${res.payload?.data?.message}`);
 				dispatch(setCurrentUser(res.payload?.data?.data?.user));
-				Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 7, secure: true })
+				Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 2, secure: true })
 
 				handleNavigation(res.payload?.data?.data?.user)
 

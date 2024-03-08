@@ -17,6 +17,7 @@ import {
 	reducerNameFromUrl,
 	setReleasePageData,
 } from "@/redux/actions/AppActions";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 
 
 
@@ -63,10 +64,16 @@ const Releases = () => {
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getReleases();
+		if (appProfileInfo.project_id) {
+			getReleases();
+		}
 	}, [appProfileInfo.project_id, releasePageinfo]);
 
 	/*  ######################################################################################## */
+
+	if (!appProfileInfo?.project_id) {
+		return <NoProjectScreen />
+	}
 
 	return (
 		<div className=" flex flex-col h-full">

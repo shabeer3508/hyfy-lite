@@ -55,7 +55,6 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		priority: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
 		project_id: z.string(),
-		org_id: z.string(),
 	});
 
 
@@ -68,7 +67,6 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		priority: undefined,
 		description: undefined,
 		project_id: appProfileInfo.project_id,
-		org_id: authInfo?.user?.org_id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({

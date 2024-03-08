@@ -19,6 +19,7 @@ import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDow
 import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
 import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import NoProjectScreen from '../empty-screens/NoProjectScreen';
 
 
 const EpicScreen = () => {
@@ -82,12 +83,17 @@ const EpicScreen = () => {
     /*  ######################################################################################## */
 
     useEffect(() => {
-        getIssues();
-        getEpics();
+        if (appProfileInfo.project_id) {
+            getIssues();
+            getEpics();
+        }
     }, [appProfileInfo.project_id]);
 
     /*  ######################################################################################## */
 
+    if (!appProfileInfo?.project_id) {
+        return <NoProjectScreen />
+    }
 
     return (
         <div className=" flex flex-col h-full">

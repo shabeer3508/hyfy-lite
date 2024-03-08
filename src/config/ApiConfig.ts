@@ -10,6 +10,9 @@ const ApiConfig: { [key: string]: string } = {
 	//signup
 	signupSendEmail: Urls.signup_send_email,
 	signupVerifyEmail: Urls.signup_verify_email,
+	signupSetupOrganization: Urls.signup_setup_organization,
+
+	invitaions: Urls.invitations,
 	invite: Urls.invite_user,
 
 	epic: Urls.epic,

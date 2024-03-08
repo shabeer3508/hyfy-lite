@@ -40,6 +40,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	const defaultFormValues = {
 		title: "",
 		status: "open",
+		description: ""
 		// org_id: authInfo?.user?.org_id
 	};
 
@@ -58,20 +59,21 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
+	const getProjects = (prams?: string) => {
+		let query = "?perPage=300&expand=owner";
+		if (prams) {
+			query = query + prams;
+		}
+		dispatch(getAction({ project: Urls.project + query }));
+	};
+
 	const handleProjectCreation = async (values: z.infer<typeof formSchema>) => {
-		const getProjects = (prams?: string) => {
-			let query = "?perPage=300&expand=owner";
-			if (prams) {
-				query = query + prams;
-			}
-			dispatch(getAction({ project: Urls.project + query }));
-		};
 		const resp = (await dispatch(postAction({ project: Urls.project }, values))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);
 			setOpenForm(false);
-			// getProjects();
+			getProjects();
 		}
 	};
 
