@@ -8,13 +8,16 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const AddMembersPage: React.FC = () => {
 
+    const navigate = useNavigate();
     const authInfo = useSelector((state: any) => state.UserReducer);
 
     const handleSkipInvitaion = () => {
         //TODO : updates user stage value to "completed"
+        navigate("/board")
     }
 
     return (

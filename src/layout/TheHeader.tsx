@@ -1,22 +1,21 @@
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
+import { HiBell } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { useNavigate, } from "react-router-dom";
 import ModeToggle from "@/components/mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
+import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYSearch from "@/components/hy-components/HYSearch";
+import { useLocation, useNavigate, } from "react-router-dom";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-
-import { HiBell } from "react-icons/hi";
-import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
-
 import { getAction, reducerNameFromUrl, setProject } from "@/redux/actions/AppActions";
 
 const TheHeader = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const { pathname } = useLocation();
 
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const projectList = useSelector((state: any) => state?.[reducerName]);
@@ -36,11 +35,14 @@ const TheHeader = () => {
 
 	/*  ######################################################################################## */
 
+
 	const projectOptions =
 		projectList?.data?.items?.map((prjct) => ({
 			value: prjct?._id,
 			label: prjct?.title,
 		})) ?? [];
+
+	const showProjectSelection = !["/projects", "/teams"].includes(pathname) && projectOptions?.length > 0
 
 	/*  ######################################################################################## */
 
@@ -48,21 +50,29 @@ const TheHeader = () => {
 		getProjects();
 	}, []);
 
+	useEffect(() => {
+		if (!appProfileInfo?.project_id && projectOptions?.length > 0) {
+			dispatch(setProject(projectOptions?.[0]?.value))
+		}
+	}, [projectList])
+
 	/*  ######################################################################################## */
 
 	return (
 		<div className="w-full transition-all duration-200 ease-in ">
 			<div className="flex h-20 items-center px-6">
 				<div className="font-semibold  flex items-center  dark:text-foreground">
-					<HYCombobox
-						name="project"
-						showSearch={false}
-						unSelectable={false}
-						buttonClassName="border"
-						options={projectOptions}
-						defaultValue={appProfileInfo?.project_id}
-						onValueChange={(value: string) => dispatch(setProject(value))}
-					/>
+					{showProjectSelection &&
+						<HYCombobox
+							name="project"
+							showSearch={false}
+							unSelectable={false}
+							buttonClassName="border"
+							options={projectOptions}
+							defaultValue={appProfileInfo?.project_id}
+							onValueChange={(value: string) => dispatch(setProject(value))}
+						/>
+					}
 				</div>
 				<div className="flex grow items-center justify-end gap-1 dark:text-foreground">
 					<HYSearch />

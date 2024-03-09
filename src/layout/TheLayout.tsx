@@ -12,10 +12,21 @@ const TheLayout = () => {
 
 	const token = Cookies.get("hyfy_auth_token");
 	const sidebar = useSelector((state: any) => state.SidebarReducer);
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	useEffect(() => {
 		if (!token) {
+			// User navigation for non  authenticated users
 			navigate("/login");
+		} else {
+			// User navigation for authenticated but user [stage !=="completed" ]
+			if (authInfo?.user?.user_type === "employee" && authInfo?.user?.stage === "organization") {
+				navigate("/signup/accept-invites");
+			} else {
+				if (authInfo?.user?.stage === "organization") navigate("/signup/setup_organization");
+				else if (authInfo?.user?.stage === "purchase") navigate("/signup/billing");
+				else if (authInfo?.user?.stage === "invitations") navigate("/signup/invite-members");
+			}
 		}
 	}, [])
 

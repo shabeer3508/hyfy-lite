@@ -6,6 +6,7 @@ import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -39,7 +40,7 @@ const Board = () => {
 	};
 
 	const getUsers = (prams?: string) => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -114,17 +115,24 @@ const Board = () => {
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getSprints();
-		getUsers();
+		if (appProfileInfo?.project_id) {
+			getSprints();
+			getUsers();
+		}
 	}, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
-		if (boardInfo) {
+		if (boardInfo && appProfileInfo?.project_id) {
 			getIssues();
 		}
 	}, [boardInfo]);
 
 	/*  ######################################################################################## */
+
+
+	if (!appProfileInfo?.project_id) {
+		return <NoProjectScreen />
+	}
 
 	return (
 		<>
