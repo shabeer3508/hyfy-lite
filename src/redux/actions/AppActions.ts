@@ -1,28 +1,16 @@
 import Actions from "./ActionTypes";
 import { capitalizeFirstLetter } from "../../utils/utils";
-import {
-	BoardStates,
-	ProjectStates,
-	ReleaseStates,
-	SprintStates,
-	TeamsStates,
-} from "../reducers/AppProfileReducer";
+import { BoardStates, ProjectStates, ReleaseStates, SprintStates, TeamsStates } from "../reducers/AppProfileReducer";
 
 const AppActions = {};
 
 type actionType = "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
 
-export const reducerNameFromUrl = (
-	url: string,
-	method: actionType,
-	isDeatil = false
-) => {
+export const reducerNameFromUrl = (url: string, method: actionType, isDeatil = false) => {
 	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let name = `${method.toLowerCase()}${apiNameCap}`
-		.replace(lastPath, "")
-		?.replaceAll(match, " ");
+	let name = `${method.toLowerCase()}${apiNameCap}`.replace(lastPath, "")?.replaceAll(match, " ");
 	name = capitalizeFirstLetter(name);
 	// name = camelize(name);
 	if (isDeatil) {
@@ -31,18 +19,11 @@ export const reducerNameFromUrl = (
 	return name;
 };
 
-export const actionTypeFromUrl = (
-	url: string,
-	method: actionType,
-	isDeatil = false
-) => {
+export const actionTypeFromUrl = (url: string, method: actionType, isDeatil = false) => {
 	const apiNameCap = capitalizeFirstLetter(url);
 	const match = /[^a-zA-Z ]/g;
 	const lastPath = /\/([^/]*)$/;
-	let ActionType = `${method}${apiNameCap}`
-		.replace(lastPath, "")
-		?.replace(match, "_")
-		.toUpperCase();
+	let ActionType = `${method}${apiNameCap}`.replace(lastPath, "")?.replace(match, "_").toUpperCase();
 	if (isDeatil) {
 		ActionType = ActionType + "_DETAIL";
 	}
@@ -70,16 +51,14 @@ export function getAction(apiUrl: object) {
 export function getDetailAction(apiurl: string | object, id: any) {
 	const method = "GET";
 	let url = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
-	const apiUrl =
-		typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
+	const apiUrl = typeof apiurl === "string" ? apiurl : Object.values(apiurl)[0];
 	if (id && apiUrl?.includes("?")) {
 		url = apiUrl.split("?")[0] + `/${id}/?${apiUrl.split("?")[1]}`;
 	}
 	if (id && !apiUrl?.includes("?")) {
 		url = apiUrl + `/${id}/`;
 	}
-	const typeName =
-		typeof apiurl === "object" ? Object.keys(apiurl)?.[0] : apiUrl;
+	const typeName = typeof apiurl === "object" ? Object.keys(apiurl)?.[0] : apiUrl;
 	const type = actionTypeFromUrl(typeName, method, true);
 	return {
 		type,
@@ -94,9 +73,9 @@ export function getDetailAction(apiurl: string | object, id: any) {
  * @param params url query parameters if any
  * @returns Redux Action
  */
-export function postAction(apiUrl: object, data: any) {
+export function postAction(apiUrl: object, data?: any) {
 	const method = "POST";
-	let url = Object.values(apiUrl)[0];
+	const url = Object.values(apiUrl)[0];
 	const typeName = Object.keys(apiUrl)[0];
 
 	const type = actionTypeFromUrl(typeName, method);
@@ -106,12 +85,7 @@ export function postAction(apiUrl: object, data: any) {
 	};
 }
 
-export function patchAction(
-	apiUrl: string | object,
-	data: any,
-	id: string,
-	lastPath?: string
-) {
+export function patchAction(apiUrl: string | object, data: any, id: string, lastPath?: string) {
 	const method = "PATCH";
 	let url = typeof apiUrl === "string" ? apiUrl : Object.values(apiUrl)[0];
 	url = url + `/${id}${lastPath ? `/${lastPath}` : ""}`;

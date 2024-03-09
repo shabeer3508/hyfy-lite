@@ -24,6 +24,7 @@ const Urls = {
 
 	invite_user: "/sendInvitation",
 	invitations: "/invitations",
+	invitations_skip: "/invitations/skip",
 
 	project: "/projects",
 	epic: "/epics",

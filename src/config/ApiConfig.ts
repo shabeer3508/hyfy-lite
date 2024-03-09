@@ -13,6 +13,8 @@ const ApiConfig: { [key: string]: string } = {
 	signupSetupOrganization: Urls.signup_setup_organization,
 
 	invitaions: Urls.invitations,
+	invitations_skip: Urls.invitations_skip,
+
 	invite: Urls.invite_user,
 
 	epic: Urls.epic,
