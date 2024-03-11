@@ -1,7 +1,10 @@
-import { Suspense, memo } from "react";
-import { Route, Routes } from "react-router-dom";
 import routes from "../routes";
+import Urls from "@/redux/actions/Urls";
+import { Route, Routes } from "react-router-dom";
+import { Suspense, memo, useEffect } from "react";
 import NotFound from "@/pages/empty-screens/NotFound";
+import { useDispatch, useSelector } from "react-redux";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 export const loading = (
 	<div className="w-full h-full bg-transparent flex items-center justify-center">
@@ -10,6 +13,17 @@ export const loading = (
 );
 
 const TheContent = () => {
+
+	const dispatch = useDispatch()
+
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const getIssueStatus = () => dispatch(getAction({ issueStatus: Urls.issue_status }));
+
+	useEffect(() => {
+		if (!issueStatusList) getIssueStatus();
+	}, [])
+
 	return (
 		<main className="transition-all transform-gpu duration-200 ease-in h-full w-full scrollbar-hide">
 			<Suspense fallback={loading}>

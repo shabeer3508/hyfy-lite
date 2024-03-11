@@ -3,19 +3,19 @@ import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { HiOutlineArrowsUpDown, HiCheck } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/hy-components/HYDialog";
 import HYSearch from "@/components/hy-components/HYSearch";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropDown from "@/components/hy-components/HYDropDown";
+import { HiOutlineArrowsUpDown, HiCheck } from "react-icons/hi2";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
 import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
-import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	HiPlus,
@@ -33,6 +33,9 @@ const BacklogColumn = () => {
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
 	const epicItems = epicsListData?.data?.items;
@@ -41,28 +44,24 @@ const BacklogColumn = () => {
 
 	/*  ######################################################################################## */
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = "?perPage=300";
-
-		if (prams) { query = query + prams }
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const getUsers = (prams?: string) => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-
-		if (prams) { query = query + prams }
+	const getUsers = () => {
+		let query = `?perPage=300`;
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
-	const getEpics = (prams?: string) => {
+	const getEpics = () => {
 		let query = `?perPage=300
 			&expand=release_id,project_id
 			&filter=project_id=${appProfileInfo.project_id}`;
 
-		if (prams) { query = query + prams }
 		dispatch(getAction({ epic: Urls.epic + query }));
 	};
+
 
 	const updateIssueToBacklog = async (issueId: string) => {
 		const resp = (await dispatch(
@@ -77,7 +76,7 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const backlogIssues =
-		issueItems?.filter((issue) => issue?.status === "backlog" && issue?.project_id === appProfileInfo?.project_id) ?? [];
+		issueItems?.filter((issue) => issue?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id) ?? [];
 
 	const usersOptions =
 		usersList?.data?.items?.map((user) => ({
@@ -104,9 +103,13 @@ const BacklogColumn = () => {
 
 	useEffect(() => {
 		getIssues();
-		getUsers();
 		getEpics();
 	}, [appProfileInfo?.project_id]);
+
+	useEffect(() => {
+		getUsers();
+	}, [])
+
 
 	/*  ######################################################################################## */
 

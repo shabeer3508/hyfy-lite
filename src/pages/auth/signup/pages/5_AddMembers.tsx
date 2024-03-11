@@ -1,21 +1,20 @@
-import InviteUsers from "@/pages/team/forms/invite-members";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie"
 import Urls from "@/redux/actions/Urls";
-import { postAction } from "@/redux/actions/AppActions";
-import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import InviteUsers from "@/pages/team/forms/invite-members";
+import { patchAction, postAction, updateUserStage } from "@/redux/actions/AppActions";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const AddMembersPage: React.FC = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const authInfo = useSelector((state: any) => state.UserReducer);
-
 	const handleSkipInvitaion = () => {
 		(dispatch(postAction({ invitations_skip: Urls.invitations_skip }, {})) as any).then((res) => {
 			if (res.payload?.status === 200) {
-				toast.success(`${res.payload?.data?.message}`);
+				dispatch(updateUserStage("completd"));
+				Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 2, secure: true })
 				navigate("/board");
 			}
 		});

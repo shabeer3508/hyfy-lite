@@ -96,6 +96,7 @@ const Login = () => {
 							{postLoginInfo?.loading ? "Loading..." : "Login"}
 						</Button>
 					</form>
+					<div className="text-xs mt-5 mb-2" >Don't have an account ? <span className="text-primary mx-1 cursor-pointer" onClick={() => navigate("/signup")}>Sign up</span></div>
 				</CardContent>
 			</Card>
 		</div >

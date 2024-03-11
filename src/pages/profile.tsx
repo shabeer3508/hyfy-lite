@@ -37,6 +37,8 @@ const Profile = () => {
 	};
 
 	const handleOrganizationChange = async (orgId: string) => {
+		// TODO : update organization and token here 
+
 		// const resp = (await dispatch(
 		// 	patchAction({ users: Urls.users }, { org_id: orgId, }, authInfo?.user?._id)
 		// )) as any;

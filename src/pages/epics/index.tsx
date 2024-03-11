@@ -246,6 +246,7 @@ const EpicScreen = () => {
 
                                                     </div>
                                                     <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
+                                                        {epicIssues?.length === 0 && "No Issues Available"}
                                                         {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
                                                     </AccordionContent>
                                                 </AccordionItem>

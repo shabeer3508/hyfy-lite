@@ -161,7 +161,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 							)))}
 						</div>
 					}
-					<Button variant="ghost" size="sm">
+					<Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
 						<MoreVertical />
 					</Button>
 				</div>

@@ -33,6 +33,8 @@ const Urls = {
 	sprints: "/sprints",
 
 	comments: "/comments",
+
+	issue_status: "/issueStatus",
 };
 
 export default Urls;

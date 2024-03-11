@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { HiDatabase, HiOutlineClock, HiOutlineDotsVertical } from "react-icons/hi";
+import { HiDatabase, HiOutlineClock } from "react-icons/hi";
 import { HiMiniXMark } from "react-icons/hi2";
 import HYSelect from "@/components/hy-components/HYSelect";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
@@ -41,13 +41,12 @@ const IssueCreationForm = ({ children }: any) => {
 	const epicItems = epicsListData?.data?.items;
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-	const authInfo = useSelector((state: any) => state.UserReducer);
-
-	const usersReducerName = reducerNameFromUrl("users", "GET");
-	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueItems = issuesListData?.data?.items;
+
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
 
 	/*  ######################################################################################## */
 
@@ -66,16 +65,14 @@ const IssueCreationForm = ({ children }: any) => {
 		description: z.string().optional().nullable(),
 		sub_tasks: z.string().optional().nullable(),
 		project_id: z.string(),
-		org_id: z.string()
 	});
 
 	const defaultFormValues = {
 		name: "",
-		// status: "backlog", // TODO: Add _id of the backlog status
 		points: "5",
 		type: "story",
 		project_id: appProfileInfo.project_id,
-		org_id: authInfo?.user?.org_id
+		status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id,
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -85,20 +82,17 @@ const IssueCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = `?perPage=300
 			&expand=release_id,project_id
 			&filter=project_id=${appProfileInfo?.project_id}`;
 
-		if (prams) { query = query + prams }
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
 
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
-
 		const postData = { ...values, assign_to: selectedUsers?.map((user) => user?._id) || [] }
-
 		const resp = (await dispatch(postAction({ issues: Urls.issues }, postData))) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
@@ -164,14 +158,7 @@ const IssueCreationForm = ({ children }: any) => {
 		{ label: "Story", value: "story" },
 	];
 
-	//TODO: update status list using api response
-	const statusOptions = [
-		{ label: "Backlog", value: "backlog" },
-		{ label: "Todo", value: "todo" },
-		{ label: "Ongoing", value: "ongoing" },
-		{ label: "Pending", value: "pending" },
-		{ label: "Done", value: "done" },
-	];
+	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
 
 	/*  ######################################################################################## */
 
@@ -269,8 +256,6 @@ const IssueCreationForm = ({ children }: any) => {
 
 						<div className=" w-full flex gap-4">
 							<div className="w-1/2 ">
-
-
 								<FormField
 									control={form.control}
 									name="status"
@@ -279,7 +264,7 @@ const IssueCreationForm = ({ children }: any) => {
 											<FormLabel className="text-xs text-[#9499A5]">Status</FormLabel>
 
 											<HYCombobox
-												defaultValue="backlog"
+												defaultValue={form?.getValues()?.status}
 												buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
 												id="status"
 												form={form}

@@ -211,6 +211,9 @@ const CreateAccountPage: React.FC = () => {
                             </Button>
                         </div>
                     </form>
+
+                    <div className="text-xs mt-5 mb-2" >Already have an account ? <span className="text-primary mx-1 cursor-pointer" onClick={() => navigate("/login")}>Login</span></div>
+
                 </Form>
             </CardContent>
         </Card>

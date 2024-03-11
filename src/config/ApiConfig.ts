@@ -24,6 +24,8 @@ const ApiConfig: { [key: string]: string } = {
 	project: Urls.project,
 
 	comments: Urls.comments,
+
+	issueStatus: Urls.issue_status,
 };
 
 export default ApiConfig;

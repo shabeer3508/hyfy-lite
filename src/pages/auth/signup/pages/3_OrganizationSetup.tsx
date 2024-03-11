@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { toast } from "sonner";
+import Cookies from "js-cookie"
 import Urls from "@/redux/actions/Urls";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -63,6 +64,7 @@ const OrganizationSetupPage: React.FC = () => {
     const handleOrganizationSetup = (data) => {
         (dispatch(postAction({ signupSetupOrganization: Urls.signup_setup_organization }, data)) as any).then(res => {
             if (res.payload?.status === 200) {
+                Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 2, secure: true })
                 toast.success(`Organization created successfully`);
                 navigate("/signup/billing")
             }

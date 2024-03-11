@@ -106,11 +106,14 @@ interface InvitationCardProps {
 
 const InvitationCard: React.FC<InvitationCardProps> = ({ inviteInfo, getInvitationList }) => {
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     const handleInvitationStatus = (inviteId: string, status: "accepted" | "rejected") => {
         (dispatch(patchAction({ invitationManage: Urls.invitations }, { status }, inviteId)) as any).then((res) => {
             if (res.payload?.status === 200) {
+                // TODO:
+                // Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 2, secure: true })
+                // dispatch(setCurrentUser(res_data?.data?.user)); 
                 getInvitationList();
             }
         })

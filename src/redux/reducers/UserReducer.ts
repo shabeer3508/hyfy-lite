@@ -6,6 +6,11 @@ export default function UserReducer() {
 		switch (action.type) {
 			case Actions.SET_USER:
 				return { ...state, user: action.payload };
+			case Actions.UPDATE_USER_STAGE:
+				return {
+					...state,
+					user: { ...state?.user, stage: action.payload },
+				};
 			case Actions.CLEAR_USER:
 				return { ...state, user: null };
 			default:

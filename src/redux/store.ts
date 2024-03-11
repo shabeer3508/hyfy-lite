@@ -35,14 +35,15 @@ const middleware = axiosMiddleware(client, {
 		request: [
 			{
 				success: async function (items: any, req: any) {
-					// let token = items?.getState().UserReducer?.token;
-					// if (!token) {
 					const token = Cookies.get("hyfy_auth_token");
-					// }
-					if (token) {
+					const tokenLessApis = ["/email", "/login", "/verifyEmail"];
+
+					if (token && !tokenLessApis?.includes(req?.url)) {
 						req.headers["Authorization"] = `Bearer ${token}`;
 					}
+
 					console.log("interceptors request", req); //contains information about request object
+
 					return req;
 				},
 				error: function (item: any, error: any) {
