@@ -50,7 +50,6 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		project_id: z.string(),
 		created_by: z.string(),
 		issues: z.string().optional().nullable(),
-		org_id: z.string(),
 	});
 
 	const defaultFormValues = {
@@ -58,7 +57,6 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 		status: "backlog",
 		project_id: appProfileInfo?.project_id,
 		created_by: authInfo?.user?._id,
-		org_id: authInfo?.user?.org_id,
 		description: ""
 	}
 

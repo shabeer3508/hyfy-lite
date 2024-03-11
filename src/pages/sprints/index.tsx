@@ -13,6 +13,7 @@ import IssueCreationCardMini from "../issues/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 
 const Sprints = () => {
 	const dispatch = useDispatch();
@@ -55,11 +56,17 @@ const Sprints = () => {
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getIssues();
-		getSprints();
+		if (appProfileInfo?.project_id) {
+			getIssues();
+			getSprints();
+		}
 	}, [appProfileInfo?.project_id]);
 
 	/*  ####################################################################################### */
+
+	if (!appProfileInfo?.project_id) {
+		return <NoProjectScreen />
+	}
 
 	return (
 		<div className="text-xs">

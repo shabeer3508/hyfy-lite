@@ -84,13 +84,17 @@ const Project = () => {
 				</div>
 			</div>
 
-			<ScrollArea className="mt-4">
-				<div className="flex flex-col gap-3 px-6 py-3">
-					{projectsData?.map((item: any, index: number) => (
-						<ProjectCard data={item} key={index} index={index} />
-					))}
-				</div>
-			</ScrollArea>
+			{projectsData?.length > 0 &&
+				<ScrollArea className="mt-4">
+					<div className="flex flex-col gap-3 px-6 py-3">
+						{projectsData?.map((item: any, index: number) => (
+							<ProjectCard data={item} key={index} index={index} />
+						))}
+					</div>
+				</ScrollArea>
+			}
+
+			{projectsData?.length === 0 && <div className="dark:text-foreground flex justify-center h-full items-center">No Projects found</div>}
 		</div>
 	);
 };
@@ -109,7 +113,6 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	const pieceWidth = 100 / projectIssues?.length;
 
 	const logoColors = [
-		// "text-[#FFFFFF]",
 		"text-[#71A4FF]",
 		"text-[#FF6481]",
 		"text-[#4C4878]",
@@ -158,7 +161,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 							)))}
 						</div>
 					}
-					<Button variant="ghost" size="sm">
+					<Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
 						<MoreVertical />
 					</Button>
 				</div>

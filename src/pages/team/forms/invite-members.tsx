@@ -7,10 +7,10 @@ import { HiMiniXMark } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
-import { postAction } from "@/redux/actions/AppActions";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import { postAction, updateUserStage } from "@/redux/actions/AppActions";
 
 interface InviteUserProps { }
 
@@ -56,15 +56,17 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
             members: formData?.inviteList?.map((user) => ({ email: user.email, role: user.role }))
         }
         if (postData?.members?.length == 0) {
-            toast.error("Please add atleast one member details")
+            toast.error("Please add atleast one member details");
         } else {
             (dispatch(postAction({ invite: Urls.invite_user }, postData)) as any).then((res) => {
                 const success = res.payload?.status == 200;
                 if (success) {
-                    toast.error("Invitations sent successfully!")
-                    setFormData({ inputUser: { email: "", role: "employee" }, inviteList: [] })
+                    toast.success("Invitations sent successfully!");
+                    setFormData({ inputUser: { email: "", role: "employee" }, inviteList: [] });
+
                     if (pathname === "/signup/invite-members") {
-                        navigate("/board")
+                        dispatch(updateUserStage("completd"));
+                        navigate("/board");
                     }
                 }
             })
@@ -148,7 +150,6 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
                     }
                     <Button
                         className="w-full text-white hover:bg-primary">
-                        {/* // onClick={() => handleInviteUsers()}> */}
                         Invite Members
                     </Button>
                 </div>

@@ -16,11 +16,15 @@ const Urls = {
 	signup_send_email: "/email",
 	signup_verify_email: "/verifyEmail",
 	signup_verify_coupon: "/subscriptions",
+	signup_setup_organization: "/organizationOnboard",
 
 	users: "/users",
 	profile: "/profile",
 	organization: "/organizations",
+
 	invite_user: "/sendInvitation",
+	invitations: "/invitations",
+	invitations_skip: "/invitations/skip",
 
 	project: "/projects",
 	epic: "/epics",
@@ -29,6 +33,8 @@ const Urls = {
 	sprints: "/sprints",
 
 	comments: "/comments",
+
+	issue_status: "/issueStatus",
 };
 
 export default Urls;

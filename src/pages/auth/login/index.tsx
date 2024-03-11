@@ -17,7 +17,6 @@ const Login = () => {
 	const dispatch = useDispatch();
 	const [showPassword, setShowPassword] = useState(false);
 
-	// TODO : convert to shadcn form
 	const { register, handleSubmit, formState: { errors }, } = useForm();
 
 	const loginReducerName = reducerNameFromUrl("login", "POST");
@@ -31,13 +30,13 @@ const Login = () => {
 				const success = res?.payload?.status == 200;
 
 				if (success) {
-					Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 7, secure: true })
+					Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 2, secure: true })
 					dispatch(setCurrentUser(res_data?.data?.user));
 
 					if (res_data?.data?.user?.role === "employee") navigate("/board");
 					else navigate("/backlog");
 
-					toast.success("Successfully Logged");
+					toast.success("Login successful");
 				}
 			});
 		} catch (e) {
@@ -97,6 +96,7 @@ const Login = () => {
 							{postLoginInfo?.loading ? "Loading..." : "Login"}
 						</Button>
 					</form>
+					<div className="text-xs mt-5 mb-2" >Don't have an account ? <span className="text-primary mx-1 cursor-pointer" onClick={() => navigate("/signup")}>Sign up</span></div>
 				</CardContent>
 			</Card>
 		</div >

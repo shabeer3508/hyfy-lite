@@ -19,6 +19,7 @@ import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDow
 import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
 import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import NoProjectScreen from '../empty-screens/NoProjectScreen';
 
 
 const EpicScreen = () => {
@@ -82,12 +83,17 @@ const EpicScreen = () => {
     /*  ######################################################################################## */
 
     useEffect(() => {
-        getIssues();
-        getEpics();
+        if (appProfileInfo.project_id) {
+            getIssues();
+            getEpics();
+        }
     }, [appProfileInfo.project_id]);
 
     /*  ######################################################################################## */
 
+    if (!appProfileInfo?.project_id) {
+        return <NoProjectScreen />
+    }
 
     return (
         <div className=" flex flex-col h-full">
@@ -240,6 +246,7 @@ const EpicScreen = () => {
 
                                                     </div>
                                                     <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
+                                                        {epicIssues?.length === 0 && "No Issues Available"}
                                                         {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
                                                     </AccordionContent>
                                                 </AccordionItem>

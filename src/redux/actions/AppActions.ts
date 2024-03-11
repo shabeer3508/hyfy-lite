@@ -94,9 +94,9 @@ export function getDetailAction(apiurl: string | object, id: any) {
  * @param params url query parameters if any
  * @returns Redux Action
  */
-export function postAction(apiUrl: object, data: any) {
+export function postAction(apiUrl: object, data?: any) {
 	const method = "POST";
-	let url = Object.values(apiUrl)[0];
+	const url = Object.values(apiUrl)[0];
 	const typeName = Object.keys(apiUrl)[0];
 
 	const type = actionTypeFromUrl(typeName, method);
@@ -152,6 +152,15 @@ export function setCurrentUser(data: any) {
 	return {
 		type: Actions.SET_USER,
 		payload: data,
+	};
+}
+
+export function updateUserStage(
+	stage: "completd" | "invitations" | "purchase" | "organisation"
+) {
+	return {
+		type: Actions.UPDATE_USER_STAGE,
+		payload: stage,
 	};
 }
 

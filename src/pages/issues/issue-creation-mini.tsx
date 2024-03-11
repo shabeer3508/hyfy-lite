@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
+import { useDispatch, useSelector } from "react-redux";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Select,
 	SelectContent,
@@ -8,32 +11,28 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { useDispatch, useSelector } from "react-redux";
-import { getAction, postAction } from "@/redux/actions/AppActions";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-	const authInfo = useSelector((state: any) => state.UserReducer);
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
 
-	const [postData, setPostData] = useState({
+	const defaultPostData = {
 		name: "",
-		status: "backlog",
 		type: "story",
 		points: "5",
 		project_id: appProfileInfo?.project_id,
-		org_id: authInfo?.user?.org_id
-	});
+		status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id,
+	}
+
+	const [postData, setPostData] = useState(defaultPostData);
 
 	/*  ######################################################################################## */
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = "?perPage=300";
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -41,8 +40,8 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 		if (sprintId) {
 			setPostData((prevData) => ({
 				...prevData,
-				sprint: sprintId,
-				status: "todo",
+				sprint_id: sprintId,
+				status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id,
 			}));
 		}
 
@@ -51,16 +50,7 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 				const success = res.payload?.status == 200;
 				if (success) {
 					getIssues();
-					setPostData(
-						{
-							name: "",
-							status: "backlog",
-							type: "story",
-							points: "5",
-							project_id: appProfileInfo?.project_id,
-							org_id: authInfo?.user?.org_id
-						}
-					)
+					setPostData(defaultPostData)
 				}
 			});
 		}
@@ -87,13 +77,13 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 				</SelectTrigger>
 				<SelectContent className="w-1 ">
 					<SelectItem value="story">
-						<img src="/story_icon.svg" alt="Project" />
+						<img src="/story_icon.svg" alt="story" />
 					</SelectItem>
 					<SelectItem value="task">
-						<img src="/task_icon.svg" alt="Project" />
+						<img src="/task_icon.svg" alt="task" />
 					</SelectItem>
 					<SelectItem value="bug">
-						<img src="/bug_icon.svg" alt="Project" />
+						<img src="/bug_icon.svg" alt="bug" />
 					</SelectItem>
 				</SelectContent>
 			</Select>

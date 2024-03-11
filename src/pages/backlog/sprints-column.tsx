@@ -70,7 +70,7 @@ const SprintsColumn = () => {
 
 	/*  ######################################################################################## */
 
-	const filteredSprints = sprintItems?.filter(sprnt => sprnt.project_id === appProfileInfo.project_id)
+	const filteredSprints = sprintItems?.filter(sprnt => true)
 
 	const sortoptions = [
 		{ label: "New", action: () => { } },
@@ -137,7 +137,7 @@ const SprintsColumn = () => {
 							{filteredSprints.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(
-									(issue) => issue?.sprint === sprint?._id
+									(issue) => issue?.sprint_id === sprint?._id
 								);
 
 								return (

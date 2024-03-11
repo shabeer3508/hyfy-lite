@@ -6,6 +6,7 @@ import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -22,6 +23,9 @@ const Board = () => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
 	const authInfo = useSelector((state: any) => state.UserReducer);
@@ -30,31 +34,22 @@ const Board = () => {
 
 	/*  ######################################################################################## */
 
-	const getSprints = (prams?: string) => {
+	const getSprints = () => {
 		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
-	const getUsers = (prams?: string) => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
+	const getUsers = () => {
+		let query = `?perPage=300`;
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = `?perPage=300
 				&filter=sprint_id=${boardInfo?.selected_sprint}
 				${boardInfo?.type_filter_value !== "all" ? `%26%26type=${boardInfo?.type_filter_value}` : ""}
 				${boardInfo?.points_filter_value !== "all" ? `&sort=${boardInfo.points_filter_value}` : ""}`;
 
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -64,17 +59,17 @@ const Board = () => {
 		}, 0);
 	};
 
-	const getIssuesByTypes = (issueStatus: "todo" | "ongoing" | "pending" | "done") => {
-		return issueListItems?.filter((issue) => issue?.status === issueStatus && boardInfo?.selected_sprint && issue?.sprint_id === boardInfo?.selected_sprint);
+	const getIssuesByTypes = (issueStatus: "Todo" | "Ongoing" | "Pending" | "Done") => {
+		return issueListItems?.filter((issue) =>
+			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id &&
+			boardInfo?.selected_sprint && issue?.sprint_id === boardInfo?.selected_sprint);
 	};
 
 
-	const updateItemStatus = async (id: string, stage: string) => {
-		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: stage }, id))) as any;
+	const updateItemStatus = async (id: string, status_name: string) => {
+		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: issueStatusList?.find(issueStatus => issueStatus?.name === status_name)?._id }, id))) as any;
 		const success = resp.payload.status == 200;
-		if (success) {
-			getIssues();
-		}
+		if (success) { getIssues() }
 	};
 
 	/*  ######################################################################################## */
@@ -114,17 +109,24 @@ const Board = () => {
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getSprints();
-		getUsers();
+		if (appProfileInfo?.project_id) {
+			getSprints();
+			getUsers();
+		}
 	}, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
-		if (boardInfo) {
+		if (boardInfo && appProfileInfo?.project_id) {
 			getIssues();
 		}
 	}, [boardInfo]);
 
 	/*  ######################################################################################## */
+
+
+	if (!appProfileInfo?.project_id) {
+		return <NoProjectScreen />
+	}
 
 	return (
 		<>
@@ -186,21 +188,19 @@ const Board = () => {
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "todo");
+									updateItemStatus(e?.dataTransfer?.getData("id"), "Todo");
 								}}
 							>
 								<div className="flex justify-between items-center px-5 py-2">
 									<div>Todo</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findTotalPoints(getIssuesByTypes("todo"))}
+										{findTotalPoints(getIssuesByTypes("Todo"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)] ">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("todo")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
-										)}
+										{getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -212,21 +212,19 @@ const Board = () => {
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "ongoing");
+									updateItemStatus(e?.dataTransfer?.getData("id"), "Ongoing");
 								}}
 							>
 								<div className="flex justify-between items-center px-5 py-2">
 									<div>Ongoing</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />{" "}
-										{findTotalPoints(getIssuesByTypes("ongoing"))}
+										{findTotalPoints(getIssuesByTypes("Ongoing"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("ongoing")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
-										)}
+										{getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -237,21 +235,19 @@ const Board = () => {
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "pending");
+									updateItemStatus(e?.dataTransfer?.getData("id"), "Pending");
 								}}
 							>
 								<div className="flex justify-between items-center px-5 py-2">
 									<div>Pending</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findTotalPoints(getIssuesByTypes("pending"))}
+										{findTotalPoints(getIssuesByTypes("Pending"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("pending")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
-										)}
+										{getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -262,21 +258,19 @@ const Board = () => {
 								onDragOver={(e) => e.preventDefault()}
 								onDrop={(e) => {
 									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "done");
+									updateItemStatus(e?.dataTransfer?.getData("id"), "Done");
 								}}
 							>
 								<div className="flex justify-between items-center px-5 py-2">
 									<div>Done</div>
 									<div className="flex gap-2 items-center">
 										<HiDatabase />
-										{findTotalPoints(getIssuesByTypes("done"))}
+										{findTotalPoints(getIssuesByTypes("Done"))}
 									</div>
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("done")?.map(
-											(tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />
-										)}
+										{getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>

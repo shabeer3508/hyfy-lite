@@ -17,7 +17,7 @@ const Profile = () => {
 	const authInfo = useSelector((state: any) => state.UserReducer);
 	const orgReducerName = reducerNameFromUrl("organization", "GET");
 	const orgList = useSelector((state: any) => state?.[orgReducerName]);
-	const orgItems = orgList?.data?.items
+	const orgItems = orgList?.data?.data?.organizations
 
 	/*  ######################################################################################## */
 
@@ -37,16 +37,18 @@ const Profile = () => {
 	};
 
 	const handleOrganizationChange = async (orgId: string) => {
-		const resp = (await dispatch(
-			patchAction({ users: Urls.users }, { current_organization: orgId, }, authInfo?.user?._id)
-		)) as any;
+		// TODO : update organization and token here 
 
-		const success = resp.payload.status == 200;
-		if (success) {
-			dispatch(setCurrentUser(resp?.payload?.data));
-			dispatch(resetAppInfo())
-			toast.success("Organization Changed Successfully");
-		}
+		// const resp = (await dispatch(
+		// 	patchAction({ users: Urls.users }, { org_id: orgId, }, authInfo?.user?._id)
+		// )) as any;
+
+		// const success = resp.payload.status == 200;
+		// if (success) {
+		// 	dispatch(setCurrentUser(resp?.payload?.data));
+		// 	dispatch(resetAppInfo())
+		// 	toast.success("Organization Changed Successfully");
+		// }
 	}
 
 	/*  ######################################################################################## */
@@ -68,13 +70,14 @@ const Profile = () => {
 						name={authInfo?.user?.user_name}
 					/>
 					<h1 className="text-2xl font-bold mt-6">{authInfo?.user?.user_name}</h1>
+					<p className="text-base font-bold text-gray-500">{authInfo?.user?.email}</p>
 					<p className="text-sm text-gray-500 mt-1 capitalize">
-						{authInfo?.user?.role}
+						({authInfo?.user?.role})
 					</p>
 					<Button
 						onClick={logoutUser}
-						variant="outline"
-						className="text-xl text-red-500 hover:text-red-500 mt-10 p-5"
+						variant="destructive"
+						className="text-xl hover: mt-10 p-5"
 					>
 						Logout
 					</Button>
@@ -86,14 +89,14 @@ const Profile = () => {
 							<Card
 								key={`ORG_${org?._id}`}
 								className="p-7 flex justify-between items-center cursor-pointer"
-								onClick={() => authInfo?.user?.current_organization !== org?._id && handleOrganizationChange(org?._id)}
+								onClick={() => authInfo?.user?.org_id !== org?._id && handleOrganizationChange(org?._id)}
 							>
 								<div>
 									<div className="text-sm">{org?.name}</div>
-									<div className="text-xs">{org?.email}</div>
+									<div className="text-xs">{org?.branch}</div>
 								</div>
 								<div>
-									{authInfo?.user?.current_organization === org?._id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
+									{authInfo?.user?.org_id === org?._id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
 								</div>
 							</Card>
 						)}

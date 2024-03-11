@@ -27,7 +27,7 @@ const BillingPage: React.FC<{}> = ({ }) => {
         (dispatch(postAction({ signup_verify_coupon: Urls.signup_verify_coupon }, data)) as any).then(res => {
             if (res.payload?.status === 200) {
                 toast.success(`${res.payload?.data?.message}`);
-                navigate("/invite-members")
+                navigate("/signup/invite-members")
             }
         })
 
