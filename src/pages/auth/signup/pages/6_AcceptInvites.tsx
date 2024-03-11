@@ -1,10 +1,11 @@
+import Cookies from "js-cookie"
 import Urls from "@/redux/actions/Urls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { getAction, patchAction, postAction } from "@/redux/actions/AppActions";
 import HYAvatar from "@/components/hy-components/HYAvatar";
+import { getAction, patchAction, reducerNameFromUrl, setCurrentUser } from "@/redux/actions/AppActions";
 import {
     Card,
     CardContent,
@@ -18,12 +19,17 @@ const AcceptInvitesPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [invites, setInvites] = useState([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    const invitaionReducerName = reducerNameFromUrl("invitaions", "GET");
+    const invitaionListData = useSelector((state: any) => state?.[invitaionReducerName]);
 
     /*  ######################################################################################## */
 
     const getInvitationList = () => {
         (dispatch(getAction({ invitaions: Urls.invitations })) as any).then(res => {
             setInvites(res?.payload?.data?.data?.invitations)
+            setIsLoaded(true);
         })
     }
 
@@ -46,11 +52,11 @@ const AcceptInvitesPage = () => {
                 <CardHeader className="pb-3">
                     <CardTitle className="text-primary mb-5">Hyfy</CardTitle>
                     <CardDescription className="text-white text-base">
-                        {hasInvites ? "You have been invited to" : "You don’t have an invite"}
+                        {isLoaded && (hasInvites ? "You have been invited to" : "You don’t have an invite")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {hasInvites ?
+                    {isLoaded && (hasInvites ?
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-col gap-2 max-h-[200px] overflow-auto pr-1">
                                 {invites?.map(org => <InvitationCard inviteInfo={org} getInvitationList={getInvitationList} />)}
@@ -72,7 +78,7 @@ const AcceptInvitesPage = () => {
                             You have not received an invite yet. Only then you can access Hyfy.
                             Please wait until your management sends you an invite
                         </div>
-                    }
+                    )}
                 </CardContent>
             </Card >
         </div >
@@ -111,9 +117,8 @@ const InvitationCard: React.FC<InvitationCardProps> = ({ inviteInfo, getInvitati
     const handleInvitationStatus = (inviteId: string, status: "accepted" | "rejected") => {
         (dispatch(patchAction({ invitationManage: Urls.invitations }, { status }, inviteId)) as any).then((res) => {
             if (res.payload?.status === 200) {
-                // TODO:
-                // Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 2, secure: true })
-                // dispatch(setCurrentUser(res_data?.data?.user)); 
+                Cookies.set('hyfy_auth_token', res?.payload?.data?.data?.token, { expires: 2, secure: true })
+                dispatch(setCurrentUser(res?.payload?.data?.data?.user));
                 getInvitationList();
             }
         })
