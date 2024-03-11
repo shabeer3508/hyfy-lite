@@ -41,11 +41,10 @@ const ReleaseCreationForm = ({ children }: any) => {
 			message: "Username must be at least 2 characters.",
 		}),
 		status: z.string(),
-		to_date: z.date().optional().nullable(),
-		priority: z.string().optional().nullable(),
+		to_date: z.date(),
+		priority: z.string(),
 		description: z.string().optional().nullable(),
 		project_id: z.string(),
-		org_id: z.string()
 	});
 
 	const formDefaultValues = {
@@ -54,7 +53,6 @@ const ReleaseCreationForm = ({ children }: any) => {
 		description: "",
 		priority: null,
 		project_id: appProfileInfo?.project_id,
-		org_id: authInfo?.user?.org_id
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({

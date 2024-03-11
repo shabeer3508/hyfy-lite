@@ -65,7 +65,7 @@ const BacklogColumn = () => {
 
 	const updateIssueToBacklog = async (issueId: string) => {
 		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues }, { sprint: "", status: "backlog" }, issueId)
+			patchAction({ issues: Urls.issues }, { sprint_id: null, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
 		)) as any;
 		const success = resp.payload.status == 200;
 		if (success) {

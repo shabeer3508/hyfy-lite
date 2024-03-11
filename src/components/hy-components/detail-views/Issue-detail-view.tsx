@@ -113,7 +113,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				</div>
 			</div>
 			<Separator className="mt-5" />
-			<ScrollArea className="max-h-[60vh] h-full pr-5 ">
+			<ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
 				<div className="flex justify-between mt-5 items-center">
 					<div className="flex flex-col gap-2">
 						<div className="text-xs text-[#9499A5]">

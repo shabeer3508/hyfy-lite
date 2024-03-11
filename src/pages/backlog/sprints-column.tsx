@@ -11,10 +11,10 @@ import HYDialog from "@/components/hy-components/HYDialog";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
-import { getAction, patchAction } from "@/redux/actions/AppActions";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
 import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import {
 	Accordion,
@@ -34,21 +34,18 @@ const SprintsColumn = () => {
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issuesItems = issuesListData?.data?.items;
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	/*  ######################################################################################## */
 
-	const getSprints = (prams?: string) => {
+	const getSprints = () => {
 		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = "?perPage=300";
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -60,7 +57,7 @@ const SprintsColumn = () => {
 
 	const updateDropedIssueToSprint = async (issueId: string, sprintId: string) => {
 		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues }, { sprint: sprintId, status: "todo" }, issueId)
+			patchAction({ issues: Urls.issues }, { sprint_id: sprintId, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id }, issueId)
 		)) as any;
 		const success = resp.payload.status == 200;
 		if (success) {
