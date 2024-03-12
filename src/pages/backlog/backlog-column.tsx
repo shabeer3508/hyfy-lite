@@ -86,7 +86,7 @@ const BacklogColumn = () => {
 
 	const epicsOptions = epicItems?.map((epc) => ({
 		value: epc?._id,
-		label: epc?.title,
+		label: epc?.name,
 	})) ?? []
 
 	/*  ######################################################################################## */

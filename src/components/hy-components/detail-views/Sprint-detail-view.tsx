@@ -53,7 +53,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
     /*  ######################################################################################## */
 
     const filteredIssues = issueListItems?.filter(
-        (sprnt) => sprnt?.sprint === data?._id
+        (sprnt) => sprnt?.sprint_id === data?._id
     );
 
 

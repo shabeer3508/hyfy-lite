@@ -52,7 +52,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 		release: z.string().optional().nullable(),
 		dependency: z.string().optional().nullable(),
 		dependency_type: z.string().optional().nullable(),
-		priority: z.string().optional().nullable(),
+		priority: z.string(),
 		description: z.string().optional().nullable(),
 		project_id: z.string(),
 	});
@@ -60,12 +60,8 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 
 	const formDefaultValues = {
 		name: "",
-		status: "blocking",
-		release: undefined,
-		dependency: undefined,
-		dependency_type: undefined,
-		priority: undefined,
-		description: undefined,
+		status: "open",
+		priority: "medium",
 		project_id: appProfileInfo.project_id,
 	}
 
@@ -182,6 +178,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 										form={form}
 										options={statusOptions}
 										buttonClassName="w-full"
+										defaultValue={form.getValues()?.status}
 									/>
 									<FormMessage />
 								</FormItem>
@@ -248,6 +245,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 										form={form}
 										options={priorityOptions}
 										buttonClassName="w-full"
+										defaultValue={form.getValues()?.priority}
 									/>
 									<FormMessage />
 								</FormItem>

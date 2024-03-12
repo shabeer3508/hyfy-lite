@@ -2,6 +2,7 @@ import Urls from "../redux/actions/Urls";
 
 const ApiConfig: { [key: string]: string } = {
 	users: Urls.users,
+	profile: Urls.profile,
 	organization: Urls.organization,
 
 	//login

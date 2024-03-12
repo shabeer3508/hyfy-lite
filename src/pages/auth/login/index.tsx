@@ -36,7 +36,6 @@ const Login = () => {
 					if (res_data?.data?.user?.role === "employee") navigate("/board");
 					else navigate("/backlog");
 
-					toast.success("Login successful");
 				}
 			});
 		} catch (e) {

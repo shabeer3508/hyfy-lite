@@ -14,19 +14,14 @@ const Profile = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const authInfo = useSelector((state: any) => state.UserReducer);
-	const orgReducerName = reducerNameFromUrl("organization", "GET");
-	const orgList = useSelector((state: any) => state?.[orgReducerName]);
-	const orgItems = orgList?.data?.data?.organizations
+	const profileReducerName = reducerNameFromUrl("profile", "GET");
+	const profileReduxInfo = useSelector((state: any) => state?.[profileReducerName]);
+	const profileInfo = profileReduxInfo?.data?.data
 
 	/*  ######################################################################################## */
 
-	const getOrganizations = (prams?: string) => {
-		let query = "?perPage=300";
-		if (prams) {
-			query = query + prams;
-		}
-		dispatch(getAction({ organization: Urls.organization + query }));
+	const getProfileInfo = () => {
+		dispatch(getAction({ profile: Urls.profile }));
 	}
 
 	const logoutUser = () => {
@@ -36,25 +31,25 @@ const Profile = () => {
 		dispatch(resetAppInfo())
 	};
 
-	const handleOrganizationChange = async (orgId: string) => {
-		// TODO : update organization and token here 
+	const handleOrganizationChange = async (selectedOrgId: string) => {
+		const resp = (await dispatch(
+			patchAction({ organization: Urls.organization + "/switch" }, {}, selectedOrgId)
+		)) as any;
 
-		// const resp = (await dispatch(
-		// 	patchAction({ users: Urls.users }, { org_id: orgId, }, authInfo?.user?._id)
-		// )) as any;
-
-		// const success = resp.payload.status == 200;
-		// if (success) {
-		// 	dispatch(setCurrentUser(resp?.payload?.data));
-		// 	dispatch(resetAppInfo())
-		// 	toast.success("Organization Changed Successfully");
-		// }
+		const success = resp.payload.status == 200;
+		if (success) {
+			Cookies.set('hyfy_auth_token', resp.payload?.data?.data?.token, { expires: 2, secure: true })
+			dispatch(setCurrentUser(resp?.payload?.data?.data?.user));
+			dispatch(resetAppInfo())
+			getProfileInfo();
+			toast.success("Organization Changed Successfully");
+		}
 	}
 
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getOrganizations();
+		getProfileInfo();
 	}, []);
 
 	/*  ######################################################################################## */
@@ -67,17 +62,17 @@ const Profile = () => {
 					<HYAvatar
 						className="size-32"
 						url="https://github.com/shadcn.png"
-						name={authInfo?.user?.user_name}
+						name={profileInfo?.user_name}
 					/>
-					<h1 className="text-2xl font-bold mt-6">{authInfo?.user?.user_name}</h1>
-					<p className="text-base font-bold text-gray-500">{authInfo?.user?.email}</p>
+					<h1 className="text-2xl font-bold mt-6">{profileInfo?.user_name}</h1>
+					<p className="text-base font-bold text-gray-500">{profileInfo?.email}</p>
 					<p className="text-sm text-gray-500 mt-1 capitalize">
-						({authInfo?.user?.role})
+						({profileInfo?.role})
 					</p>
 					<Button
 						onClick={logoutUser}
 						variant="destructive"
-						className="text-xl hover: mt-10 p-5"
+						className="text-xl mt-10 p-5 border dark:border-destructive hover:dark:text-destructive rounded"
 					>
 						Logout
 					</Button>
@@ -85,18 +80,18 @@ const Profile = () => {
 				<div className="w-2/3 flex gap-5 flex-col justify-center p-10">
 					<div className="text-xl text-primary">My Organizations</div>
 					<div className="flex flex-col gap-3 max-h-[50vh] overflow-auto pr-2">
-						{orgItems?.map((org) =>
+						{profileInfo?.organizations?.map((org) =>
 							<Card
 								key={`ORG_${org?._id}`}
 								className="p-7 flex justify-between items-center cursor-pointer"
-								onClick={() => authInfo?.user?.org_id !== org?._id && handleOrganizationChange(org?._id)}
+								onClick={() => profileInfo?.org_id !== org?._id && handleOrganizationChange(org?._id)}
 							>
 								<div>
 									<div className="text-sm">{org?.name}</div>
 									<div className="text-xs">{org?.branch}</div>
 								</div>
 								<div>
-									{authInfo?.user?.org_id === org?._id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
+									{profileInfo?.org_id === org?._id && <HiOutlineCheckCircle className="w-6 h-6 text-primary" />}
 								</div>
 							</Card>
 						)}
