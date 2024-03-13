@@ -21,24 +21,18 @@ const EpicDetailView = ({ data }: { data: any }) => {
 	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
 	/*  ######################################################################################## */
 
-	const getIssues = (prams?: string) => {
-		let query = `?filter=project_id=${appProfileInfo?.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
+	const getIssues = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const getReleases = (prams?: string) => {
-		let query = `?filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
+	const getReleases = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
 		dispatch(getAction({ release: Urls.release + query }));
 	};
 
 
-	const filterIssueByEpic = issueListItems?.filter((issue) => issue?.epic === data.id)
+	const filterIssueByEpic = issueListItems?.filter((issue) => issue?.epic_id === data?._id);
 
 	const findIssueCount = (type: "bug" | "story" | "task") => {
 		return filterIssueByEpic?.filter((issue) => issue.type === type).length;
@@ -103,8 +97,8 @@ const EpicDetailView = ({ data }: { data: any }) => {
 					<HYSearch />
 				</div>
 			</div>
-			<ScrollArea className="max-h-[calc(100vh-500px)] h-full w-full">
-				<div className="pr-5 space-y-2 text-xs">
+			<ScrollArea className="max-h-[calc(100vh-600px)] overflow-auto w-full">
+				<div className="pr-4 space-y-2 text-xs">
 					{filterIssueByEpic?.map((sprint) => {
 						return <IssueMiniCard data={sprint} key={sprint?._id} />;
 					})}

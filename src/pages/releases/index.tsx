@@ -33,9 +33,8 @@ const Releases = () => {
 
 	/*  ######################################################################################## */
 
-	const getReleases = (prams?: string) => {
+	const getReleases = () => {
 		let query = `?filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) { query = query + prams }
 		dispatch(getAction({ release: Urls.release + query }));
 	}
 

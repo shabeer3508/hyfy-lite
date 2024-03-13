@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
+import { useDispatch } from "react-redux";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useDispatch } from "react-redux";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 
 const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?: string }) => {
@@ -17,7 +17,7 @@ const CommentCreation = ({ issueId, projectId }: { issueId?: string, projectId?:
     /*  ######################################################################################## */
 
     const getComments = () => {
-        let query = `?expand=created_by&sort=-createdAt`;
+        let query = `?expand=created_by&sort=-createdAt${issueId ? `&filter=issue_id=${issueId}` : ""}${projectId ? `&filter=project_id=${projectId}` : ""}`;
         dispatch(getAction({ comments: Urls.comments + query }));
     }
 

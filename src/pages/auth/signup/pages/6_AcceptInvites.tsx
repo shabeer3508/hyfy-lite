@@ -59,7 +59,7 @@ const AcceptInvitesPage = () => {
                     {isLoaded && (hasInvites ?
                         <div className="flex flex-col gap-2">
                             <div className="flex flex-col gap-2 max-h-[200px] overflow-auto pr-1">
-                                {invites?.map(org => <InvitationCard inviteInfo={org} getInvitationList={getInvitationList} />)}
+                                {invites?.map(org => <InvitationCard key={`${org?._id}`} inviteInfo={org} getInvitationList={getInvitationList} />)}
                             </div>
 
                             <div className="text-[#737377] my-2 text-sm">Please make sure this is your organization</div>

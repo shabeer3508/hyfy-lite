@@ -20,6 +20,7 @@ import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-
 import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import NoProjectScreen from '../empty-screens/NoProjectScreen';
+import IssueCreationCardMini from '../issues/issue-creation-mini';
 
 
 const EpicScreen = () => {
@@ -37,21 +38,18 @@ const EpicScreen = () => {
     const issuesListData = useSelector((state: any) => state?.GetIssues);
     const issuesItems = issuesListData?.data?.items;
 
+    const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
     /*  ######################################################################################## */
 
-    const getIssues = (prams?: string) => {
-        let query = "?perPage=300";
-        if (prams) {
-            query = query + prams;
-        }
+    const getIssues = () => {
+        let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ issues: Urls.issues + query }));
     };
 
-    const getEpics = (prams?: string) => {
+    const getEpics = () => {
         let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-        if (prams) {
-            query = query + prams;
-        }
         dispatch(getAction({ epic: Urls.epic + query }));
     };
 
@@ -176,10 +174,15 @@ const EpicScreen = () => {
                                 {epicItems.map((epic, i) => {
 
                                     const epicIssues = issuesItems?.filter(
-                                        (issue) => issue?.epic === epic?._id
+                                        (issue) => issue?.epic_id === epic?._id
                                     );
 
                                     const pieceWidth = 100 / epicIssues?.length;
+
+                                    const findStatusNameById = (statusId) => {
+                                        return issueStatusList?.find((status) => status?._id === statusId)?.name
+                                    }
+
 
                                     return (
                                         <div
@@ -216,7 +219,7 @@ const EpicScreen = () => {
                                                             <div className='flex py-2 items-center'>
                                                                 <div className="flex gap-2 items-center text-[#737377] px-4 border-r">
                                                                     <HYCombobox
-                                                                        unSelectable={false}
+                                                                        unSelectable={true}
                                                                         options={releaseOptions}
                                                                         defaultValue={epic?.releases}
                                                                         buttonClassName="max-w-[200px]"
@@ -227,26 +230,28 @@ const EpicScreen = () => {
                                                                 </div>
                                                                 <div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
                                                                     {epicIssues?.map((itm => (
-                                                                        <HYTooltip message={itm?.status} className='capitalize'>
+                                                                        <HYTooltip key={itm?._id} message={findStatusNameById(itm?.status)} className='capitalize'>
                                                                             <div
                                                                                 className={`
-                                                                                ${itm?.status === "done" && "bg-[#56972E]"}
-                                                                                ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
-                                                                                ${itm?.status === "ongoing" && "bg-cyan-500"} 
-                                                                                ${itm?.status === "todo" && "bg-[#006EEF]"} 
-                                                                                ${itm?.status === "pending" && "bg-[#D63B00]"} `}
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Done")?._id && "bg-[#56972E]"}
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#FFFFFF66]"} 
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Ongoing")?._id && "bg-cyan-500"} 
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#006EEF]"} 
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Pending")?._id && "bg-[#D63B00]"} `}
                                                                                 style={{ width: `${pieceWidth}%` }}>
                                                                             </div>
                                                                         </HYTooltip>
                                                                     )))}
                                                                 </div>
-                                                                <Button className='hover:bg-background' variant='ghost' type='button' size='icon'><HiOutlineDotsVertical className='' /></Button>
+                                                                <Button className='hover:bg-background' variant='ghost' type='button' size='icon'>
+                                                                    <HiOutlineDotsVertical className='' />
+                                                                </Button>
                                                             </div>
                                                         </div>
 
                                                     </div>
                                                     <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
-                                                        {epicIssues?.length === 0 && "No Issues Available"}
+                                                        <IssueCreationCardMini epicId={epic?._id} />
                                                         {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
                                                     </AccordionContent>
                                                 </AccordionItem>

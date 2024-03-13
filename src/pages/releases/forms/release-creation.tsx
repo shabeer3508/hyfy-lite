@@ -1,15 +1,15 @@
 import { z } from "zod";
-import { useEffect, useState } from "react";
-import HYSelect from "../../../components/hy-components/HYSelect";
+import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
-import HYInputDate from "../../../components/hy-components/HYInputDate";
-import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import HYInputDate from "@/components/hy-components/HYInputDate";
 import { getAction, postAction } from "@/redux/actions/AppActions";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import {
 	Dialog,
 	DialogContent,
@@ -25,14 +25,12 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 const ReleaseCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -51,7 +49,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 		name: "",
 		status: "planning",
 		description: "",
-		priority: null,
+		priority: "medium",
 		project_id: appProfileInfo?.project_id,
 	}
 
@@ -62,14 +60,12 @@ const ReleaseCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
+	const getReleases = () => {
+		let query = `?filter=project_id=${appProfileInfo.project_id}`;
+		dispatch(getAction({ release: Urls.release + query }));
+	}
+
 	const handleReleaseCreation = async (values: z.infer<typeof formSchema>) => {
-		const getReleases = (prams?: string) => {
-			let query = `?filter=project_id="${appProfileInfo?.project_id}"`;
-			if (prams) {
-				query = query + prams;
-			}
-			dispatch(getAction({ release: Urls.release + query }));
-		};
 		const resp = (await dispatch(postAction({ release: Urls.release }, values))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
@@ -78,6 +74,21 @@ const ReleaseCreationForm = ({ children }: any) => {
 			getReleases();
 		}
 	};
+
+	/*  ######################################################################################## */
+
+	const releaseStatus = [
+		{ label: "Planning", value: "planning" },
+		{ label: "Ongoing", value: "ongoing" },
+		{ label: "Released", value: "released" },
+	]
+
+	const priorityOptions = [
+		{ label: "Low", value: "low" },
+		{ label: "Medium", value: "medium" },
+		{ label: "High", value: "high" },
+		{ label: "Urgent", value: "urgent" },
+	];
 
 	/*  ######################################################################################## */
 
@@ -118,23 +129,10 @@ const ReleaseCreationForm = ({ children }: any) => {
 
 										<HYCombobox
 											id="status"
-											buttonClassName="w-full"
-											// name="Status"
 											form={form}
-											options={[
-												{
-													label: "Planning",
-													value: "planning",
-												},
-												{
-													label: "Ongoing",
-													value: "ongoing",
-												},
-												{
-													label: "Released",
-													value: "released",
-												},
-											]}
+											options={releaseStatus}
+											buttonClassName="w-full"
+											defaultValue={form.getValues()?.status}
 										/>
 										<FormMessage />
 									</FormItem>
@@ -158,16 +156,12 @@ const ReleaseCreationForm = ({ children }: any) => {
 							render={({ field }) => (
 								<FormItem>
 									<FormLabel>Priority</FormLabel>
-									<HYSelect
-										field={field}
+									<HYCombobox
 										id="priority"
-										className="w-full"
-										options={[
-											"low",
-											"medium",
-											"high",
-											"urgent",
-										]}
+										form={form}
+										buttonClassName="w-full"
+										options={priorityOptions}
+										defaultValue={form.getValues()?.priority}
 									/>
 									<FormMessage />
 								</FormItem>

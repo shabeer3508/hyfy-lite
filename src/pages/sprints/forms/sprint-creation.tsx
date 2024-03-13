@@ -68,11 +68,8 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 	/*  ######################################################################################## */
 
 	const handleSprintCreation = async (values: z.infer<typeof formSchema>) => {
-		const getSprints = (prams?: string) => {
-			let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
-			if (prams) {
-				query = query + prams;
-			}
+		const getSprints = () => {
+			let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
 			dispatch(getAction({ sprints: Urls.sprints + query }));
 		};
 		const resp = (await dispatch(postAction({ sprints: Urls.sprints }, values))) as any;

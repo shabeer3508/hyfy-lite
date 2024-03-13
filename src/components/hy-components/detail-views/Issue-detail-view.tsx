@@ -1,10 +1,9 @@
 import dayjs from "dayjs";
-import HYAvatar from "../HYAvatar";
 import { useEffect } from "react";
+import HYAvatar from "../HYAvatar";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
-import { HiDatabase } from "react-icons/hi";
-import { HiDotsVertical } from "react-icons/hi";
+import HYEditableDiv from "../HYEditableDiv";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
@@ -12,14 +11,21 @@ import { useDispatch, useSelector } from "react-redux";
 import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { HiDatabase, HiDotsVertical } from "react-icons/hi";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const IssueDetailView = ({ data }: { data: any }) => {
 	const dispatch = useDispatch()
 
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+
 	const commentsReducerName = reducerNameFromUrl("comments", "GET");
 	const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
 	const commentsItems = commentsList?.data?.items
+
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
 
 	/*  ######################################################################################## */
 
@@ -28,14 +34,22 @@ const IssueDetailView = ({ data }: { data: any }) => {
 		dispatch(getAction({ comments: Urls.comments + query }));
 	}
 
+	const getIssues = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
+
+	const handleIssueEdit = (value, field: "status" | "name" | "description") => {
+		(dispatch(patchAction({ issues: Urls.issues }, { [field]: value }, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getIssues();
+			}
+		})
+	}
+
 	/*  ######################################################################################## */
 
-	const statusOptions = [
-		{ value: "todo", label: "Todo" },
-		{ value: "ongoing", label: "Ongoing" },
-		{ value: "pending", label: "Pending" },
-		{ value: "done", label: "Done" },
-		{ value: "backlog", label: "Backlog" }]
+	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }));
 
 	/*  ######################################################################################## */
 
@@ -49,18 +63,19 @@ const IssueDetailView = ({ data }: { data: any }) => {
 		<div>
 			<div className="flex gap-2 text-xl">
 				{data?.type === "story" && (
-					<img src="/story_icon.svg" alt="Project" height={25} width={25} />
+					<img src="/story_icon.svg" alt="story" height={25} width={25} />
 				)}
 
 				{data?.type === "task" && (
-					<img src="/task_icon.svg" alt="Project" height={25} width={25} />
+					<img src="/task_icon.svg" alt="task" height={25} width={25} />
 				)}
 
 				{data?.type === "bug" && (
-					<img src="/bug_icon.svg" alt="Project" height={25} width={25} />
+					<img src="/bug_icon.svg" alt="bug" height={25} width={25} />
 				)}
-
-				{data?.name}
+				<div className="flex-1">
+					<HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => handleIssueEdit(value, "name")} />
+				</div>
 			</div>
 			<div className="grid grid-cols-6 pt-5">
 				<div className="flex justify-between pr-3">
@@ -94,7 +109,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col">
 						<div className="text-xs text-[#9499A5]">Hours</div>
-						<div className=" flex flex-1 items-center">5 </div>
+						<div className=" flex flex-1 items-center">{data?.estimated_hours}</div>
 					</div>
 					<Separator orientation="vertical" />
 				</div>
@@ -108,7 +123,12 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col">
 						<div className="text-xs text-[#9499A5]">Status</div>
-						<HYCombobox defaultValue={data?.status} options={statusOptions} buttonClassName="w-[150px] my-2" unSelectable={false} />
+						<HYCombobox
+							defaultValue={data?.status}
+							options={statusOptions}
+							buttonClassName="w-[150px] my-2"
+							onValueChange={(value) => handleIssueEdit(value, "status")}
+						/>
 					</div>
 				</div>
 			</div>
@@ -143,7 +163,15 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				<div className="text-xs space-y-4">
 					<div className="space-y-1">
 						<div className="text-[#9499A5]">Description</div>
-						<div>{data?.description}</div>
+						<div>
+							<HYEditableDiv
+								type="textarea"
+								className="text-xs"
+								placeholder="Add description"
+								defaultText={data?.description}
+								handleChange={(value) => handleIssueEdit(value, "description")}
+							/>
+						</div>
 					</div>
 					<div className="space-y-2">
 						<div className="text-[#9499A5]">Sub Tasks</div>

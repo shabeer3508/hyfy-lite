@@ -35,7 +35,7 @@ const Board = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
@@ -46,7 +46,7 @@ const Board = () => {
 
 	const getIssues = () => {
 		let query = `?perPage=300
-				&filter=sprint_id=${boardInfo?.selected_sprint}
+				&filter=project_id=${appProfileInfo?.project_id}%26%26sprint_id=${boardInfo?.selected_sprint}
 				${boardInfo?.type_filter_value !== "all" ? `%26%26type=${boardInfo?.type_filter_value}` : ""}
 				${boardInfo?.points_filter_value !== "all" ? `&sort=${boardInfo.points_filter_value}` : ""}`;
 

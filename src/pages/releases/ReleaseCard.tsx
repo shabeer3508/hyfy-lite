@@ -21,57 +21,19 @@ const ReleaseCard = ({ item }: ReleaseCardProps) => {
 			</div>
 			<Separator className=" w-full" />
 			<div className="p-4 space-y-2">
-				<div className="text-base">{item?.description}</div>
-				<div className="text-base">
-					<span className=" text-xs text-[#737377] mr-2">Release Date </span>{" "}
+				<div className="text-base w-1/2 line-clamp-2">{item?.description}</div>
+				<div className="text-xs">
+					<span className="  text-[#737377] mr-2">Release Date </span>{" "}
 					<span className="">
 						{item?.to_date && formatter.format(new Date(item?.to_date))}
 					</span>
 				</div>
 			</div>
-			<Separator className=" w-full" />
-			<div className="flex items-center gap-3 px-4 py-[10px]">
-				<div className="flex gap-1">
-					<img src="/story_icon.svg" alt="Project" />
-					<span>12</span>
-				</div>
-				<div className="flex gap-1">
-					<img src="/task_icon.svg" alt="Project" />
-					<span>12</span>
-				</div>
-				<div className="flex gap-1">
-					<img src="/bug_icon.svg" alt="Project" />
-					<span>12</span>
-				</div>
-			</div>
-			<Separator className=" w-full" />
-			<div className="flex items-center p-4">
-				<div className="flex items-center">
-					<HYAvatar
-						className=""
-						url=""
-						name="Shad D"
-						color="bg-purple-400"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Apple Seed"
-						color="bg-amber-500"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Jone ave"
-						color="bg-fuchsia-700"
-					/>
-					<HYAvatar
-						className="-ml-2 shadow-md"
-						url=""
-						name="Fazil Ali"
-						color="bg-green-400"
-					/>
-				</div>
+
+			<Separator className=" w-full " />
+			<div className="flex justify-between text-xs p-2 px-4">
+				<div className="text-[#737377]">Tags :</div>
+				<div className="text-[#737377]">Priority <span className="dark:text-white capitalize ml-2">{item?.priority}</span></div>
 			</div>
 		</Card>
 	);

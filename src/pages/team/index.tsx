@@ -117,7 +117,7 @@ const Team = () => {
 													<CardDescription className="capitalize">{user?.role}</CardDescription>
 												</CardHeader>
 											</div>
-											<div className="flex dark:text-slate-400 gap-2 items-center ">
+											<div className="flex dark:text-slate-400 gap-2 items-center mr-2">
 												<Label className="" htmlFor="email">
 													{user?.email}
 												</Label>

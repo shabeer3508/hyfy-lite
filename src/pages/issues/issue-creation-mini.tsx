@@ -12,7 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
+const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId?: string }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -32,7 +32,7 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		let query = "?perPage=300";
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -42,6 +42,13 @@ const IssueCreationCardMini = ({ sprintId }: { sprintId?: string }) => {
 				...prevData,
 				sprint_id: sprintId,
 				status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id,
+			}));
+		}
+
+		if (epicId) {
+			setPostData((prevData) => ({
+				...prevData,
+				epic_id: epicId,
 			}));
 		}
 
