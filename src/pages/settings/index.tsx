@@ -23,38 +23,37 @@ const Settings = () => {
 
       <div className="flex flex-col gap-4">
         <Card className="flex w-4/6  dark:bg-[#131417] p-4">
-          <div className="flex  w-full items-center justify-between ">
-            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px]">
+          <div className="flex  w-full items-center justify-between   ">
+            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px] ">
               <img className=" w-6 h-6 " src={icon_org} alt="org_icon" />
               <div className=" w-[86px] h-6 text-[#737377] ">Organization</div>
             </div>
 
-            <div className=" flex gap-4 whitespace-nowrap w-[253.66px] h-6 items-center ">
-              <span className="w-[43px] h-6 text-[#737377] ">Active</span>
-              <span className=" w-[123px] h-6">ABC Software LLP</span>
+            <div className=" flex gap-4 whitespace-nowrap w-[253.66px] h-6 items-center  ">
+              <span className="w-[43px] h-6 text-[#737377] text-sm ">
+                Active
+              </span>
+              <span className=" w-[123px] h-6 text-sm">ABC Software LLP</span>
             </div>
-
-            <div className=" flex w-[332px] h-11 justify-end items-center">
-              <img className="w-5 h-5  " src={icon_arrow} alt=""></img>
+            <div className=" flex w-[332px] h-11 justify-end items-center ">
+              <img className="w-5 h-5" src={icon_arrow} alt=""></img>
             </div>
           </div>
         </Card>
 
-        <Card className="flex w-4/6  dark:bg-[#131417] p-4">
-          <div className="flex flex-wrap w-full items-center justify-between">
-            <div className="flex w-[169px] h-6 items-center gap-4  py-[10px]">
+        <Card className="flex w-4/6  dark:bg-[#131417] p-4 ">
+          <div className="flex flex-wrap p- w-full items-center justify-between  ">
+            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px] ">
               <img className=" w-6 h-6 " src={icons_billing} alt="" />
               <div className=" w-[41px] h-6 text-[#737377] ">Billing</div>
             </div>
-            <div className="flex flex-row  w-[253px] h-6 items-center py-[10px]">
-              <div className=" text-sm flex gap-2">
-                <span className="text-sm">Platimum</span>
-                <span className="text-[#737377]">|</span>
-                <span className="text-[#737377]">Plan valid till</span>
-                <span className="text-[#737377]">24 jun 2024</span>
-              </div>
+            <div className="flex whitespace-nowrap w-[253.66px] h-6 items-center gap-2  ">
+              <span className="text-sm">Platimum</span>
+              <span className="text-[#737377]">|</span>
+              <span className="text-[#737377]">Plan valid till</span>
+              <span className="text-[#737377]">24 jun 2024</span>
             </div>
-            <div className="flex w-[332px] h-11 justify-end items-center gap-4">
+            <div className="flex w-[289px] h-11 justify-end items-center gap-4 ">
               <Button
                 className="w-[140px] h-[44px] text-[#737377] gap-2"
                 type="reset"
@@ -69,15 +68,15 @@ const Settings = () => {
               >
                 Upgrade
               </Button>
-              <div className="">
-                <img className=" w-5 h-5" src={icon_arrow} alt=""></img>
-              </div>
+            </div>
+            <div className="flex justify-end items-center">
+              <img className=" w-5 h-5" src={icon_arrow} alt=""></img>
             </div>
           </div>
         </Card>
 
         <Card className="flex w-4/6  dark:bg-[#131417] p-4">
-          <div className="flex flex-wrap w-full items-center justify-between">
+          <div className="flex  w-full items-center justify-between">
             <div className="flex w-[169px] h-6 items-center gap-4 py-[10px]">
               <img
                 className=" w-6 h-6"
@@ -94,7 +93,7 @@ const Settings = () => {
         </Card>
 
         <Card className="flex w-4/6  dark:bg-[#131417] p-4">
-          <div className="flex flex-nowrap w-full items-center justify-between">
+          <div className="flex  w-full items-center justify-between">
             <div className="flex w-[169px] h-6 items-center gap-4 py-[10px]">
               <img className=" w-6 h-6  " src={icon_userRoles} alt="" />
               <div className="flex whitespace-nowrap text-[#737377] w-[72px] h-6">
