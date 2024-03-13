@@ -12,6 +12,9 @@ const IssueMiniCard = ({ data }: any) => {
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	/*  ######################################################################################## */
 
 	const upadateIssueByType = (value: string | number, key: string) => {
@@ -26,13 +29,7 @@ const IssueMiniCard = ({ data }: any) => {
 			label: user?.name,
 		})) ?? [];
 
-	const statusOptions = [
-		{ label: "Backlog", value: "backlog" },
-		{ label: "Todo", value: "todo" },
-		{ label: "Ongoing", value: "ongoing" },
-		{ label: "Pending", value: "pending" },
-		{ label: "Done", value: "done" },
-	];
+	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
 
 	const pointsOptions = [
 		{ label: "5", value: "5" },

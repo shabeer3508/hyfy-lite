@@ -116,10 +116,17 @@ const Board = () => {
 	}, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
-		if (boardInfo && appProfileInfo?.project_id) {
+		if (boardInfo?.selected_sprint && appProfileInfo?.project_id) {
 			getIssues();
 		}
 	}, [boardInfo]);
+
+	useEffect(() => {
+		if (!boardInfo?.selected_sprint && sprintOptions?.length > 0) {
+			dispatch(setBoardData(sprintOptions?.[0]?.value, "selected_sprint"))
+		}
+	}, [sprintListData])
+
 
 	/*  ######################################################################################## */
 
@@ -135,6 +142,7 @@ const Board = () => {
 					<div className="text-base">
 						<HYCombobox
 							name="sprint"
+							label={"Sprint :"}
 							showSearch={false}
 							options={sprintOptions}
 							buttonClassName="border"

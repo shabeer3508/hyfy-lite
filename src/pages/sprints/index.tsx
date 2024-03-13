@@ -83,7 +83,7 @@ const Sprints = () => {
 					{filteredSprints?.map((sprint) => {
 
 						const sprintIssues = issueListItems?.filter(
-							(issue) => issue?.sprint === sprint?._id
+							(issue) => issue?.sprint_id === sprint?._id
 						);
 
 						return <div

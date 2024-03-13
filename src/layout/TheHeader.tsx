@@ -66,6 +66,7 @@ const TheHeader = () => {
 						<HYCombobox
 							name="project"
 							showSearch={false}
+							label={"Project :"}
 							unSelectable={false}
 							buttonClassName="border"
 							options={projectOptions}

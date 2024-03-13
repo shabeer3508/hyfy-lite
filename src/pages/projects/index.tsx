@@ -106,11 +106,16 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issuesItems = issuesListData?.data?.items;
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	const projectIssues = issuesItems?.filter(
 		(issue) => issue?.project_id === data?._id
 	);
 
+
 	const pieceWidth = 100 / projectIssues?.length;
+
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -139,22 +144,28 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 					<div className="capitalize">{data?.title}</div>
 				</div>
 				<div className="flex gap-4 items-center">
-					<HYCombobox unSelectable={false} defaultValue={data?.status} options={statusOptions} />
+					<HYCombobox
+						unSelectable={false}
+						defaultValue={data?.status}
+						options={statusOptions}
+					/>
+
 					<div className="flex items-center gap-4 w-[200px] truncate text-base">
 						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.[0]?.user_name} />
 						<div className="truncate" title={data?.owner?.[0]?.user_name}>{data?.owner?.[0]?.user_name}</div>
 					</div>
+
 					{projectIssues?.length > 0 &&
 						<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
 							{projectIssues?.map((itm => (
 								<HYTooltip key={itm?._id} message={itm?.status} className='capitalize'>
 									<div
 										className={`
-                                         ${itm?.status === "done" && "bg-[#56972E]"}
-                                         ${itm?.status === "backlog" && "bg-[#FFFFFF66]"} 
-                                         ${itm?.status === "ongoing" && "bg-cyan-500"} 
-                                         ${itm?.status === "todo" && "bg-[#006EEF]"} 
-                                         ${itm?.status === "pending" && "bg-[#D63B00]"} `}
+                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#56972E]"}
+                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#FFFFFF66]"} 
+                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Ongoing")?._id && "bg-cyan-500"} 
+                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#006EEF]"} 
+                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Pending")?._id && "bg-[#D63B00]"} `}
 										style={{ width: `${pieceWidth}%` }}>
 									</div>
 								</HYTooltip>

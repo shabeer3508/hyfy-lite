@@ -98,7 +98,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 									<FormLabel>Release Title</FormLabel>
 									<Input
 										placeholder="title"
-										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />
@@ -182,7 +182,7 @@ const ReleaseCreationForm = ({ children }: any) => {
 									<FormLabel>Description</FormLabel>
 									<Input
 										type="text"
-										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>
 									<FormMessage />
