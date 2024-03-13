@@ -5,15 +5,15 @@ import { HiDatabase } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
 import { IssueCard } from "../backlog/backlog-column";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction } from "@/redux/actions/AppActions";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYDialog from "@/components/hy-components/HYDialog";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import IssueCreationCardMini from "../issues/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import NoProjectScreen from "../empty-screens/NoProjectScreen";
 
 const Sprints = () => {
 	const dispatch = useDispatch();
@@ -22,13 +22,16 @@ const Sprints = () => {
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
 	const issueListItems = issueListData?.data?.items
 	const sprintListItems = sprintListData?.data?.items
 
 	/*  ######################################################################################## */
 
 	const getIssues = (prams?: string) => {
-		let query = "?perPage=300";
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}
@@ -36,12 +39,22 @@ const Sprints = () => {
 	};
 
 	const getSprints = (prams?: string) => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
 		if (prams) {
 			query = query + prams;
 		}
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
+
+	const updateDropedIssueToSprint = async (issueId: string, sprintId: string) => {
+		const resp = (await dispatch(
+			patchAction({ issues: Urls.issues }, { sprint_id: sprintId, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id }, issueId)
+		)) as any;
+
+		if (resp.payload.status == 200) {
+			getIssues();
+		}
+	}
 
 	/*  ######################################################################################## */
 
@@ -88,6 +101,11 @@ const Sprints = () => {
 
 						return <div
 							key={sprint?._id}
+							onDrop={(e) => {
+								e.preventDefault();
+								updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?._id)
+							}}
+							onDragOver={(e) => e.preventDefault()}
 							className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer dark:bg-background bg-[#F7F8F9]"
 						>
 							<Accordion

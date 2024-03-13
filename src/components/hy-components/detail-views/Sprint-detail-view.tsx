@@ -1,8 +1,9 @@
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
+import HYEditableDiv from "../HYEditableDiv";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
@@ -15,8 +16,7 @@ import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppA
 const SprintDetailView = ({ data }: { data: any }) => {
     const dispatch = useDispatch();
 
-    const [sprintData, setSprintData] = useState()
-
+    const authInfo = useSelector((state: any) => state.UserReducer);
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
     const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
@@ -26,19 +26,13 @@ const SprintDetailView = ({ data }: { data: any }) => {
 
     /*  ######################################################################################## */
 
-    const getIssues = (prams?: string) => {
-        let query = "";
-        if (prams) {
-            query = query + prams;
-        }
+    const getIssues = () => {
+        let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
         dispatch(getAction({ issues: Urls.issues + query }));
     };
 
-    const getSprints = (prams?: string) => {
-        let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
-        if (prams) {
-            query = query + prams;
-        }
+    const getSprints = () => {
+        let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
         dispatch(getAction({ sprints: Urls.sprints + query }));
     };
 
@@ -61,6 +55,10 @@ const SprintDetailView = ({ data }: { data: any }) => {
         return filteredIssues?.filter((issue) => issue.type === type).length;
     };
 
+    const isCurrentUser = (userId: string) => {
+        return authInfo?.user?._id === userId;
+    }
+
     /*  ######################################################################################## */
 
     useEffect(() => {
@@ -71,7 +69,9 @@ const SprintDetailView = ({ data }: { data: any }) => {
 
     return (
         <div>
-            <div>{data?.name}</div>
+            <div className="text-xl">
+                <HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => updateSprintInfo("name", value)} />
+            </div>
             <div className="flex justify-between py-3 text-xs items-center">
                 <div className="flex gap-2 items-center">
                     <HiCalendarDays className="text-[#707173]" />{data?.start_date && formatter.format(new Date(data?.start_date))} to
@@ -93,6 +93,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
                                 url="https://github.com/shadcn.png"
                                 name={"Jhon"}
                             />
+                            <span className="mx-2 truncate w-[150px]">{isCurrentUser(data?.created_by?.[0]?._id) ? "You" : data?.created_by?.[0]?.user_name}</span>
                         </div>
                     </div>
                     <Separator orientation="vertical" />
@@ -101,11 +102,15 @@ const SprintDetailView = ({ data }: { data: any }) => {
                     <div className="flex flex-col gap-3">
                         <div className="text-xs text-[#9499A5]">Assigned to</div>
                         <div className="flex flex-1 items-center">
-                            <HYAvatar
-                                className="size-6"
-                                url="https://github.com/shadcn.png"
-                                name={"Jhon"}
-                            />
+                            { /* TODO : update  user data for the avatars according to response */}
+                            {data?.members?.length > 0 && data?.members?.map(member =>
+                                <HYAvatar
+                                    key={member?._id}
+                                    className="size-6"
+                                    url="https://github.com/shadcn.png"
+                                    name={"Jhon"}
+                                />
+                            )}
                         </div>
                     </div>
                     <Separator orientation="vertical" />
@@ -116,7 +121,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
                             Description
                         </div>
                         <div className="flex flex-1 items-center">
-                            {data?.description}
+                            <HYEditableDiv className="text-base" defaultText={data?.description} handleChange={(value) => updateSprintInfo("description", value)} />
                         </div>
                     </div>
                 </div>
@@ -125,11 +130,11 @@ const SprintDetailView = ({ data }: { data: any }) => {
             </div>
             <Separator className="my-2" />
             <div className="flex justify-between items-center my-2">
-                <div className="flex  gap-3">
+                <div className="flex  gap-3 align-middle">
                     <div>Stories</div>
                     <div className="flex gap-3 text-xs items-center">
-                        (
-                        <div className="flex gap-1">
+                        <div className="border flex items-center">{`(`}</div>
+                        <div className="flex gap-1 ">
                             <img src="/story_icon.svg" alt="Project" />
                             <span>{findIssueCount("story")}</span>
                         </div>

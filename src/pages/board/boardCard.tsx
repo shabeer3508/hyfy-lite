@@ -25,9 +25,7 @@ const BoardCard = ({ data }: any) => {
 
 		<Card
 			draggable
-			onDragStart={(e) => {
-				e.dataTransfer.setData("id", data?._id);
-			}}
+			onDragStart={(e) => { e.dataTransfer.setData("id", data?._id) }}
 			className={`cursor-grab dark:bg-[#151619] card-gradient`}
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
@@ -35,7 +33,7 @@ const BoardCard = ({ data }: any) => {
 					className="max-w-6xl"
 					content={<IssueDetailView data={data} />}
 				>
-					<div className="h-[90px] justify-between flex flex-col ">
+					<div className="min-h-[110px] justify-between flex flex-col ">
 						<div className="text-left flex gap-2 space-y-2">
 							{data?.type === "story" && (
 								<img src="/story_icon.svg" alt="Project" />
@@ -50,7 +48,7 @@ const BoardCard = ({ data }: any) => {
 							)}
 							{data?.name}
 						</div>
-						<div className="text-left py-3 truncate max-w-[200px]">
+						<div className="text-left py-3 truncate max-w-[200px] dark:text-[#9499A5]">
 							{data?.description}
 						</div>
 						<div className="flex items-center justify-between">
@@ -58,9 +56,9 @@ const BoardCard = ({ data }: any) => {
 								{data?.assign_to?.map((usr, i) => {
 									const currentUser = userItems?.find((u) => u?._id === usr)
 									return <HYAvatar
+										key={usr}
 										className="cursor-default first:ml-0 -ml-2 border text-white"
-										url=""
-										name={currentUser?.name}
+										name={currentUser?.user_name}
 										color={`${logoColors[i]}`}
 									/>
 								}

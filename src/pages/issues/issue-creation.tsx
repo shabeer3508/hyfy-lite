@@ -56,7 +56,7 @@ const IssueCreationForm = ({ children }: any) => {
 		}),
 		type: z.string(),
 		status: z.string().optional(),
-		epic: z.string().optional().nullable(),
+		epic_id: z.string().optional().nullable(),
 		points: z.string().optional().nullable(),
 		dependency: z.string().optional().nullable(),
 		dependency_type: z.string().optional().nullable(),
@@ -116,11 +116,10 @@ const IssueCreationForm = ({ children }: any) => {
 
 	/*  ######################################################################################## */
 
-	const epicOptions =
-		epicItems?.filter(epic => epic.project_id === appProfileInfo.project_id)?.map((epic) => ({
-			value: epic?._id,
-			label: epic?.name,
-		})) ?? [];
+	const epicOptions = epicItems?.map((epic) => ({
+		value: epic?._id,
+		label: epic?.name,
+	})) ?? [];
 
 	const issueOptions =
 		issueItems
@@ -217,7 +216,7 @@ const IssueCreationForm = ({ children }: any) => {
 						<div className="grid grid-cols-2 gap-4 py-4 ">
 							<FormField
 								control={form.control}
-								name="epic"
+								name="epic_id"
 								render={({ field }) => (
 									<FormItem className="flex flex-col">
 										<FormLabel className="my-1 text-xs text-[#9499A5]">
@@ -355,18 +354,20 @@ const IssueCreationForm = ({ children }: any) => {
 								<div className="border dark:border-[#36363A] h-[210px] my-2 rounded p-1 flex flex-col gap-1 overflow-auto">
 
 									{selectedUsers?.map(user => {
-										return (<div className="border dark:border-[#36363A] p-1 rounded flex justify-between items-center">
-											<div className="flex gap-2 items-center">
-												<div><HYAvatar name={user?.user_name || user?.name} /></div>
-												<div>
-													<div className="capitalize">{user?.user_name || user?.name}</div>
-													<div className="text-[10px] text-[#9499A5]">{user?.role}</div>
+										return (
+											<div key={user?._id} className="border dark:border-[#36363A] p-1 rounded flex justify-between items-center">
+												<div className="flex gap-2 items-center">
+													<div><HYAvatar name={user?.user_name || user?.name} /></div>
+													<div>
+														<div className="capitalize">{user?.user_name || user?.name}</div>
+														<div className="text-[10px] text-[#9499A5]">{user?.role}</div>
+													</div>
 												</div>
+												<Button type="button" variant="ghost" size="icon" onClick={() => handleUserDelete(user?._id)}>
+													<HiMiniXMark />
+												</Button>
 											</div>
-											<Button type="button" variant="ghost" size="icon" onClick={() => handleUserDelete(user?._id)}>
-												<HiMiniXMark />
-											</Button>
-										</div>)
+										)
 									})}
 
 								</div>

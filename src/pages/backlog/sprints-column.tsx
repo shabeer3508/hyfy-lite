@@ -40,12 +40,12 @@ const SprintsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo.project_id}`;
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
 	const getIssues = () => {
-		let query = "?perPage=300";
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -181,7 +181,7 @@ const SprintsColumn = () => {
 																		} ${sprint?.status ===
 																		"retro" &&
 																		"bg-[#DF8430]"
-																		}  text-white px-3 py-0.5 whitespace-nowrap mx-2 rounded-full text-xs `}
+																		}  text-white px-3 py-0.5 whitespace-nowrap mx-2 capitalize rounded-full text-[11px] `}
 																>
 																	{sprint?.status}
 																</div>

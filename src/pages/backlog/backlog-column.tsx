@@ -1,6 +1,7 @@
-import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { TbSquareCheck } from "react-icons/tb";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -9,11 +10,11 @@ import HYSearch from "@/components/hy-components/HYSearch";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropDown from "@/components/hy-components/HYDropDown";
-import { HiOutlineArrowsUpDown, HiCheck } from "react-icons/hi2";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
 import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -26,6 +27,11 @@ import {
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
+
+	const [epicTransfer, setEpictransfer] = useState({
+		isSelectionOn: false,
+		selectedIssues: [],
+	})
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueItems = issuesListData?.data?.items;
@@ -45,7 +51,8 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		let query = "?perPage=300";
+		// TODO: &expand=epic_id in the query
+		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -161,8 +168,14 @@ const BacklogColumn = () => {
 							options={[{ label: "All", value: "all" }, ...epicsOptions]}
 						/>
 
-						<div className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer" >
-							<HiCheck className="h-5 w-5 text-[#707173]" />
+						{epicTransfer?.isSelectionOn && <Button className="h-10 text-xs text-white select-none">Move to</Button>}
+
+						<div
+							className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer"
+							onClick={() => setEpictransfer((prevData) => ({ ...prevData, isSelectionOn: !prevData?.isSelectionOn }))}>
+
+							{!epicTransfer?.isSelectionOn && <TbSquareCheck className="h-5 w-5 text-[#707173]" title="Select issues" />}
+							{epicTransfer?.isSelectionOn && <HiMiniXMark className="h-5 w-5 text-[#707173]" title="Un Select issues" />}
 						</div>
 					</div>
 				</div>
@@ -226,7 +239,7 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 	return (
 		<Card
 			draggable
-			key={issue.id}
+			key={issue?._id}
 			onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
 			className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
 		>
@@ -248,7 +261,8 @@ export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
 							<img src="/bug_icon.svg" alt="Project" />
 						)}
 
-						<div className="text-[#737377]">{issue.name}</div>
+						<div className="text-[#737377]">{issue?.name}</div>
+						<div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{issue?.epic_id}</div>
 					</div>
 					<div className="flex gap-4 items-center text-[#737377]">
 						<div className="">

@@ -1,17 +1,17 @@
 import { z } from "zod";
 import Urls from "@/redux/actions/Urls";
-import HYInputDate from "../../../components/hy-components/HYInputDate";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import HYInputDate from "../../../components/hy-components/HYInputDate";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
+import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 const ProjectCreationForm = ({ children }: { children: any }) => {
 	const dispatch = useDispatch();
@@ -20,8 +20,6 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-
-	// const authInfo = useSelector((state: any) => state.UserReducer);
 
 	/*  ######################################################################################## */
 
@@ -34,14 +32,12 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
 		status: z.string(),
-		// org_id: z.string()
 	});
 
 	const defaultFormValues = {
 		title: "",
 		status: "open",
 		description: ""
-		// org_id: authInfo?.user?.org_id
 	};
 
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -51,19 +47,13 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 
 	/*  ######################################################################################## */
 
-	const getUsers = (prams?: string) => {
+	const getUsers = () => {
 		let query = `?perPage=300`;
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
-	const getProjects = (prams?: string) => {
+	const getProjects = () => {
 		let query = "?perPage=300&expand=owner";
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ project: Urls.project + query }));
 	};
 
@@ -109,7 +99,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 								<FormItem className="">
 									<FormLabel>Project Title</FormLabel>
 									<Input
-										placeholder="title"
+										placeholder="Title"
 										className="w-full outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
 										{...field}
 									/>

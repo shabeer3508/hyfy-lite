@@ -1,20 +1,20 @@
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
-import { HiFolder } from "react-icons/hi";
-import { MoreVertical } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
+import { HiDotsVertical, HiFolder } from "react-icons/hi";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { ScrollArea, } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/hy-components/HYDialog";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYTooltip from "@/components/hy-components/HYTooltip";
+import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import ProjectCreationForm from "@/pages/projects/forms/project-creation";
 import ProjectDetailView from "@/components/hy-components/detail-views/Project-detail-view";
-import { getAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
+import { getAction, patchAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 
 const Project = () => {
@@ -29,11 +29,18 @@ const Project = () => {
 
 	/*  ######################################################################################## */
 
-	const getProjects = (prams?: string) => {
-		let query = "?perPage=300&expand=owner";
-		if (prams) { query = query + prams }
+	const getProjects = () => {
+		let query = `?perPage=300&expand=owner
+			&sort=${projectPageInfo.order_filter_value === "recent" ? "-createdAt" : "createdAt"}
+			${projectPageInfo.status_filter_value !== "all" ? `&filter=status=${projectPageInfo.status_filter_value}` : ""}`;
+
 		dispatch(getAction({ project: Urls.project + query }));
 	}
+
+	const getIssues = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		dispatch(getAction({ issues: Urls.issues + query }));
+	};
 
 	/*  ######################################################################################## */
 
@@ -53,6 +60,10 @@ const Project = () => {
 	useEffect(() => {
 		getProjects();
 	}, [projectPageInfo]);
+
+	useEffect(() => {
+		getIssues();
+	}, [])
 
 	/*  ######################################################################################## */
 
@@ -101,7 +112,15 @@ const Project = () => {
 
 export default Project;
 
+
+
+
+
+
+
 const ProjectCard = ({ data, index }: { data: any, index: number }) => {
+
+	const dispatch = useDispatch()
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issuesItems = issuesListData?.data?.items;
@@ -109,13 +128,37 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
 
+	/*  ######################################################################################## */
+
+	const getProjects = () => {
+		let query = "?perPage=300&expand=owner";
+		dispatch(getAction({ project: Urls.project + query }));
+	}
+
+	const findStatusNameById = (statusId) => {
+		return issueStatusList?.find((status) => status?._id === statusId)?.name
+	}
+
+	const findIssueStatusIdByName = (statusName: "Todo" | "Ongoing" | "Backlog" | "Pending" | "Done") => {
+		return issueStatusList?.find((status) => status?.name === statusName)?._id
+	}
+
 	const projectIssues = issuesItems?.filter(
 		(issue) => issue?.project_id === data?._id
 	);
 
 
-	const pieceWidth = 100 / projectIssues?.length;
+	const handleProjectStatusChange = (projectStatus: string) => {
+		(dispatch(patchAction({ project: Urls.project }, { status: projectStatus }, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getProjects();
+			}
+		})
+	}
 
+	/*  ######################################################################################## */
+
+	const pieceWidth = 100 / projectIssues?.length;
 
 	const logoColors = [
 		"text-[#71A4FF]",
@@ -127,56 +170,75 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 	];
 
 	const statusOptions = [
-		{ label: "Done", value: "done" },
+		{ label: "Open", value: "open" },
 		{ label: "In-progress", value: "in-progress" },
 		{ label: "Pending", value: "pending" },
-		{ label: "Open", value: "open" }]
+		{ label: "Done", value: "done" },
+	]
+
+	/*  ######################################################################################## */
 
 
-	return <Card className="dark:bg-[#151619] bg-[#F7F8F9]">
-		<HYDialog
-			className="max-w-6xl"
-			content={<ProjectDetailView data={data} />}
-		>
-			<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
-				<div className="flex gap-3 items-center">
-					<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
-					<div className="capitalize">{data?.title}</div>
-				</div>
-				<div className="flex gap-4 items-center">
-					<HYCombobox
-						unSelectable={false}
-						defaultValue={data?.status}
-						options={statusOptions}
-					/>
 
-					<div className="flex items-center gap-4 w-[200px] truncate text-base">
-						<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.[0]?.user_name} />
-						<div className="truncate" title={data?.owner?.[0]?.user_name}>{data?.owner?.[0]?.user_name}</div>
+	return (
+		<Card className="dark:bg-[#151619] bg-[#F7F8F9]">
+			<HYDialog
+				className="max-w-6xl"
+				content={<ProjectDetailView data={data} />}
+			>
+				<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
+					<div className="flex gap-3 items-center">
+						<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
+						<div className="capitalize">{data?.title}</div>
 					</div>
+					<div className="flex gap-4 items-center">
+						<HYCombobox
+							defaultValue={data?.status}
+							options={statusOptions}
+							onValueChange={(value) => handleProjectStatusChange(value)}
+						/>
 
-					{projectIssues?.length > 0 &&
-						<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
-							{projectIssues?.map((itm => (
-								<HYTooltip key={itm?._id} message={itm?.status} className='capitalize'>
-									<div
-										className={`
-                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#56972E]"}
-                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#FFFFFF66]"} 
-                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Ongoing")?._id && "bg-cyan-500"} 
-                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#006EEF]"} 
-                                         ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Pending")?._id && "bg-[#D63B00]"} `}
-										style={{ width: `${pieceWidth}%` }}>
-									</div>
-								</HYTooltip>
-							)))}
+						<div className="flex items-center gap-4 w-[200px] truncate text-base">
+							<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.[0]?.user_name} />
+							<div className="truncate" title={data?.owner?.[0]?.user_name}>{data?.owner?.[0]?.user_name}</div>
 						</div>
-					}
-					<Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
-						<MoreVertical />
-					</Button>
+
+						{projectIssues?.length > 0 &&
+							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
+								{projectIssues?.map((itm => (
+									<HYTooltip key={itm?._id} message={findStatusNameById(itm?.status)} className='capitalize'>
+										<div
+											className={`
+                                         ${itm?.status === findIssueStatusIdByName("Done") && "bg-[#56972E]"}
+                                         ${itm?.status === findIssueStatusIdByName("Backlog") && "bg-[#FFFFFF66]"} 
+                                         ${itm?.status === findIssueStatusIdByName("Ongoing") && "bg-cyan-500"} 
+                                         ${itm?.status === findIssueStatusIdByName("Todo") && "bg-[#006EEF]"} 
+                                         ${itm?.status === findIssueStatusIdByName("Pending") && "bg-[#D63B00]"} `}
+											style={{ width: `${pieceWidth}%` }}>
+										</div>
+									</HYTooltip>
+								)))}
+							</div>
+						}
+
+						<HYDropDown options={[
+							{
+								label: "Edit",
+								action: () => { }
+							},
+							{
+								label: "Delete",
+								action: (e) => { e?.stopPropagation() }
+							},
+						]}>
+							<Button size="icon" variant="ghost" className="" onClick={(e) => e.stopPropagation()}>
+								<HiDotsVertical className="size-5" />
+							</Button>
+						</HYDropDown>
+
+					</div>
 				</div>
-			</div>
-		</HYDialog>
-	</Card>
+			</HYDialog>
+		</Card >
+	)
 }
