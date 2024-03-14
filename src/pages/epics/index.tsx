@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import Urls from '@/redux/actions/Urls';
 import { BiDirections } from 'react-icons/bi'
 import { Button } from '@/components/ui/button'
-import { IssueCard } from '../backlog/backlog-column';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HYSearch from '@/components/hy-components/HYSearch'
@@ -21,6 +20,7 @@ import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-i
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import NoProjectScreen from '../empty-screens/NoProjectScreen';
 import IssueCreationCardMini from '../issues/issue-creation-mini';
+import { IssueCard } from '../issues/issue-card-1';
 
 
 const EpicScreen = () => {
@@ -219,6 +219,7 @@ const EpicScreen = () => {
                                                             <div className='flex py-2 items-center'>
                                                                 <div className="flex gap-2 items-center text-[#737377] px-4 border-r">
                                                                     <HYCombobox
+                                                                        label={"Release : "}
                                                                         unSelectable={true}
                                                                         options={releaseOptions}
                                                                         defaultValue={epic?.releases}

@@ -44,6 +44,11 @@ const Board = () => {
 		dispatch(getAction({ users: Urls.users + query }));
 	};
 
+	const getEpics = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		dispatch(getAction({ epic: Urls.epic + query }));
+	};
+
 	const getIssues = () => {
 		let query = `?perPage=300
 				&filter=project_id=${appProfileInfo?.project_id}%26%26sprint_id=${boardInfo?.selected_sprint}
@@ -112,6 +117,7 @@ const Board = () => {
 		if (appProfileInfo?.project_id) {
 			getSprints();
 			getUsers();
+			getEpics();
 		}
 	}, [appProfileInfo?.project_id]);
 

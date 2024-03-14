@@ -1,13 +1,13 @@
 import { z } from "zod";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Dialog,
@@ -49,7 +49,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 			message: "Username must be at least 2 characters.",
 		}),
 		status: z.string(),
-		release: z.string().optional().nullable(),
+		release_id: z.string().optional().nullable(),
 		dependency: z.string().optional().nullable(),
 		dependency_type: z.string().optional().nullable(),
 		priority: z.string(),
@@ -186,7 +186,7 @@ const EpicCreationForm = ({ children }: { children: any }) => {
 						/>
 						<FormField
 							control={form.control}
-							name="release"
+							name="release_id"
 							render={({ field }) => (
 								<FormItem className="flex flex-col">
 									<FormLabel>Release</FormLabel>
