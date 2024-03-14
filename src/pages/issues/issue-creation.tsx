@@ -123,7 +123,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const issueOptions =
 		issueItems
-			?.filter((issue) => issue?.type === "story" && issue.project_id === appProfileInfo.project_id)
+			?.filter((issue) => issue?.type === "story")
 			?.map((issue) => ({
 				value: issue?._id,
 				label: issue?.name,

@@ -3,7 +3,6 @@ import Urls from "../../redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
 import { HiDatabase } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
-import { IssueCard } from "../backlog/backlog-column";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
@@ -14,6 +13,7 @@ import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { IssueCard } from "../issues/issue-card-1";
 
 const Sprints = () => {
 	const dispatch = useDispatch();

@@ -5,14 +5,13 @@ import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
 import HYEditableDiv from "../HYEditableDiv";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
-import { HiDatabase, HiDotsVertical } from "react-icons/hi";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { HiDatabase, HiDotsVertical, HiOutlineClock } from "react-icons/hi";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const IssueDetailView = ({ data }: { data: any }) => {
@@ -21,11 +20,18 @@ const IssueDetailView = ({ data }: { data: any }) => {
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const commentsReducerName = reducerNameFromUrl("comments", "GET");
-	const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
-	const commentsItems = commentsList?.data?.items
+	const commentsItems = useSelector((state: any) => state?.[commentsReducerName])?.data?.items;
+
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicItems = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+
+	const issuesListData = useSelector((state: any) => state?.GetIssues);
+	const issueItems = issuesListData?.data?.items;
+
+	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
 
 	/*  ######################################################################################## */
 
@@ -39,8 +45,15 @@ const IssueDetailView = ({ data }: { data: any }) => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const handleIssueEdit = (value, field: "status" | "name" | "description") => {
-		(dispatch(patchAction({ issues: Urls.issues }, { [field]: value }, data?._id)) as any).then((res) => {
+	const handleIssueEdit = (value, field: string) => {
+
+		let postData = { [field]: value !== "" ? value : null };
+
+		if (value === "" && field === "sprint_id") {
+			postData = { ...postData, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }
+		}
+
+		(dispatch(patchAction({ issues: Urls.issues }, postData, data?._id)) as any).then((res) => {
 			if (res.payload?.status === 200) {
 				getIssues();
 			}
@@ -50,6 +63,39 @@ const IssueDetailView = ({ data }: { data: any }) => {
 	/*  ######################################################################################## */
 
 	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }));
+
+	const epicOptions =
+		epicItems?.map((epic) => ({
+			value: epic?._id,
+			label: epic?.name,
+		})) ?? [];
+
+	const sprintOptions =
+		sprintListData?.map((sprnt) => ({
+			value: sprnt?._id,
+			label: sprnt?.name,
+		})) ?? [];
+
+	const issueOptions =
+		issueItems
+			?.filter((issue) => issue?.type === "story")
+			?.map((issue) => ({
+				value: issue?._id,
+				label: issue?.name,
+			})) ?? [];
+
+	const pointOptions = [
+		{ label: "5", value: "5" },
+		{ label: "10", value: "10" },
+		{ label: "15", value: "15" },
+	];
+
+	const estimatedHours = [
+		{ label: "1", value: "1" },
+		{ label: "2", value: "2" },
+		{ label: "3", value: "3" },
+		{ label: "4", value: "4" },
+	];
 
 	/*  ######################################################################################## */
 
@@ -79,54 +125,90 @@ const IssueDetailView = ({ data }: { data: any }) => {
 			</div>
 			<div className="grid grid-cols-6 pt-5">
 				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
+					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Epic</div>
-						<div className=" flex flex-1 items-center">Epic 1</div>
-					</div>
-					<Separator orientation="vertical" />
-				</div>
-				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
-						<div className="text-xs text-[#9499A5]">Sprint</div>
-						<div className=" flex flex-1 items-center">
-							Sprint 1
+						<div className=" flex flex-1 items-center mr-4 ">
+							<HYCombobox
+								unSelectable={true}
+								options={epicOptions}
+								buttonClassName="w-full"
+								defaultValue={data?.epic_id}
+								onValueChange={(value) => handleIssueEdit(value, "epic_id")}
+							/>
 						</div>
 					</div>
 					<Separator orientation="vertical" />
 				</div>
 				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
+					<div className="flex flex-col w-full gap-3">
+						<div className="text-xs text-[#9499A5]">Sprint</div>
+						<div className=" flex flex-1 items-center mr-4">
+							<HYCombobox
+								unSelectable={true}
+								options={sprintOptions}
+								buttonClassName="w-full"
+								defaultValue={data?.sprint_id}
+								onValueChange={(value) => handleIssueEdit(value, "sprint_id")}
+							/>
+						</div>
+					</div>
+					<Separator orientation="vertical" />
+				</div>
+				<div className="flex justify-between pr-3">
+					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">
 							Estimation Points
 						</div>
 						<div className=" flex flex-1 items-center gap-2">
-							<HiDatabase />
-							{data?.points}
+							<HYCombobox
+								label={<HiDatabase />}
+								options={pointOptions}
+								buttonClassName="w-full mr-4"
+								defaultValue={data?.points?.toString()}
+								onValueChange={(value) => handleIssueEdit(value, "points")}
+							/>
 						</div>
 					</div>
 					<Separator orientation="vertical" />
 				</div>
 				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
+					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Hours</div>
-						<div className=" flex flex-1 items-center">{data?.estimated_hours}</div>
+						<div className=" flex flex-1 items-center">
+							<HYCombobox
+								label={<HiOutlineClock />}
+								options={estimatedHours}
+								buttonClassName="w-full mr-4"
+								defaultValue={data?.estimated_hours?.toString()}
+								onValueChange={(value) => handleIssueEdit(value, "estimated_hours")}
+
+							/>
+						</div>
 					</div>
 					<Separator orientation="vertical" />
 				</div>
 				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
+					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Dependency</div>
-						<div className=" flex flex-1 items-center">Story 5</div>
+						<div className=" flex flex-1 items-center">
+							<HYCombobox
+								unSelectable={true}
+								options={issueOptions}
+								buttonClassName="w-full mr-4"
+								defaultValue={data?.dependency}
+								onValueChange={(value) => handleIssueEdit(value, "dependency")}
+							/>
+						</div>
 					</div>
 					<Separator orientation="vertical" />
 				</div>
 				<div className="flex justify-between pr-3">
-					<div className="flex flex-col">
+					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Status</div>
 						<HYCombobox
 							defaultValue={data?.status}
 							options={statusOptions}
-							buttonClassName="w-[150px] my-2"
+							buttonClassName="w-full mr-4"
 							onValueChange={(value) => handleIssueEdit(value, "status")}
 						/>
 					</div>
@@ -173,7 +255,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							/>
 						</div>
 					</div>
-					<div className="space-y-2">
+					{/* <div className="space-y-2">
 						<div className="text-[#9499A5]">Sub Tasks</div>
 						<div className="space-y-2">
 							<div className="flex items-center gap-2">
@@ -183,7 +265,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 								<Checkbox /> Kill Bugs 2
 							</div>
 						</div>
-					</div>
+					</div> */}
 				</div>
 				<Separator className="my-5" />
 				<div className="space-y-3">

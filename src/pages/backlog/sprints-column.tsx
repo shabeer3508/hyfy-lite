@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
-import { IssueCard } from "./backlog-column";
 import { Button } from "@/components/ui/button";
 import { HiPlus, HiDatabase } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +21,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
+import { IssueCard } from "../issues/issue-card-1";
 
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
@@ -92,7 +92,7 @@ const SprintsColumn = () => {
 				<div className="flex gap-3">
 					<HYSearch />
 					<SprintCreationForm>
-						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm">
+						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm whitespace-nowrap">
 							Add Sprint
 							<HiPlus className="h-5 w-5" />
 						</div>
@@ -128,7 +128,7 @@ const SprintsColumn = () => {
 			</div>
 			<div>
 				{filteredSprints?.length > 0 && (
-					<ScrollArea className="h-[calc(100vh-200px)] w-full">
+					<ScrollArea className="h-[calc(100vh-200px)] w-full ">
 
 						<div className="py-4 px-6 space-y-2">
 							{filteredSprints.map((sprint, i) => {

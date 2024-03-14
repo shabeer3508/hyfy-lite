@@ -108,12 +108,28 @@ export const getFileName = (url: string) => {
 	return url?.replace(/^.*[\\\/]/, "") || "";
 };
 
-// PRINT ACTION
-export const print = () => {
-	window.print();
-};
-
 // Warning Message
 export const warning = () => {
 	toast.warning("Sorry! This feature is not ready to use. Please try later");
 };
+
+/**
+ * 
+ * @param id any unique identifier string
+ * @example
+ * 	let id = "example_string_id"; // Example string ID
+   	let color = generateColorCode(id);
+	console.log(color);
+ * @returns HEX color code
+ */
+
+export function generateColorCode(id: string) {
+	let hex = (hashCode(id) >>> 0).toString(16);
+	return "#" + "000000".slice(hex.length) + hex;
+}
+
+function hashCode(str: string) {
+	for (var r = 0, t = 0; t < str.length; t++)
+		(r = (r << 5) - r + str.charCodeAt(t)), (r |= 0);
+	return r;
+}

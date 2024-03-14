@@ -1,35 +1,31 @@
 import Urls from "@/redux/actions/Urls";
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
 import { TbSquareCheck } from "react-icons/tb";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import HYDialog from "@/components/hy-components/HYDialog";
 import HYSearch from "@/components/hy-components/HYSearch";
-import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
-import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import {
-	HiPlus,
-	HiFilter,
-	HiOutlineArrowNarrowUp,
-	HiDatabase,
-} from "react-icons/hi";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
+import { toast } from "sonner";
+import { IssueCard } from "../issues/issue-card-1";
+import HYModal from "@/components/hy-components/HYModal";
+import { BiDirections } from "react-icons/bi";
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
 
-	const [epicTransfer, setEpictransfer] = useState({
+	const [issueTransfer, setIssueTransfer] = useState({
 		isSelectionOn: false,
+		openTranserModal: false,
 		selectedIssues: [],
 	})
 
@@ -80,6 +76,28 @@ const BacklogColumn = () => {
 		}
 	}
 
+	const handleIssueSelection = (issueId: string, isChecked: boolean) => {
+		let updatedInviteList = issueTransfer?.selectedIssues
+
+		if (isChecked) { updatedInviteList = [...updatedInviteList, issueId] }
+		else { updatedInviteList = issueTransfer?.selectedIssues?.filter((issue) => issue !== issueId) }
+
+		setIssueTransfer((prevData) => ({ ...prevData, selectedIssues: updatedInviteList }))
+	}
+
+	const handleIssueMovement = () => {
+		if (issueTransfer?.selectedIssues?.length === 0) {
+			toast.error("Select atleast one issue from the list");
+		} else {
+			setIssueTransfer((prevData) => ({ ...prevData, openTranserModal: true }));
+		}
+	}
+
+	const closeTransferModal = () => {
+		setIssueTransfer((prevData) => ({ ...prevData, openTranserModal: false }));
+	}
+
+
 	/*  ######################################################################################## */
 
 	const backlogIssues =
@@ -127,7 +145,7 @@ const BacklogColumn = () => {
 				<div className="flex gap-3">
 					<HYSearch />
 					<IssueCreationForm>
-						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm">
+						<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm whitespace-nowrap">
 							Add Issue
 							<HiPlus className="h-5 w-5 " />
 						</div>
@@ -135,48 +153,55 @@ const BacklogColumn = () => {
 				</div>
 			</div>
 			<div className="px-6 w-full">
-				<div className="flex border-b  justify-between py-3">
-					<div className="flex gap-3">
-						<HYDropDown options={sortoptions}>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border aspect-square h-10 w-10"
-							>
-								<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
-							</Button>
-						</HYDropDown>
-						<HYDropdownMenuCheckbox>
-							<Button
-								variant="ghost"
-								size="icon"
-								className="border aspect-square h-10 w-10"
-							>
-								<HiFilter className="h-5 w-5 text-[#707173]" />
-							</Button>
-						</HYDropdownMenuCheckbox>
+				<div className="flex flex-col 2xl:flex-row border-b gap-2  justify-between py-3">
+					<div className="flex justify-between gap-3">
+						<div className="flex gap-3">
+							<HYDropDown options={sortoptions}>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border aspect-square h-10 w-10"
+								>
+									<HiOutlineArrowsUpDown className="h-5 w-5 text-[#707173]" />
+								</Button>
+							</HYDropDown>
+							<HYDropdownMenuCheckbox>
+								<Button
+									variant="ghost"
+									size="icon"
+									className="border aspect-square h-10 w-10"
+								>
+									<HiFilter className="h-5 w-5 text-[#707173]" />
+								</Button>
+							</HYDropdownMenuCheckbox>
+						</div>
+
+						<div className="flex gap-2">
+							{issueTransfer?.isSelectionOn && <Button className="h-10 text-xs text-white select-none" onClick={handleIssueMovement}>Move to</Button>}
+
+							<div
+								className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer"
+								onClick={() => setIssueTransfer((prevData) => ({ ...prevData, isSelectionOn: !prevData?.isSelectionOn, selectedIssues: [] }))}>
+
+								{!issueTransfer?.isSelectionOn && <TbSquareCheck className="h-5 w-5 text-[#707173]" title="Select issues" />}
+								{issueTransfer?.isSelectionOn && <HiMiniXMark className="h-5 w-5 text-[#707173]" title="Un Select issues" />}
+							</div>
+						</div>
 					</div>
-					<div className="flex gap-2">
+
+					<div className="flex gap-2 justify-between">
 						<HYCombobox
+							buttonClassName=" 2xl:w-auto min-w-28"
 							defaultValue="all"
 							label="Assigned to"
 							options={[{ label: "All", value: "all" }, ...usersOptions]}
 						/>
 						<HYCombobox
+							buttonClassName=" 2xl:w-auto"
 							defaultValue="all"
 							label="Epic"
 							options={[{ label: "All", value: "all" }, ...epicsOptions]}
 						/>
-
-						{epicTransfer?.isSelectionOn && <Button className="h-10 text-xs text-white select-none">Move to</Button>}
-
-						<div
-							className="border-border rounded-md border h-10 w-10 aspect-square flex justify-center items-center cursor-pointer"
-							onClick={() => setEpictransfer((prevData) => ({ ...prevData, isSelectionOn: !prevData?.isSelectionOn }))}>
-
-							{!epicTransfer?.isSelectionOn && <TbSquareCheck className="h-5 w-5 text-[#707173]" title="Select issues" />}
-							{epicTransfer?.isSelectionOn && <HiMiniXMark className="h-5 w-5 text-[#707173]" title="Un Select issues" />}
-						</div>
 					</div>
 				</div>
 			</div>
@@ -194,10 +219,10 @@ const BacklogColumn = () => {
 				}}>
 
 				{backlogIssues?.length > 0 && (
-					<ScrollArea className="h-[calc(100vh-250px)] w-full">
+					<ScrollArea className="h-[calc(100vh-250px)] w-full bg-[#F7F8F9] dark:bg-[#111215]">
 						<div className="py-4 px-6 space-y-2">
 							{backlogIssues.map((issue, i) => (
-								<IssueCard index={i} issue={issue} key={issue?._id} />
+								<IssueCard index={i} issue={issue} key={issue?._id} showSelection={issueTransfer?.isSelectionOn} handleSelection={handleIssueSelection} />
 							))}
 						</div>
 					</ScrollArea>
@@ -228,6 +253,14 @@ const BacklogColumn = () => {
 						</div>
 					</div>
 				)}
+
+				<HYModal
+					showCloseButton
+					handleClose={closeTransferModal}
+					open={issueTransfer.openTranserModal}
+					content={<IssueTransferModal data={issueTransfer} handleClose={closeTransferModal} />}
+				/>
+
 			</div>
 		</div>
 	);
@@ -235,55 +268,103 @@ const BacklogColumn = () => {
 
 export default BacklogColumn;
 
-export const IssueCard = ({ issue, index }: { issue: any; index: number }) => {
+
+interface IssueTransferModalProps {
+	data: any,
+	handleClose: () => void
+}
+
+
+const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClose }) => {
+
+	const epicReducerName = reducerNameFromUrl("epic", "GET");
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
+	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
+
+
+	const [search, setSearch] = useState("");
+	const [targetId, setTargetId] = useState<any>({ epic_id: null, sprint_id: null });
+
+	const handleApplyTransfer = (type: "epic" | "sprint") => {
+		let postData = { selectedIssues: data?.selectedIssues, type: type, targetId: null }
+
+		if (type === "epic") {
+			if (!targetId?.epic_id) toast.error("Please select a epic from the  list");
+			else { postData = { ...postData, targetId: targetId?.epic_id } }
+		} else {
+			if (!targetId?.sprint_id) toast.error("Please select a sprint from the  list");
+			else { postData = { ...postData, targetId: targetId?.sprint_id } }
+		}
+
+		//TODO: API Itegration & handleClose()
+		// console.log("🚀 ~ data:", postData);
+
+
+	}
+
 	return (
-		<Card
-			draggable
-			key={issue?._id}
-			onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
-			className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
-		>
-			<HYDialog
-				className="max-w-6xl"
-				content={<IssueDetailView data={issue} />}
-			>
-				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
-					<div className="flex gap-1 items-center">
-						{issue.type === "story" && (
-							<img src="/story_icon.svg" alt="Project" />
-						)}
+		<div className="flex flex-col">
+			<div className="text-xl mb-3">Move Issues to</div>
+			<Tabs defaultValue="epic" className="">
+				<TabsList className="rounded">
+					<TabsTrigger value="epic" className="flex gap-1 rounded">
+						<HiViewBoards className="w-4 h-4" />
+						Epic
+					</TabsTrigger>
+					<TabsTrigger value="sprint" className="flex gap-1 rounded">
+						<BiDirections className="w-4 h-4" />
+						Sprint
+					</TabsTrigger>
+				</TabsList>
 
-						{issue.type === "task" && (
-							<img src="/task_icon.svg" alt="Project" />
-						)}
-
-						{issue.type === "bug" && (
-							<img src="/bug_icon.svg" alt="Project" />
-						)}
-
-						<div className="text-[#737377]">{issue?.name}</div>
-						<div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{issue?.epic_id}</div>
-					</div>
-					<div className="flex gap-4 items-center text-[#737377]">
-						<div className="">
-							<Avatar className="h-5 w-5">
-								<AvatarImage
-									src="https://github.com/shadcn.png"
-									alt="@shadcn"
-								/>
-								<AvatarFallback>user</AvatarFallback>
-							</Avatar>
+				<TabsContent value="epic" >
+					<div className="flex flex-col gap-3">
+						<div className="w-full">
+							<HYSearch className="w-full max-w-full" />
 						</div>
-						{index % 2 === 0 && (
-							<HiOutlineArrowNarrowUp className="text-red-500" />
-						)}
-						<PiLinkSimpleHorizontalBold />
-						<div className="flex gap-1 items-center">
-							<HiDatabase className="" /> {issue?.points}
+						<div className="border p-3 rounded  flex flex-col gap-2 max-h-[300px] overflow-auto">
+							{epicsListData?.map(epic =>
+								<div
+									onClick={() => setTargetId({ epic_id: epic?._id })}
+									className={`${targetId?.epic_id === epic?._id && "bg-[#2E3035]"} py-1 px-3 border rounded cursor-pointer text-sm`}
+								>
+									{epic?.name}
+								</div>
+							)}
+						</div>
+						<div className="flex gap-3">
+							<Button variant="outline" className="w-1/2 text-primary" onClick={() => handleClose()}>Cancel</Button>
+							<Button className="w-1/2 text-white" onClick={() => handleApplyTransfer("epic")}>Move</Button>
 						</div>
 					</div>
-				</div>
-			</HYDialog>
-		</Card>
-	);
-};
+				</TabsContent>
+
+				<TabsContent value="sprint" >
+					<div className="flex flex-col gap-3">
+						<div className="w-full">
+							<HYSearch className="w-full max-w-full" />
+						</div>
+						<div className="border p-3 rounded flex flex-col gap-2 max-h-[300px] overflow-auto">
+							{sprintListData?.map(sprint =>
+								<div
+									onClick={() => setTargetId({ sprint_id: sprint?._id })}
+									className={`${targetId?.sprint_id === sprint?._id && "bg-[#2E3035]"} py-1 px-3 border rounded cursor-pointer text-sm`}
+								>
+									{sprint?.name}
+								</div>
+							)}
+						</div>
+						<div className="flex gap-3">
+							<Button variant="outline" className="w-1/2 text-primary" onClick={() => handleClose()}>Cancel</Button>
+							<Button className="w-1/2 text-white" onClick={() => handleApplyTransfer("sprint")}> Move</Button>
+						</div>
+					</div>
+				</TabsContent>
+			</Tabs>
+
+		</div >
+	)
+}
+
+
+

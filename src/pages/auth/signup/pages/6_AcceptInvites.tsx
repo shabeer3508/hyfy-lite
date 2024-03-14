@@ -97,6 +97,7 @@ interface InvitationCardProps {
     inviteInfo: {
         _id: string;
         org_id?: {
+            _id: string;
             name: string;
             branch: string;
             address?: string;
@@ -139,14 +140,14 @@ const InvitationCard: React.FC<InvitationCardProps> = ({ inviteInfo, getInvitati
                         type="button"
                         variant="ghost"
                         className="text-[#737377]"
-                        onClick={() => handleInvitationStatus(inviteInfo?._id, "rejected")}
+                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, "rejected")}
                     >
                         Reject
                     </Button>
                     <Button
                         type="button"
                         className="text-white"
-                        onClick={() => handleInvitationStatus(inviteInfo?._id, "accepted")}
+                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, "accepted")}
                     >
                         Accept
                     </Button>

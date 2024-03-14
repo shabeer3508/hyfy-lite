@@ -16,12 +16,10 @@ const TheContent = () => {
 
 	const dispatch = useDispatch()
 
-	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
 	const getIssueStatus = () => dispatch(getAction({ issueStatus: Urls.issue_status }));
 
 	useEffect(() => {
-		if (!issueStatusList) getIssueStatus();
+		getIssueStatus();
 	}, [])
 
 	return (

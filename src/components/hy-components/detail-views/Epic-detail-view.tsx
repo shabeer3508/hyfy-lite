@@ -7,7 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import IssueMiniCard from "@/pages/issues/issueMiniCard";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import HYEditableDiv from "../HYEditableDiv";
 
 const EpicDetailView = ({ data }: { data: any }) => {
 	const dispatch = useDispatch();
@@ -31,12 +32,25 @@ const EpicDetailView = ({ data }: { data: any }) => {
 		dispatch(getAction({ release: Urls.release + query }));
 	};
 
+	const getEpics = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		dispatch(getAction({ epic: Urls.epic + query }));
+	};
+
 
 	const filterIssueByEpic = issueListItems?.filter((issue) => issue?.epic_id === data?._id);
 
 	const findIssueCount = (type: "bug" | "story" | "task") => {
 		return filterIssueByEpic?.filter((issue) => issue.type === type).length;
 	};
+
+	const updateEpicData = async (key: string | number, value: string | boolean) => {
+		const resp = (await dispatch(patchAction({ epic: Urls.epic }, { [key]: value !== "" ? value : null }, data?._id))) as any
+		const success = resp.payload.status == 200;
+		if (success) {
+			getEpics();
+		}
+	}
 
 
 	/*  ######################################################################################## */
@@ -58,18 +72,28 @@ const EpicDetailView = ({ data }: { data: any }) => {
 
 	return (
 		<div>
-			<div>{data?.name}</div>
-			<div className="my-3 space-y-1">
+			<div className="text-xl">
+				<HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => updateEpicData("name", value)} />
+			</div>
+			<div className="my-3 space-y-3">
 				<div className="text-xs text-[#9499A5]">Description</div>
-				<div>{data?.description}</div>
+				<div className="text-xs">
+					<HYEditableDiv
+						type="textarea"
+						className="text-xs"
+						placeholder="Add description"
+						defaultText={data?.description}
+						handleChange={(value) => updateEpicData("description", value)}
+					/>
+				</div>
 			</div>
 			<div>
 				<HYCombobox
-					name="Release"
-					showSearch={false}
-					unSelectable={false}
+					label="Release"
+					unSelectable={true}
 					options={releaseOptions}
 					defaultValue={data?.releases}
+					onValueChange={(value) => updateEpicData("release_id", value)}
 				/>
 			</div>
 			<Separator className="my-2" />
