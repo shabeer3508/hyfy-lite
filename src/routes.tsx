@@ -47,7 +47,7 @@ const defultRoutes = [
 		component: <Teams />,
 	},
 	{
-		path: "/settings",
+		path: "/settings/*",
 		component: <Settings />,
 	},
 	{
