@@ -97,7 +97,7 @@ export function HYCombobox({
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className={`w-[200px] p-0 ${optionsClassName}`} onClick={e => e.stopPropagation()}>
-				<Command>
+				<Command className="dark:bg-[#111215]">
 					{showSearch && (<CommandInput placeholder={`Search  ${name ?? ""}..`} />)}
 					<CommandEmpty>No options found.</CommandEmpty>
 					<CommandGroup>

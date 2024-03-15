@@ -1,114 +1,99 @@
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import icon_org from "@/assets/icons/header-icons/icon_org.svg";
-import icon_arrow from "@/assets/icons/header-icons/icon_arrow.svg";
-import icons_dwnld from "@/assets/icons/header-icons/icons_dwnld.svg";
-import icons_billing from "@/assets/icons/header-icons/Icons_billing.svg";
-import icon_userRoles from "@/assets/icons/header-icons/Icons_userRoles.svg";
-import icon_settingsnotification from "@/assets/icons/header-icons/Icons_settingsnotification.svg";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+
+import { TbReceipt } from "react-icons/tb";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { HiBell, HiOutlineDownload } from "react-icons/hi";
+import { HiUser, HiBuildingLibrary } from "react-icons/hi2";
 
 const Settings = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="dark:text-foreground flex flex-col m-8 gap-y-6">
-      <div>Settings</div>
+    <div className="dark:text-foreground h-screen ml-6">
+      <div className="flex justify-between items-center">
+        <div className="text-xl flex h-10 items-center">
+          Settings
+        </div>
+      </div>
 
-      <div className="flex flex-col gap-4">
-        <Card
-          className="flex w-4/6  dark:bg-[#131417] p-4"
-          onClick={() => navigate("/settings/organization")}
-        >
-          <div className="flex  w-full items-center justify-between   ">
-            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px] ">
-              <img className=" w-6 h-6 " src={icon_org} alt="org_icon" />
-              <div className=" w-[86px] h-6 text-[#737377] ">Organization</div>
+      <div className="flex flex-col gap-4 my-3 xl:w-2/3 mr-6 xl:mr-0">
+        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3" >
+          <div className="grid grid-cols-3 w-full">
+            <div className="flex gap-4 items-center">
+              <HiBuildingLibrary className="h-6 w-6 text-[#737377]" />
+              <div className=" h-6 text-[#737377] ">Organization</div>
             </div>
-
-            <div className=" flex gap-4 whitespace-nowrap w-[253.66px] h-6 items-center  ">
-              <span className="w-[43px] h-6 text-[#737377] text-sm ">
+            <div className="flex gap-2 col-span-2 items-center h-full">
+              <div className=" text-[#737377] text-sm ">
                 Active
-              </span>
-              <span className=" w-[123px] h-6 text-sm">ABC Software LLP</span>
+              </div>
+              <div className="text-sm">ABC Software LLP</div>
             </div>
-            <div className=" flex w-[332px] h-11 justify-end items-center ">
-              <img className="w-5 h-5" src={icon_arrow} alt=""></img>
-            </div>
+            <div className=""></div>
+          </div>
+          <div onClick={() => navigate("/settings/organization")}>
+            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
 
-        <Card
-          className="flex w-4/6  dark:bg-[#131417] p-4 "
-          onClick={() => navigate("/settings/billing")}
-        >
-          <div className="flex flex-wrap md:gap-y-5 md:gap-x-1 w-full items-center justify-between  ">
-            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px] ">
-              <img className=" w-6 h-6 " src={icons_billing} alt="" />
-              <div className=" w-[41px] h-6 text-[#737377] ">Billing</div>
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+          <div className="grid grid-cols-3 w-full">
+            <div className="flex items-center gap-4 ">
+              <TbReceipt className="w-7 h-7 text-background fill-[#737377]" />
+              <div className=" h-6 text-[#737377] ">Billing</div>
             </div>
-            <div className="flex whitespace-nowrap w-[253.66px] h-6 items-center gap-2  ">
-              <span className="text-sm">Platimum</span>
-              <span className="text-[#737377]">|</span>
-              <span className="text-[#737377]">Plan valid till</span>
-              <span className="text-[#737377]">24 jun 2024</span>
+            <div className=" flex flex-col xl:flex-row text-xs xl:items-center gap-2 items-left h-full">
+              <div className="text-sm ">Platinum</div>
+              <div className="text-[#737377] hidden xl:block">|</div>
+              <div className="text-[#737377] ">Plan valid till 24 jun 2024</div>
             </div>
-            <div className="flex w-[289px] h-11 justify-end items-center gap-4 ">
+            <div className=" flex gap-1">
               <Button
-                className="w-[140px] h-[44px] text-[#737377] gap-2"
+                className=" text-[#737377] border-border gap-2 w-1/2 text-xs"
                 type="reset"
                 variant="outline"
               >
-                <img className="" src={icons_dwnld} alt=""></img> Invoice
+                <HiOutlineDownload className="h-6 w-6" />
+                Invoice
               </Button>
               <Button
-                className="border-[#3E72F8] w-32 text-[#3E72F8]"
+                className="border-[#3E72F8] w-1/2 text-[#3E72F8] text-xs"
                 type="reset"
                 variant="outline"
               >
                 Upgrade
               </Button>
             </div>
-            <div className="flex justify-end items-center">
-              <img className=" w-5 h-5" src={icon_arrow} alt=""></img>
-            </div>
+          </div>
+          <div onClick={() => navigate("/settings/billing")}>
+            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
 
-        <Card
-          className="flex w-4/6  dark:bg-[#131417] p-4"
-          onClick={() => navigate("/settings/notification")}
-        >
-          <div className="flex  w-full items-center justify-between">
-            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px]">
-              <img
-                className=" w-6 h-6"
-                src={icon_settingsnotification}
-                alt="org_icon"
-              />
-              <div className="text-[#737377] w-[86px] h-6">Notifications</div>
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+          <div className="grid grid-cols-3 w-full">
+            <div className="flex gap-4 items-center col-span-2">
+              <HiBell className="h-6 w-6 text-[#737377]" />
+              <div className="h-6 text-[#737377] ">Notifications</div>
             </div>
-
-            <div className="flex flex-row w-[332px] h-11 items-center justify-end">
-              <img className="w-5 h-5 " src={icon_arrow} alt=""></img>
-            </div>
+          </div>
+          <div onClick={() => navigate("/settings/notification")}>
+            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
 
-        <Card
-          className="flex w-4/6  dark:bg-[#131417] p-4"
-          onClick={() => navigate("/settings/roles")}
-        >
-          <div className="flex  w-full items-center justify-between">
-            <div className="flex w-[169px] h-6 items-center gap-4 py-[10px]">
-              <img className=" w-6 h-6  " src={icon_userRoles} alt="" />
-              <div className="flex whitespace-nowrap text-[#737377] w-[72px] h-6">
-                User Roles
-              </div>
+        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+          <div className="grid grid-cols-3 w-full">
+            <div className="flex gap-4 items-center">
+              <HiUser className="h-6 w-6 text-[#737377] " />
+              <div className="h-6 text-[#737377] ">User Roles</div>
             </div>
-            <div className="flex flex-row w-[332px] h-11 items-center justify-end">
-              <img className=" w-5 h-5 " src={icon_arrow} alt=""></img>
-            </div>
+            <div></div>
+          </div>
+          <div onClick={() => navigate("/settings/roles")}>
+            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
       </div>

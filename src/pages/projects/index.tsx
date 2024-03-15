@@ -187,7 +187,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 				content={<ProjectDetailView data={data} />}
 			>
 				<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
-					<div className="flex gap-3 items-center">
+					<div className="flex gap-3 items-center ">
 						<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
 						<div className="capitalize">{data?.title}</div>
 					</div>
@@ -204,7 +204,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 						</div>
 
 						{projectIssues?.length > 0 &&
-							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
+							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[400px] h-2 overflow-hidden mr-3">
 								{projectIssues?.map((itm => (
 									<HYTooltip key={itm?._id} message={findStatusNameById(itm?.status)} className='capitalize'>
 										<div

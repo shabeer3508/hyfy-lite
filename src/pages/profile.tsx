@@ -24,6 +24,11 @@ const Profile = () => {
 		dispatch(getAction({ profile: Urls.profile }));
 	}
 
+	const getProjects = () => {
+		let query = "?perPage=300&expand=owner";
+		dispatch(getAction({ project: Urls.project + query }));
+	};
+
 	const logoutUser = () => {
 		Cookies.remove("hyfy_auth_token");
 		navigate("/login");
@@ -42,6 +47,7 @@ const Profile = () => {
 			dispatch(setCurrentUser(resp?.payload?.data?.data?.user));
 			dispatch(resetAppInfo())
 			getProfileInfo();
+			getProjects();
 			toast.success("Organization Changed Successfully");
 		}
 	}
@@ -80,9 +86,9 @@ const Profile = () => {
 				<div className="w-2/3 flex gap-5 flex-col justify-center p-10">
 					<div className="text-xl text-primary">My Organizations</div>
 					<div className="flex flex-col gap-3 max-h-[50vh] overflow-auto pr-2">
-						{profileInfo?.organizations?.map((org) =>
+						{profileInfo?.organizations?.map((org, idx) =>
 							<Card
-								key={`ORG_${org?._id}`}
+								key={`ORG_${org?._id}_${idx}`}
 								className="p-7 flex justify-between items-center cursor-pointer"
 								onClick={() => profileInfo?.org_id !== org?._id && handleOrganizationChange(org?._id)}
 							>
