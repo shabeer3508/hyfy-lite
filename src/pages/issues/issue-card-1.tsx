@@ -1,11 +1,12 @@
 
 import { Card } from "@/components/ui/card";
+import { HiBookOpen } from "react-icons/hi2";
 import { Checkbox } from "@/components/ui/checkbox";
 import HYDialog from "@/components/hy-components/HYDialog";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
+import { HiOutlineArrowNarrowUp, HiDatabase } from "react-icons/hi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
-import { HiOutlineArrowNarrowUp, HiDatabase } from "react-icons/hi";
 
 
 
@@ -42,7 +43,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
                         }
 
                         {issue.type === "story" && (
-                            <img src="/story_icon.svg" alt="Project" />
+                            <HiBookOpen className="w-4 h-4" />
                         )}
 
                         {issue.type === "task" && (
@@ -54,7 +55,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
                         )}
 
                         <div className="text-[#737377]">{issue?.name}</div>
-                        <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{issue?.epic_id}</div>
+                        <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{issue?.epic_id?.[0]?.name}</div>
                     </div>
                     <div className="flex gap-4 items-center text-[#737377]">
                         <div className="">

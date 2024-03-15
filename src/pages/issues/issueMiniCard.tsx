@@ -1,6 +1,7 @@
 import Urls from "@/redux/actions/Urls";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { HiBookOpen } from "react-icons/hi2";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
@@ -57,7 +58,7 @@ const IssueMiniCard = ({ data }: any) => {
 						<img src="/task_icon.svg" alt="Project" />
 					)}
 					{data?.type === "story" && (
-						<img src="/story_icon.svg" alt="Project" />
+						<HiBookOpen className="w-4 h-4" />
 					)}
 					{data?.type === "bug" && (
 						<img src="/bug_icon.svg" alt="Project" />

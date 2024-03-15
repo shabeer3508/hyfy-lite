@@ -19,10 +19,10 @@ const Settings = () => {
       </div>
 
       <div className="flex flex-col gap-4 my-3 xl:w-2/3 mr-6 xl:mr-0">
-        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3" >
+        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
-              <HiBuildingLibrary className="h-6 w-6 text-[#737377]" />
+              <HiBuildingLibrary className="h-6 w-6 text-[#737377] group-hover:text-primary" />
               <div className=" h-6 text-[#737377] ">Organization</div>
             </div>
             <div className="flex gap-2 col-span-2 items-center h-full">
@@ -38,10 +38,10 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
           <div className="grid grid-cols-3 w-full">
             <div className="flex items-center gap-4 ">
-              <TbReceipt className="w-7 h-7 text-background fill-[#737377]" />
+              <TbReceipt className="w-7 h-7 text-background fill-[#737377]  group-hover:fill-primary" />
               <div className=" h-6 text-[#737377] ">Billing</div>
             </div>
             <div className=" flex flex-col xl:flex-row text-xs xl:items-center gap-2 items-left h-full">
@@ -72,10 +72,10 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center col-span-2">
-              <HiBell className="h-6 w-6 text-[#737377]" />
+              <HiBell className="h-6 w-6 text-[#737377] group-hover:text-primary" />
               <div className="h-6 text-[#737377] ">Notifications</div>
             </div>
           </div>
@@ -84,10 +84,10 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3" >
+        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
-              <HiUser className="h-6 w-6 text-[#737377] " />
+              <HiUser className="h-6 w-6 text-[#737377] group-hover:text-primary" />
               <div className="h-6 text-[#737377] ">User Roles</div>
             </div>
             <div></div>

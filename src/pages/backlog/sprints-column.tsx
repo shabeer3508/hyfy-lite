@@ -225,7 +225,7 @@ const SprintsColumn = () => {
 							<div className="text-primary font-bold text-xl">
 								Add sprints here
 							</div>
-							<div className="w-2/3 text-center text-[#F8F8F8]">
+							<div className="w-2/3 text-center dark:text-[#F8F8F8]">
 								Sprints are week long and help you get things
 								done
 							</div>{" "}

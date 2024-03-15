@@ -144,7 +144,7 @@ const Board = () => {
 	return (
 		<>
 			<div className="text-xs">
-				<div className="flex justify-between px-6 items-center">
+				<div className="flex justify-between px-6 gap-2 items-center">
 					<div className="text-base">
 						<HYCombobox
 							name="sprint"

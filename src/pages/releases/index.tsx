@@ -18,6 +18,7 @@ import {
 	setReleasePageData,
 } from "@/redux/actions/AppActions";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
+import { ReleaseTypes } from "@/interfaces";
 
 
 
@@ -28,8 +29,8 @@ const Releases = () => {
 	const releasePageinfo = appProfileInfo.releases
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const itemsList = useSelector((state: any) => state?.[releaseReducerName]);
-	const releaseItems = itemsList?.data?.items
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
+	const releaseItems = releaseList?.data?.items as ReleaseTypes[]
 
 	/*  ######################################################################################## */
 
@@ -46,7 +47,7 @@ const Releases = () => {
 		}
 	}
 
-	const getReleasesByStatus = (status: "planning" | "ongoing" | "released") => releaseItems?.filter((item: any) => item?.status === status);
+	const getReleasesByStatus = (status: "planning" | "ongoing" | "released") => releaseItems?.filter((item) => item?.status === status);
 
 	/*  ######################################################################################## */
 
@@ -124,8 +125,8 @@ const Releases = () => {
 								<p className="text-sm">Planing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
-										{getReleasesByStatus("planning")?.map((item: any) => (
-											<ReleaseCard key={`${item?._id}`} item={item} />
+										{getReleasesByStatus("planning")?.map((release) => (
+											<ReleaseCard key={`${release?._id}`} data={release} />
 										))}
 									</div>
 								</ScrollArea>
@@ -142,8 +143,8 @@ const Releases = () => {
 								<p className="text-sm">Ongoing</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
-										{getReleasesByStatus("ongoing")?.map((item: any) => (
-											<ReleaseCard key={`${item?._id}`} item={item} />
+										{getReleasesByStatus("ongoing")?.map((release) => (
+											<ReleaseCard key={`${release?._id}`} data={release} />
 										))}
 									</div>
 								</ScrollArea>
@@ -160,8 +161,8 @@ const Releases = () => {
 								<p className="text-sm">Released</p>
 								<ScrollArea className="max-h-[calc(100vh-260px)] h-[calc(100vh-260px)]">
 									<div className="space-y-3 pr-5">
-										{getReleasesByStatus("released")?.map((item: any) => (
-											<ReleaseCard key={`${item?._id}`} item={item} />
+										{getReleasesByStatus("released")?.map((release) => (
+											<ReleaseCard key={`${release?._id}`} data={release} />
 										))}
 									</div>
 								</ScrollArea>
