@@ -25,7 +25,9 @@ const Login = () => {
 
 	const login = async (data) => {
 		try {
-			(dispatch(postAction({ login: Urls.authenticate }, data)) as any).then((res: any) => {
+			const postDate = { ...data, identity: data?.identity?.toLowerCase() };
+
+			(dispatch(postAction({ login: Urls.authenticate }, postDate)) as any).then((res: any) => {
 				const res_data = res?.payload?.data
 				const success = res?.payload?.status == 200;
 

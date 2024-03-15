@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { HiBookOpen } from "react-icons/hi2";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -34,9 +35,9 @@ const BoardCard = ({ data }: any) => {
 					content={<IssueDetailView data={data} />}
 				>
 					<div className="min-h-[110px] justify-between flex flex-col ">
-						<div className="text-left flex gap-2 space-y-2">
+						<div className="text-left flex gap-2 items-center min-h-6">
 							{data?.type === "story" && (
-								<img src="/story_icon.svg" alt="Project" />
+								<HiBookOpen className="w-4 h-4" />
 							)}
 
 							{data?.type === "task" && (

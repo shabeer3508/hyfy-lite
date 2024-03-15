@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
+import { SprintTypes } from "@/interfaces";
 import HYEditableDiv from "../HYEditableDiv";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
@@ -13,7 +14,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
-const SprintDetailView = ({ data }: { data: any }) => {
+const SprintDetailView = ({ data }: { data: SprintTypes }) => {
     const dispatch = useDispatch();
 
     const authInfo = useSelector((state: any) => state.UserReducer);
@@ -93,7 +94,10 @@ const SprintDetailView = ({ data }: { data: any }) => {
                                 url="https://github.com/shadcn.png"
                                 name={"Jhon"}
                             />
-                            <span className="mx-2 truncate w-[150px]">{isCurrentUser(data?.created_by?.[0]?._id) ? "You" : data?.created_by?.[0]?.user_name}</span>
+                            <span className="mx-2 truncate w-[150px]">
+                                {typeof data?.created_by !== "string" &&
+                                    (isCurrentUser(data?.created_by?.[0]?._id) ? "You" : data?.created_by?.[0]?.user_name)}
+                            </span>
                         </div>
                     </div>
                     <Separator orientation="vertical" />
@@ -103,14 +107,14 @@ const SprintDetailView = ({ data }: { data: any }) => {
                         <div className="text-xs text-[#9499A5]">Assigned to</div>
                         <div className="flex flex-1 items-center">
                             { /* TODO : update  user data for the avatars according to response */}
-                            {data?.members?.length > 0 && data?.members?.map(member =>
-                                <HYAvatar
-                                    key={member?._id}
-                                    className="size-6"
-                                    url="https://github.com/shadcn.png"
-                                    name={"Jhon"}
-                                />
-                            )}
+                            {/* {data?.members?.length > 0 && data?.members?.map(member => */}
+                            <HYAvatar
+                                // key={member?._id}
+                                className="size-6"
+                                url="https://github.com/shadcn.png"
+                                name={"Jhon"}
+                            />
+                            {/* )} */}
                         </div>
                     </div>
                     <Separator orientation="vertical" />
@@ -146,7 +150,7 @@ const SprintDetailView = ({ data }: { data: any }) => {
                             <img src="/bug_icon.svg" alt="Project" />
                             <span>{findIssueCount("bug")}</span>
                         </div>
-                        )
+                        {`)`}
                     </div>
                 </div>
                 <div className="pr-5">

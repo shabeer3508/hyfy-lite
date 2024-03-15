@@ -25,7 +25,7 @@ const HYDropDown = ({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
+			<DropdownMenuContent align="end" className="dark:bg-[#111215]">
 				{options?.map((opt, index) => {
 					if (opt?.isTriggerDialog) {
 						return (
@@ -45,7 +45,7 @@ const HYDropDown = ({
 							<DropdownMenuItem
 								key={`_${index}_`}
 								onClick={opt?.action}
-								className="cursor-pointer"
+								className="cursor-pointer "
 							>
 								{opt?.label}
 							</DropdownMenuItem>

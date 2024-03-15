@@ -4,6 +4,7 @@ import HYAvatar from "../HYAvatar";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
 import HYEditableDiv from "../HYEditableDiv";
+import { HiBookOpen } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
@@ -105,11 +106,14 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 	/*  ######################################################################################## */
 
+	console.log("🚀 ~ IssueDetailView ~ data:", data)
+
+
 	return (
 		<div>
-			<div className="flex gap-2 text-xl">
+			<div className="flex gap-2 text-xl items-center">
 				{data?.type === "story" && (
-					<img src="/story_icon.svg" alt="story" height={25} width={25} />
+					<HiBookOpen className="w-6 h-6" />
 				)}
 
 				{data?.type === "task" && (
@@ -217,28 +221,42 @@ const IssueDetailView = ({ data }: { data: any }) => {
 			<Separator className="mt-5" />
 			<ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
 				<div className="flex justify-between mt-5 items-center">
-					<div className="flex flex-col gap-2">
-						<div className="text-xs text-[#9499A5]">
-							Assigned to
+					<div className="flex flex-col gap-2 w-full">
+						<div className=" flex justify-between w-full text-xs ">
+							<div className="text-[#9499A5]">Assigned To</div>
+							<div className="text-primary cursor-pointer">Add</div>
 						</div>
 						<div className="flex gap-2 ">
-							<div className="flex gap-2 items-center">
-								<HYAvatar
-									url="https://github.com/shadcn.png"
-									name={"Jhon"}
-								/>
-								<a className="text-xs">{"Jhon"}</a>
+							<div className="flex gap-4 items-center border p-3 rounded">
+								<HYAvatar name={"Jhon"} />
+
+								<div className="text-xs">
+									<div>User Name</div>
+									<div className="text-[#FFFFFF66]">Manger</div>
+								</div>
+
+								<div className="text-xs">
+									<Button className="" size="icon" variant="ghost">
+										<HiDotsVertical />
+									</Button>
+								</div>
+							</div>
+
+							<div className="flex gap-4 items-center border p-3 rounded">
+								<HYAvatar name={"Jhon"} />
+
+								<div className="text-xs">
+									<div>User Name</div>
+									<div className="text-[#FFFFFF66]">Manger</div>
+								</div>
+
+								<div className="text-xs">
+									<Button className="" size="icon" variant="ghost">
+										<HiDotsVertical />
+									</Button>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div>
-						<Button
-							className="border-primary text-primary"
-							variant="outline"
-							type="button"
-						>
-							Manage
-						</Button>
 					</div>
 				</div>
 				<Separator className="my-5" />

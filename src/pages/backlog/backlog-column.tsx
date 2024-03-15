@@ -47,8 +47,7 @@ const BacklogColumn = () => {
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		// TODO: &expand=epic_id in the query
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -237,7 +236,7 @@ const BacklogColumn = () => {
 							<div className="text-primary font-bold text-xl">
 								Add your stories here
 							</div>
-							<div className="w-2/3 text-center text-[#F8F8F8]">
+							<div className="w-2/3 text-center dark:text-[#F8F8F8]">
 								You can add stories here and then drag ‘n’ drop
 								them to stories.
 							</div>
@@ -277,6 +276,7 @@ interface IssueTransferModalProps {
 
 const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClose }) => {
 
+	const dispatch = useDispatch();
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
 	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
@@ -286,19 +286,22 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 	const [targetId, setTargetId] = useState<any>({ epic_id: null, sprint_id: null });
 
 	const handleApplyTransfer = (type: "epic" | "sprint") => {
-		let postData = { selectedIssues: data?.selectedIssues, type: type, targetId: null }
+		let postData: any = { issue_ids: data?.selectedIssues }
 
 		if (type === "epic") {
 			if (!targetId?.epic_id) toast.error("Please select a epic from the  list");
-			else { postData = { ...postData, targetId: targetId?.epic_id } }
+			else { postData = { ...postData, epic_id: targetId?.epic_id } }
 		} else {
 			if (!targetId?.sprint_id) toast.error("Please select a sprint from the  list");
-			else { postData = { ...postData, targetId: targetId?.sprint_id } }
+			else { postData = { ...postData, sprint_id: targetId?.sprint_id } }
 		}
 
-		//TODO: API Itegration & handleClose()
-		// console.log("🚀 ~ data:", postData);
-
+		(dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, type)) as any).then(res => {
+			if (res.payload.status == 200) {
+				toast.success("Issue moved successfully");
+				handleClose();
+			}
+		})
 
 	}
 

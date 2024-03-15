@@ -59,10 +59,12 @@ const CreateAccountPage: React.FC = () => {
     /*  ######################################################################################## */
 
     const handleSendEmailVerification = async (data: z.infer<typeof formSchema>) => {
-        (dispatch(postAction({ signupSendEmail: Urls.signup_send_email }, data)) as any).then(res => {
+        const postData = { ...data, email: data?.email?.toLowerCase() };
+
+        (dispatch(postAction({ signupSendEmail: Urls.signup_send_email }, postData)) as any).then(res => {
             if (res.payload?.status === 200) {
                 toast.success(`${res.payload?.data?.message}`)
-                navigate("/signup/verify_email", { state: { authInfo: data } })
+                navigate("/signup/verify_email", { state: { authInfo: postData } })
             }
         })
     }

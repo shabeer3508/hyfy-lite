@@ -30,7 +30,7 @@ const HYDropdownMenuCheckbox = ({
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-56">
+			<DropdownMenuContent className="w-56 dark:bg-[#111215]" >
 				{showInnerLabel && (
 					<>
 						<DropdownMenuLabel>{innerLabel}</DropdownMenuLabel>

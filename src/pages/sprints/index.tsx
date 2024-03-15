@@ -3,6 +3,7 @@ import Urls from "../../redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
 import { HiDatabase } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
+import { IssueCard } from "../issues/issue-card-1";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
@@ -10,10 +11,10 @@ import HYDialog from "@/components/hy-components/HYDialog";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import IssueCreationCardMini from "../issues/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { IssueCard } from "../issues/issue-card-1";
 
 const Sprints = () => {
 	const dispatch = useDispatch();
@@ -23,26 +24,20 @@ const Sprints = () => {
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
-	const issueListItems = issueListData?.data?.items
-	const sprintListItems = sprintListData?.data?.items
+	const issueListItems = issueListData?.data?.items as IssueTypes[]
+	const sprintListItems = sprintListData?.data?.items as SprintTypes[]
 
 	/*  ######################################################################################## */
 
-	const getIssues = (prams?: string) => {
+	const getIssues = () => {
 		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const getSprints = (prams?: string) => {
+	const getSprints = () => {
 		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
-		if (prams) {
-			query = query + prams;
-		}
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
@@ -60,7 +55,7 @@ const Sprints = () => {
 
 	const filteredSprints = sprintListItems?.filter(sprnt => sprnt.project_id === appProfileInfo.project_id)
 
-	const findTotalPoints = (data: any[]) => {
+	const findTotalPoints = (data: IssueTypes[]) => {
 		return data?.reduce((accumulator, currentValue) => {
 			return accumulator + +currentValue?.points;
 		}, 0);
@@ -133,16 +128,12 @@ const Sprints = () => {
 												</div>
 												<div>
 													<div
-														className={`${sprint?.status ===
-															"in-progress" &&
-															"bg-[#56972E]"
-															} ${sprint?.status ===
-															"backlog" &&
-															"bg-[#5F5F5F]"
-															} ${sprint?.status ===
-															"retro" &&
-															"bg-[#DF8430]"
-															}  text-white px-3 py-0.5 whitespace-nowrap mx-2 rounded-full text-xs `}
+														className={`
+															${sprint?.status === "in-progress" && "bg-[#56972E]"} 
+															${sprint?.status === "backlog" && "bg-[#5F5F5F]"}
+															${sprint?.status === "retro" && "bg-[#DF8430]"}
+															text-white px-3 py-0.5 whitespace-nowrap mx-2 rounded-full text-xs `
+														}
 													>
 														{sprint?.status}
 													</div>
@@ -159,15 +150,15 @@ const Sprints = () => {
 											</div>
 										</HYDialog>
 										<div className="pl-2">
-											<Button type="button" variant="ghost" className="p-0" ><AccordionTrigger className="p-3" /></Button>
+											<Button type="button" variant="ghost" className="p-0" >
+												<AccordionTrigger className="p-3" />
+											</Button>
 										</div>
 									</div>
 									<AccordionContent className="flex flex-col gap-2">
-										{sprintIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
+										{sprintIssues?.map((issue, i2) => <IssueCard key={i2} issue={issue} index={i2} />)}
 
-										<IssueCreationCardMini
-											sprintId={sprint?._id}
-										/>
+										<IssueCreationCardMini sprintId={sprint?._id} />
 									</AccordionContent>
 								</AccordionItem>
 							</Accordion>

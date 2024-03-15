@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { IssueTypes, ProjectType } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { HiDotsVertical, HiFolder } from "react-icons/hi";
 import HYAvatar from "@/components/hy-components/HYAvatar";
@@ -17,12 +18,12 @@ import ProjectDetailView from "@/components/hy-components/detail-views/Project-d
 import { getAction, patchAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 
-const Project = () => {
+const Project: React.FC = () => {
 	const dispatch = useDispatch();
 
 	const projectReducerName = reducerNameFromUrl("project", "GET");
 	const projectListResponse = useSelector((state: any) => state?.[projectReducerName]);
-	const projectsData = projectListResponse?.data?.items
+	const projectsData = projectListResponse?.data?.items as ProjectType[]
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const projectPageInfo = appProfileInfo.projects
@@ -45,10 +46,11 @@ const Project = () => {
 	/*  ######################################################################################## */
 
 	const statusOptions = [
-		{ label: "Done", value: "done" },
+		{ label: "Open", value: "open" },
 		{ label: "In-progress", value: "in-progress" },
 		{ label: "Pending", value: "pending" },
-		{ label: "Open", value: "open" }]
+		{ label: "Done", value: "done" },
+	]
 
 	const orderFilterOption = [
 		{ label: "Recent", value: "recent" },
@@ -98,7 +100,7 @@ const Project = () => {
 			{projectsData?.length > 0 &&
 				<ScrollArea className="mt-4">
 					<div className="flex flex-col gap-3 px-6 py-3">
-						{projectsData?.map((item: any, index: number) => (
+						{projectsData?.map((item, index: number) => (
 							<ProjectCard data={item} key={index} index={index} />
 						))}
 					</div>
@@ -118,12 +120,12 @@ export default Project;
 
 
 
-const ProjectCard = ({ data, index }: { data: any, index: number }) => {
+const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 
 	const dispatch = useDispatch()
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issuesItems = issuesListData?.data?.items;
+	const issuesItems = issuesListData?.data?.items as IssueTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
@@ -178,7 +180,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 
 	/*  ######################################################################################## */
 
-
+	let fdfd = data.owner[0]
 
 	return (
 		<Card className="dark:bg-[#151619] bg-[#F7F8F9]">
@@ -187,7 +189,7 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 				content={<ProjectDetailView data={data} />}
 			>
 				<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
-					<div className="flex gap-3 items-center">
+					<div className="flex gap-3 items-center ">
 						<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
 						<div className="capitalize">{data?.title}</div>
 					</div>
@@ -199,21 +201,28 @@ const ProjectCard = ({ data, index }: { data: any, index: number }) => {
 						/>
 
 						<div className="flex items-center gap-4 w-[200px] truncate text-base">
-							<HYAvatar url="https://github.com/shadcn.png" name={data?.owner?.[0]?.user_name} />
-							<div className="truncate" title={data?.owner?.[0]?.user_name}>{data?.owner?.[0]?.user_name}</div>
+							<HYAvatar
+								url="https://github.com/shadcn.png"
+								name={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name} />
+							<div
+								className="truncate"
+								title={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
+							>
+								{typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
+							</div>
 						</div>
 
 						{projectIssues?.length > 0 &&
-							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
-								{projectIssues?.map((itm => (
-									<HYTooltip key={itm?._id} message={findStatusNameById(itm?.status)} className='capitalize'>
+							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[400px] h-2 overflow-hidden mr-3">
+								{projectIssues?.map((issue => (
+									<HYTooltip key={issue?._id} message={findStatusNameById(issue?.status)} className='capitalize'>
 										<div
 											className={`
-                                         ${itm?.status === findIssueStatusIdByName("Done") && "bg-[#56972E]"}
-                                         ${itm?.status === findIssueStatusIdByName("Backlog") && "bg-[#FFFFFF66]"} 
-                                         ${itm?.status === findIssueStatusIdByName("Ongoing") && "bg-cyan-500"} 
-                                         ${itm?.status === findIssueStatusIdByName("Todo") && "bg-[#006EEF]"} 
-                                         ${itm?.status === findIssueStatusIdByName("Pending") && "bg-[#D63B00]"} `}
+                                         		${issue?.status === findIssueStatusIdByName("Done") && "bg-[#56972E]"}
+                                         		${issue?.status === findIssueStatusIdByName("Backlog") && "bg-[#FFFFFF66]"} 
+                                         		${issue?.status === findIssueStatusIdByName("Ongoing") && "bg-cyan-500"} 
+                                         		${issue?.status === findIssueStatusIdByName("Todo") && "bg-[#006EEF]"} 
+                                         		${issue?.status === findIssueStatusIdByName("Pending") && "bg-[#D63B00]"} `}
 											style={{ width: `${pieceWidth}%` }}>
 										</div>
 									</HYTooltip>

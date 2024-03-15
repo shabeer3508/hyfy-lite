@@ -1,4 +1,5 @@
 import Urls from "@/redux/actions/Urls";
+import { UsersTypes } from "@/interfaces";
 import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -23,7 +24,7 @@ const Team = () => {
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
-	const userItems = usersList?.data?.items
+	const userItems = usersList?.data?.items as UsersTypes[]
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const teamsPageInfo = appProfileInfo?.teams
@@ -109,7 +110,7 @@ const Team = () => {
 							{userItems?.length > 0 &&
 								<ScrollArea className="flex flex-col gap-5 space-y-5  h-[calc(100vh-200px)] items-center xl:w-2/3 pr-3">
 									{userItems?.map(user => (
-										<Card key={user?._id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] bg-[#F7F8F9] first:my-0 my-3" >
+										<Card key={user?._id} className="flex flex-row justify-between items-center w-full dark:bg-[#151619] hover:border-primary first:my-0 my-3" >
 											<div className="flex items-center">
 												<HYAvatar className="size-12 ml-6 my-2" url="https://github.com/shadcn.png" />
 												<CardHeader className="gap-y-0 p-3">
@@ -161,7 +162,7 @@ const Team = () => {
 
 export default Team;
 
-const RemoveUserCard = ({ userInfo }: { userInfo: any, updateUserList: any }) => {
+const RemoveUserCard = ({ userInfo }: { userInfo: UsersTypes, updateUserList: any }) => {
 	const dispatch = useDispatch();
 
 	const handleRemoveMember = () => {
@@ -197,7 +198,7 @@ const RemoveUserCard = ({ userInfo }: { userInfo: any, updateUserList: any }) =>
 }
 
 
-const ManageUserCard = ({ userInfo, updateUserList }: { userInfo: any, updateUserList: any }) => {
+const ManageUserCard = ({ userInfo, updateUserList }: { userInfo: UsersTypes, updateUserList: any }) => {
 
 	const dispatch = useDispatch();
 	const [managerInfo, setManagerInfo] = useState<any>({ role: userInfo?.role })

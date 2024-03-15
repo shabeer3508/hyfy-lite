@@ -8,7 +8,7 @@ const Releases = lazy(() => import("@/pages/releases/index"));
 const Projects = lazy(() => import("@/pages/projects/index"));
 const Teams = lazy(() => import("@/pages/team/index"));
 const Settings = lazy(() => import("@/pages/settings/index"));
-const Profile = lazy(() => import("@/pages/profile"));
+const Profile = lazy(() => import("@/pages/profile/profile"));
 const Notification = lazy(() => import("@/pages/notification"));
 
 export { Backlog, Projects };
