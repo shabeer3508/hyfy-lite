@@ -115,8 +115,8 @@ const InvitationCard: React.FC<InvitationCardProps> = ({ inviteInfo, getInvitati
 
     const dispatch = useDispatch();
 
-    const handleInvitationStatus = (inviteId: string, status: "accepted" | "rejected") => {
-        (dispatch(patchAction({ invitationManage: Urls.invitations }, { status }, inviteId)) as any).then((res) => {
+    const handleInvitationStatus = (orgId: string, inviteId: string, status: "accepted" | "rejected") => {
+        (dispatch(patchAction({ invitationManage: Urls.invitations }, { status }, `${orgId}/${inviteId}`)) as any).then((res) => {
             if (res.payload?.status === 200) {
                 Cookies.set('hyfy_auth_token', res?.payload?.data?.data?.token, { expires: 2, secure: true })
                 dispatch(setCurrentUser(res?.payload?.data?.data?.user));
@@ -140,14 +140,14 @@ const InvitationCard: React.FC<InvitationCardProps> = ({ inviteInfo, getInvitati
                         type="button"
                         variant="ghost"
                         className="text-[#737377]"
-                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, "rejected")}
+                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, inviteInfo?._id, "rejected")}
                     >
                         Reject
                     </Button>
                     <Button
                         type="button"
                         className="text-white"
-                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, "accepted")}
+                        onClick={() => handleInvitationStatus(inviteInfo?.org_id?._id, inviteInfo?._id, "accepted")}
                     >
                         Accept
                     </Button>
