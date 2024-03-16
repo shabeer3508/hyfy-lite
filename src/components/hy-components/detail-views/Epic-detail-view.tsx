@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
+import { EpicTypes } from "@/interfaces";
 import { HYCombobox } from "../HYCombobox";
+import HYEditableDiv from "../HYEditableDiv";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import IssueMiniCard from "@/pages/issues/issueMiniCard";
+import IssueMiniCard from "@/pages/issues/issue-card-2";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import HYEditableDiv from "../HYEditableDiv";
 
-const EpicDetailView = ({ data }: { data: any }) => {
+const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -73,7 +74,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 	return (
 		<div>
 			<div className="text-xl">
-				<HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => updateEpicData("name", value)} />
+				<HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => updateEpicData("name", value)} />
 			</div>
 			<div className="my-3 space-y-3">
 				<div className="text-xs text-[#9499A5]">Description</div>
@@ -92,11 +93,12 @@ const EpicDetailView = ({ data }: { data: any }) => {
 					label="Release"
 					unSelectable={true}
 					options={releaseOptions}
-					defaultValue={data?.releases}
+					defaultValue={data?.release_id}
+					buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 					onValueChange={(value) => updateEpicData("release_id", value)}
 				/>
 			</div>
-			<Separator className="my-2" />
+			<Separator className="my-2 dark:bg-[#FFFFFF1A]" />
 			<div className="flex justify-between items-center my-2">
 				<div className="flex  gap-3">
 					<div>Stories</div>
@@ -118,7 +120,7 @@ const EpicDetailView = ({ data }: { data: any }) => {
 					</div>
 				</div>
 				<div className="pr-5 ">
-					<HYSearch />
+					<HYSearch className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]" inputClassName="dark:bg-[#23252A]" />
 				</div>
 			</div>
 			<ScrollArea className="max-h-[calc(100vh-600px)] overflow-auto w-full">

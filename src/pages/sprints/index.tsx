@@ -3,8 +3,10 @@ import Urls from "../../redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
 import { HiDatabase } from "react-icons/hi";
 import { Button } from "@/components/ui/button";
+import { HiOutlineInbox } from "react-icons/hi2";
 import { IssueCard } from "../issues/issue-card-1";
 import { useDispatch, useSelector } from "react-redux";
+import SprintCreationForm from "./forms/sprint-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -32,7 +34,7 @@ const Sprints = () => {
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -52,8 +54,6 @@ const Sprints = () => {
 	}
 
 	/*  ######################################################################################## */
-
-	const filteredSprints = sprintListItems?.filter(sprnt => sprnt.project_id === appProfileInfo.project_id)
 
 	const findTotalPoints = (data: IssueTypes[]) => {
 		return data?.reduce((accumulator, currentValue) => {
@@ -84,88 +84,114 @@ const Sprints = () => {
 				</div>
 				<div className="flex gap-2">
 					<HYSearch />
+					<SprintCreationForm>
+						<Button className='text-white text-sm'>Add Sprint</Button>
+					</SprintCreationForm>
 				</div>
 			</div>
-			<ScrollArea className="h-[calc(100vh-200px)] w-full my-3">
-				<div className="px-6 space-y-2">
-					{filteredSprints?.map((sprint) => {
+			{sprintListItems?.length > 0 &&
+				<ScrollArea className="h-[calc(100vh-200px)] w-full my-3">
+					<div className="px-6 space-y-2">
+						{sprintListItems?.map((sprint) => {
 
-						const sprintIssues = issueListItems?.filter(
-							(issue) => issue?.sprint_id === sprint?._id
-						);
+							const sprintIssues = issueListItems?.filter(
+								(issue) => issue?.sprint_id === sprint?._id
+							);
 
-						return <div
-							key={sprint?._id}
-							onDrop={(e) => {
-								e.preventDefault();
-								updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?._id)
-							}}
-							onDragOver={(e) => e.preventDefault()}
-							className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer dark:bg-background bg-[#F7F8F9]"
-						>
-							<Accordion
-								type="single"
-								collapsible
-								className="w-full border-0 p-0 m-0"
+							return <div
+								key={sprint?._id}
+								onDrop={(e) => {
+									e.preventDefault();
+									updateDropedIssueToSprint(e?.dataTransfer?.getData("id"), sprint?._id)
+								}}
+								onDragOver={(e) => e.preventDefault()}
+								className="flex gap-3 justify-between items-center text-sm border  px-2 rounded hover:border-primary cursor-pointer dark:bg-background bg-[#F7F8F9]"
 							>
-								<AccordionItem
-									value="item-1"
-									className="border-0 p-0 m-0"
+								<Accordion
+									type="single"
+									collapsible
+									className="w-full border-0 p-0 m-0"
 								>
-									<div className="flex justify-between items-center w-full">
-										<HYDialog
-											className="max-w-6xl"
-											content={<SprintDetailView data={sprint} />}
-										>
-											<div className="flex justify-between items-center w-full">
-												<div className="flex gap-1 items-center">
-													<IoIosFlash
-														className={`w-5  ${sprint?.is_started ? "text-primary" : "text-[#707173]"}`}
-													/>
-													<div className="sm:w-[50px] md:w-[60px] 2xl:w-[100px]  truncate">
-														{sprint.name}
+									<AccordionItem
+										value="item-1"
+										className="border-0 p-0 m-0"
+									>
+										<div className="flex justify-between items-center w-full">
+											<HYDialog
+												className="max-w-6xl dark:bg-[#23252A]"
+												content={<SprintDetailView data={sprint} />}
+											>
+												<div className="flex justify-between items-center w-full">
+													<div className="flex gap-1 items-center">
+														<IoIosFlash
+															className={`w-5  ${sprint?.is_started ? "text-primary" : "text-[#707173]"}`}
+														/>
+														<div className="sm:w-[50px] md:w-[60px] 2xl:w-[100px]  truncate">
+															{sprint.name}
+														</div>
 													</div>
-												</div>
-												<div>
-													<div
-														className={`
+													<div>
+														<div
+															className={`
 															${sprint?.status === "in-progress" && "bg-[#56972E]"} 
 															${sprint?.status === "backlog" && "bg-[#5F5F5F]"}
 															${sprint?.status === "retro" && "bg-[#DF8430]"}
 															text-white px-3 py-0.5 whitespace-nowrap mx-2 rounded-full text-xs `
-														}
-													>
-														{sprint?.status}
+															}
+														>
+															{sprint?.status}
+														</div>
+													</div>
+													<div className="flex gap-2 items-center text-[#737377]">
+														<div className="text-xs">
+															4 Apr - 12 Apr
+														</div>
+														<div className="flex gap-1 items-center">
+															<HiDatabase className="" />{" "}
+															{findTotalPoints(sprintIssues)}
+														</div>
 													</div>
 												</div>
-												<div className="flex gap-2 items-center text-[#737377]">
-													<div className="text-xs">
-														4 Apr - 12 Apr
-													</div>
-													<div className="flex gap-1 items-center">
-														<HiDatabase className="" />{" "}
-														{findTotalPoints(sprintIssues)}
-													</div>
-												</div>
+											</HYDialog>
+											<div className="pl-2">
+												<Button type="button" variant="ghost" className="p-0" >
+													<AccordionTrigger className="p-3" />
+												</Button>
 											</div>
-										</HYDialog>
-										<div className="pl-2">
-											<Button type="button" variant="ghost" className="p-0" >
-												<AccordionTrigger className="p-3" />
-											</Button>
 										</div>
-									</div>
-									<AccordionContent className="flex flex-col gap-2">
-										{sprintIssues?.map((issue, i2) => <IssueCard key={i2} issue={issue} index={i2} />)}
+										<AccordionContent className="flex flex-col gap-2">
+											{sprintIssues?.map((issue, i2) => <IssueCard key={i2} issue={issue} index={i2} />)}
 
-										<IssueCreationCardMini sprintId={sprint?._id} />
-									</AccordionContent>
-								</AccordionItem>
-							</Accordion>
-						</div>;
-					})}
+											<IssueCreationCardMini sprintId={sprint?._id} />
+										</AccordionContent>
+									</AccordionItem>
+								</Accordion>
+							</div>;
+						})}
+					</div>
+				</ScrollArea>
+			}
+
+			{sprintListItems?.length === 0 && (
+				<div className="dark:text-foreground flex justify-center h-[calc(100vh-200px)] items-center">
+					<div className="flex flex-col justify-center items-center text-center gap-3">
+						<div>
+							<HiOutlineInbox className="text-primary h-20 w-20 " />
+						</div>
+						<div className="text-primary text-4xl font-semibold">
+							Nothing here!
+						</div>
+						<div className="dark:text-foreground text-xl">
+							Create an sprint from the backlog to start working!
+						</div>
+						<div className='my-3'>
+							<SprintCreationForm>
+								<Button className='text-white text-sm'>Create an Sprint</Button>
+							</SprintCreationForm>
+						</div>
+					</div>
 				</div>
-			</ScrollArea>
+			)}
 		</div>
 	);
 };

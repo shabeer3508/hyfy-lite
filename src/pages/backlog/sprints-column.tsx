@@ -158,7 +158,7 @@ const SprintsColumn = () => {
 											>
 												<div className="flex justify-between items-center w-full">
 													<HYDialog
-														className="max-w-6xl"
+														className="max-w-6xl dark:bg-[#23252A]"
 														content={<SprintDetailView data={sprint} />}
 													>
 														<div className="flex justify-between items-center w-full">

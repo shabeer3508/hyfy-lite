@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
+import { ProjectType } from "@/interfaces";
 import HYEditableDiv from "../HYEditableDiv";
 import { HiCalendarDays } from "react-icons/hi2";
 import { CommentCard } from "./Issue-detail-view";
@@ -11,7 +12,7 @@ import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
-const ProjectDetailView = ({ data }: { data: any }) => {
+const ProjectDetailView = ({ data }: { data: ProjectType }) => {
     const dispatch = useDispatch()
 
     const authInfo = useSelector((state: any) => state.UserReducer);
@@ -66,8 +67,8 @@ const ProjectDetailView = ({ data }: { data: any }) => {
 
     return (
         <div className="">
-            <div className="flex gap-2 text-xl capitalize mx-1">
-                <HYEditableDiv className="text-xl" defaultText={data?.title} handleChange={(value) => handleProjectEdit(value, "title")} />
+            <div className="flex gap-2 text-xl capitalize mx-1 ">
+                <HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.title} handleChange={(value) => handleProjectEdit(value, "title")} />
             </div>
             <div className="flex justify-between py-3 text-xs items-center my-3 mx-1">
                 <div className="flex gap-2 items-center">
@@ -83,12 +84,12 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                             <HYAvatar
                                 className="size-6"
                                 url="https://github.com/shadcn.png"
-                                name={data?.owner?.[0]?.user_name}
+                                name={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
                             />
-                            <span className="mx-2 truncate w-[150px]">{isCurrentUser(data?.owner?.[0]?._id) ? "You" : data?.owner?.[0]?.user_name}</span>
+                            <span className="mx-2 truncate w-[150px]">{typeof data?.owner !== "string" && (isCurrentUser(data?.owner?.[0]?._id) ? "You" : data?.owner?.[0]?.user_name)}</span>
                         </div>
                     </div>
-                    <Separator orientation="vertical" />
+                    <Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
                 </div>
                 <div className="flex justify-between pr-3">
                     <div className="flex flex-col gap-3">
@@ -97,7 +98,7 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                             { /* TODO : update  user data for the avatars according to response */}
                             {data?.members?.length > 0 && data?.members?.map(member =>
                                 <HYAvatar
-                                    key={member?._id}
+                                    key={member}
                                     className="size-6"
                                     url="https://github.com/shadcn.png"
                                     name={"Jhon"}
@@ -109,26 +110,27 @@ const ProjectDetailView = ({ data }: { data: any }) => {
                 </div>
             </div>
             <div className="pr-5">
-                <Separator className="my-3" />
+                <Separator className="my-3 dark:bg-[#FFFFFF1A]" />
             </div>
 
             <ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
                 <div className="space-y-2 mx-1">
                     <div className="text-xs text-[#9499A5]">Description</div>
                     <div className="min-h-2 py-3">
-                        <HYEditableDiv className="text-base" defaultText={data?.description} handleChange={(value) => handleProjectEdit(value, "description")} />
+                        <HYEditableDiv className="text-base dark:bg-[#23252A]" defaultText={data?.description} handleChange={(value) => handleProjectEdit(value, "description")} />
                     </div>
 
                     <div className="text-xs text-[#9499A5]">Status</div>
                     <div className="">
                         <HYCombobox
+                            buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
                             options={statusOptions}
                             defaultValue={data?.status}
                             onValueChange={(value) => handleProjectEdit(value, "status")}
                         />
                     </div>
                 </div>
-                <Separator className="my-3 " />
+                <Separator className="my-3 dark:bg-[#FFFFFF1A]" />
                 <div className="space-y-3 ">
                     <div className="space-y-2 mx-1">
                         <div>Comments</div>

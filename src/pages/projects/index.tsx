@@ -92,7 +92,7 @@ const Project: React.FC = () => {
 					/>
 					<HYSearch />
 					<ProjectCreationForm>
-						<Button className="text-white">Create Project</Button>
+						<Button className="text-white">Add Project</Button>
 					</ProjectCreationForm>
 				</div>
 			</div>
@@ -185,7 +185,7 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 	return (
 		<Card className="dark:bg-[#151619] bg-[#F7F8F9]">
 			<HYDialog
-				className="max-w-6xl"
+				className="max-w-6xl dark:bg-[#23252A]"
 				content={<ProjectDetailView data={data} />}
 			>
 				<div className="flex justify-between items-center h-16 px-3 cursor-pointer">

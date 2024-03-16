@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
-import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
+import { useEffect, useState } from "react";
 import HYEditableDiv from "../HYEditableDiv";
+import HYAlertDialog from "../HYAlertDialog";
 import { HiBookOpen } from "react-icons/hi2";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,27 +13,33 @@ import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { HiDatabase, HiDotsVertical, HiOutlineClock } from "react-icons/hi";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineX } from "react-icons/hi";
+import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { CommentsTypes, EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 
-const IssueDetailView = ({ data }: { data: any }) => {
-	const dispatch = useDispatch()
+const IssueDetailView = ({ data }: { data: IssueTypes }) => {
+	const dispatch = useDispatch();
+	const [showUserSelection, setShowUserSelection] = useState(false);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const commentsReducerName = reducerNameFromUrl("comments", "GET");
-	const commentsItems = useSelector((state: any) => state?.[commentsReducerName])?.data?.items;
+	const commentsItems = useSelector((state: any) => state?.[commentsReducerName])?.data?.items as CommentsTypes[];
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
-	const epicItems = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
+	const epicItems = useSelector((state: any) => state?.[epicReducerName])?.data?.items as EpicTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
-	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issueItems = issuesListData?.data?.items;
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
-	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
+	const issuesReducerName = reducerNameFromUrl("issues", "GET");
+	const issueItems = useSelector((state: any) => state?.[issuesReducerName])?.data?.items as IssueTypes[];
+
+	const sprintReducerName = reducerNameFromUrl("sprints", "GET");
+	const sprintListData = useSelector((state: any) => state?.[sprintReducerName])?.data?.items as SprintTypes[];
 
 	/*  ######################################################################################## */
 
@@ -47,19 +54,33 @@ const IssueDetailView = ({ data }: { data: any }) => {
 	};
 
 	const handleIssueEdit = (value, field: string) => {
-
 		let postData = { [field]: value !== "" ? value : null };
-
-		if (value === "" && field === "sprint_id") {
-			postData = { ...postData, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }
-		}
-
+		if (value === "" && field === "sprint_id") { postData = { ...postData, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id } }
 		(dispatch(patchAction({ issues: Urls.issues }, postData, data?._id)) as any).then((res) => {
 			if (res.payload?.status === 200) {
 				getIssues();
 			}
 		})
 	}
+
+	const handleIssueDelete = () => {
+		(dispatch(deleteAction(Urls.issues, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getIssues();
+			}
+		})
+	}
+
+	const handleAssignIssueUser = (userId: string, type: "assign" | "remove") => {
+		const opration = type === "assign" ? "/assign" : "/remove";
+		(dispatch(patchAction({ issues: Urls.issues + opration }, { user_id: userId }, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getIssues();
+			}
+		})
+		setShowUserSelection(false);
+	}
+
 
 	/*  ######################################################################################## */
 
@@ -85,6 +106,12 @@ const IssueDetailView = ({ data }: { data: any }) => {
 				label: issue?.name,
 			})) ?? [];
 
+	const usersOptions =
+		usersList?.map((user) => ({
+			value: user?._id,
+			label: user?.user_name,
+		})) ?? [];
+
 	const pointOptions = [
 		{ label: "5", value: "5" },
 		{ label: "10", value: "10" },
@@ -106,12 +133,10 @@ const IssueDetailView = ({ data }: { data: any }) => {
 
 	/*  ######################################################################################## */
 
-	console.log("🚀 ~ IssueDetailView ~ data:", data)
-
 
 	return (
-		<div>
-			<div className="flex gap-2 text-xl items-center">
+		<div className="">
+			<div className="flex gap-2 text-xl items-center ">
 				{data?.type === "story" && (
 					<HiBookOpen className="w-6 h-6" />
 				)}
@@ -124,10 +149,10 @@ const IssueDetailView = ({ data }: { data: any }) => {
 					<img src="/bug_icon.svg" alt="bug" height={25} width={25} />
 				)}
 				<div className="flex-1">
-					<HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => handleIssueEdit(value, "name")} />
+					<HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => handleIssueEdit(value, "name")} />
 				</div>
 			</div>
-			<div className="grid grid-cols-6 pt-5">
+			<div className="grid grid-cols-7 pt-5">
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Epic</div>
@@ -135,13 +160,13 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={epicOptions}
-								buttonClassName="w-full"
+								buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 								defaultValue={data?.epic_id}
 								onValueChange={(value) => handleIssueEdit(value, "epic_id")}
 							/>
 						</div>
 					</div>
-					<Separator orientation="vertical" />
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
@@ -150,13 +175,13 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={sprintOptions}
-								buttonClassName="w-full"
+								buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 								defaultValue={data?.sprint_id}
 								onValueChange={(value) => handleIssueEdit(value, "sprint_id")}
 							/>
 						</div>
 					</div>
-					<Separator orientation="vertical" />
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
@@ -167,13 +192,13 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							<HYCombobox
 								label={<HiDatabase />}
 								options={pointOptions}
-								buttonClassName="w-full mr-4"
+								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 								defaultValue={data?.points?.toString()}
 								onValueChange={(value) => handleIssueEdit(value, "points")}
 							/>
 						</div>
 					</div>
-					<Separator orientation="vertical" />
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
@@ -182,14 +207,14 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							<HYCombobox
 								label={<HiOutlineClock />}
 								options={estimatedHours}
-								buttonClassName="w-full mr-4"
+								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 								defaultValue={data?.estimated_hours?.toString()}
 								onValueChange={(value) => handleIssueEdit(value, "estimated_hours")}
 
 							/>
 						</div>
 					</div>
-					<Separator orientation="vertical" />
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
@@ -198,68 +223,106 @@ const IssueDetailView = ({ data }: { data: any }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={issueOptions}
-								buttonClassName="w-full mr-4"
+								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
 								defaultValue={data?.dependency}
 								onValueChange={(value) => handleIssueEdit(value, "dependency")}
 							/>
 						</div>
 					</div>
-					<Separator orientation="vertical" />
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Status</div>
-						<HYCombobox
-							defaultValue={data?.status}
-							options={statusOptions}
-							buttonClassName="w-full mr-4"
-							onValueChange={(value) => handleIssueEdit(value, "status")}
-						/>
+						<div className="flex flex-1 items-center">
+							<HYCombobox
+								defaultValue={data?.status}
+								options={statusOptions}
+								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								onValueChange={(value) => handleIssueEdit(value, "status")}
+							/>
+						</div>
+					</div>
+					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
+				</div>
+				<div className="flex justify-between pr-3">
+					<div className="flex flex-col w-full gap-3">
+						<div className="text-xs text-[#9499A5] opacity-0 select-none">Delete</div>
+						<div className="flex flex-1 items-center">
+							<HYAlertDialog submitAction={handleIssueDelete} >
+								<Button
+									type="button"
+									variant="ghost"
+									className="border border-destructive text-destructive hover:text-destructive"
+								>
+									Delete
+								</Button>
+							</HYAlertDialog>
+						</div>
 					</div>
 				</div>
 			</div>
-			<Separator className="mt-5" />
+			<Separator className="mt-5 dark:bg-[#FFFFFF1A]" />
 			<ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
 				<div className="flex justify-between mt-5 items-center">
 					<div className="flex flex-col gap-2 w-full">
-						<div className=" flex justify-between w-full text-xs ">
+						<div className="flex justify-between w-full text-xs ">
 							<div className="text-[#9499A5]">Assigned To</div>
-							<div className="text-primary cursor-pointer">Add</div>
+							<div
+								className="text-primary cursor-pointer"
+								onClick={() => setShowUserSelection(prevData => !prevData)}
+							>
+								{showUserSelection ? "Done" : "Add"}
+							</div>
 						</div>
-						<div className="flex gap-2 ">
-							<div className="flex gap-4 items-center border p-3 rounded">
-								<HYAvatar name={"Jhon"} />
+						<div className="">
+							{data?.assign_to?.length > 0 &&
+								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
+									{data?.assign_to?.map(userId => {
+										const userInfo = usersList?.find(user => user._id === userId);
+										return (
+											<div className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] px-3 py-1 rounded w-full group">
+												<div className="flex gap-3">
+													<HYAvatar name={userInfo?.user_name} />
+													<div className="text-xs">
+														<div className="truncate w-[50px] md:w-[100px] lg:w-[150px]">{userInfo?.user_name}</div>
+														<div className="dark:text-[#FFFFFF66] text-gray-500">{userInfo?.role}</div>
+													</div>
+												</div>
 
-								<div className="text-xs">
-									<div>User Name</div>
-									<div className="text-[#FFFFFF66]">Manger</div>
+												<div className="text-xs">
+													<Button
+														size="icon"
+														variant="ghost"
+														className="opacity-0 group-hover:opacity-100"
+														onClick={() => handleAssignIssueUser(userId, "remove")}
+													>
+														<HiOutlineX />
+													</Button>
+												</div>
+											</div>
+										)
+									})}
 								</div>
+							}
 
-								<div className="text-xs">
-									<Button className="" size="icon" variant="ghost">
-										<HiDotsVertical />
-									</Button>
+							{data?.assign_to?.length === 0 && <div className="text-xs">Unassigned</div>}
+
+
+							{showUserSelection &&
+								<div className="mt-2 w-full">
+									<HYCombobox
+										options={usersOptions}
+										buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+										optionsClassName="w-[200px]"
+										onValueChange={(value: string) => handleAssignIssueUser(value, "assign")}
+									/>
 								</div>
-							</div>
-
-							<div className="flex gap-4 items-center border p-3 rounded">
-								<HYAvatar name={"Jhon"} />
-
-								<div className="text-xs">
-									<div>User Name</div>
-									<div className="text-[#FFFFFF66]">Manger</div>
-								</div>
-
-								<div className="text-xs">
-									<Button className="" size="icon" variant="ghost">
-										<HiDotsVertical />
-									</Button>
-								</div>
-							</div>
+							}
 						</div>
 					</div>
 				</div>
-				<Separator className="my-5" />
+				<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
 				<div className="text-xs space-y-4">
 					<div className="space-y-1">
 						<div className="text-[#9499A5]">Description</div>
@@ -285,7 +348,7 @@ const IssueDetailView = ({ data }: { data: any }) => {
 						</div>
 					</div> */}
 				</div>
-				<Separator className="my-5" />
+				<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
 				<div className="space-y-3">
 					<div className="space-y-2">
 						<div>Comments</div>
@@ -304,7 +367,7 @@ export default IssueDetailView;
 
 export const CommentCard = ({ data }: { data: any }) => {
 	return (
-		<Card className="dark:bg-[#151619]">
+		<Card className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]">
 			<CardContent className="p-3 text-xs">
 				<div className="flex justify-between items-center mb-3">
 					<div className="flex gap-2">

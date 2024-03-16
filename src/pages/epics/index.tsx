@@ -105,7 +105,7 @@ const EpicScreen = () => {
                         Nothing here!
                     </div>
                     <div className="dark:text-foreground text-xl">
-                        Create an epic from the backlog to start working!
+                        Create an epic  to start working!
                     </div>
                     <div className='my-3'>
                         <EpicCreationForm>
@@ -208,7 +208,7 @@ const EpicScreen = () => {
                                                             <div className="flex gap-1 items-center">
                                                                 <HiBookOpen className={`w-5 h-5 mr-2 ${logoColors[i % 6]}`} />
                                                                 <HYDialog
-                                                                    className="max-w-6xl "
+                                                                    className="max-w-6xl dark:bg-[#23252A]"
                                                                     content={<EpicDetailView data={epic} />}
                                                                 >
                                                                     <div className="sm:w-[100px] md:w-[120px] 2xl:w-[200px] capitalize truncate cursor-pointer">

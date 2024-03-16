@@ -84,7 +84,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const getIssues = () => {
 		let query = `?perPage=300
-			&expand=release_id,project_id
+			&expand=release_id,project_id,epic_id
 			&filter=project_id=${appProfileInfo?.project_id}`;
 
 		dispatch(getAction({ issues: Urls.issues + query }));
@@ -224,7 +224,7 @@ const IssueCreationForm = ({ children }: any) => {
 										</FormLabel>
 										<HYCombobox
 											buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
-											id="epic"
+											id="epic_id"
 											form={form}
 											options={epicOptions}
 										/>
@@ -393,7 +393,7 @@ const IssueCreationForm = ({ children }: any) => {
 							)}
 						/>
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="sub_tasks"
 							render={({ field }) => (
@@ -410,7 +410,7 @@ const IssueCreationForm = ({ children }: any) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-[#23252A] dark:border-[#36363A]">
 							<Button

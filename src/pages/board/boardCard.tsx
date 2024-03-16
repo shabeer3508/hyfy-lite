@@ -31,7 +31,7 @@ const BoardCard = ({ data }: any) => {
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog
-					className="max-w-6xl"
+					className="max-w-6xl dark:bg-[#23252A]"
 					content={<IssueDetailView data={data} />}
 				>
 					<div className="min-h-[110px] justify-between flex flex-col ">

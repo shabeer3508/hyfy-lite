@@ -31,7 +31,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
             className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
         >
             <HYDialog
-                className="max-w-6xl"
+                className="max-w-6xl  dark:bg-[#23252A]"
                 content={<IssueDetailView data={issue} />}
             >
                 <div className={`flex gap-3 justify-between items-center text-sm px-3 ${showSelection ? "py-1" : "py-2.5"}`}>

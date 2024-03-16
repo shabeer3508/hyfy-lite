@@ -19,6 +19,7 @@ import { toast } from "sonner";
 import { IssueCard } from "../issues/issue-card-1";
 import HYModal from "@/components/hy-components/HYModal";
 import { BiDirections } from "react-icons/bi";
+import { IssueStatusTypes } from "@/interfaces";
 
 const BacklogColumn = () => {
 	const dispatch = useDispatch();
@@ -93,7 +94,7 @@ const BacklogColumn = () => {
 	}
 
 	const closeTransferModal = () => {
-		setIssueTransfer((prevData) => ({ ...prevData, openTranserModal: false }));
+		setIssueTransfer((prevData) => ({ selectedIssues: [], isSelectionOn: false, openTranserModal: false }));
 	}
 
 
@@ -257,7 +258,7 @@ const BacklogColumn = () => {
 					showCloseButton
 					handleClose={closeTransferModal}
 					open={issueTransfer.openTranserModal}
-					content={<IssueTransferModal data={issueTransfer} handleClose={closeTransferModal} />}
+					content={<IssueTransferModal data={issueTransfer} getIssues={getIssues} handleClose={closeTransferModal} />}
 				/>
 
 			</div>
@@ -271,15 +272,19 @@ export default BacklogColumn;
 interface IssueTransferModalProps {
 	data: any,
 	handleClose: () => void
+	getIssues: () => void
 }
 
 
-const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClose }) => {
+const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClose, getIssues }) => {
 
 	const dispatch = useDispatch();
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
 	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
+
+	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 
 	const [search, setSearch] = useState("");
@@ -293,12 +298,19 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 			else { postData = { ...postData, epic_id: targetId?.epic_id } }
 		} else {
 			if (!targetId?.sprint_id) toast.error("Please select a sprint from the  list");
-			else { postData = { ...postData, sprint_id: targetId?.sprint_id } }
+			else {
+				postData = {
+					...postData,
+					sprint_id: targetId?.sprint_id,
+					status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id
+				}
+			}
 		}
 
 		(dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, type)) as any).then(res => {
 			if (res.payload.status == 200) {
 				toast.success("Issue moved successfully");
+				getIssues();
 				handleClose();
 			}
 		})

@@ -3,6 +3,7 @@ import { useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
 import { Input } from "@/components/ui/input";
+import { JsonToFormData } from "@/utils/utils";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,7 +67,10 @@ const ReleaseCreationForm = ({ children }: any) => {
 	}
 
 	const handleReleaseCreation = async (values: z.infer<typeof formSchema>) => {
-		const resp = (await dispatch(postAction({ release: Urls.release }, values))) as any;
+		const postData = JsonToFormData(values)
+
+		// TODO: Add tag & file name 
+		const resp = (await dispatch(postAction({ release: Urls.release }, postData))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(formDefaultValues);

@@ -8,7 +8,7 @@ import HYEditableDiv from "../HYEditableDiv";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
-import IssueMiniCard from "@/pages/issues/issueMiniCard";
+import IssueMiniCard from "@/pages/issues/issue-card-2";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
@@ -69,9 +69,9 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
     /*  ######################################################################################## */
 
     return (
-        <div>
+        <div className="">
             <div className="text-xl">
-                <HYEditableDiv className="text-xl" defaultText={data?.name} handleChange={(value) => updateSprintInfo("name", value)} />
+                <HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => updateSprintInfo("name", value)} />
             </div>
             <div className="flex justify-between py-3 text-xs items-center">
                 <div className="flex gap-2 items-center">
@@ -100,7 +100,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                             </span>
                         </div>
                     </div>
-                    <Separator orientation="vertical" />
+                    <Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
                 </div>
                 <div className="flex justify-between pr-3">
                     <div className="flex flex-col gap-3">
@@ -117,7 +117,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                             {/* )} */}
                         </div>
                     </div>
-                    <Separator orientation="vertical" />
+                    <Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
                 </div>
                 <div className="flex pr-3 col-span-3">
                     <div className="flex flex-col">
@@ -125,14 +125,14 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                             Description
                         </div>
                         <div className="flex flex-1 items-center">
-                            <HYEditableDiv className="text-base" defaultText={data?.description} handleChange={(value) => updateSprintInfo("description", value)} />
+                            <HYEditableDiv className="text-base dark:bg-[#23252A]" defaultText={data?.description} handleChange={(value) => updateSprintInfo("description", value)} />
                         </div>
                     </div>
                 </div>
 
 
             </div>
-            <Separator className="my-2" />
+            <Separator className="my-2 dark:bg-[#FFFFFF1A]" />
             <div className="flex justify-between items-center my-2">
                 <div className="flex  gap-3 align-middle">
                     <div>Stories</div>
@@ -154,7 +154,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                     </div>
                 </div>
                 <div className="pr-5">
-                    <HYSearch />
+                    <HYSearch className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]" inputClassName="dark:bg-[#23252A]" />
                 </div>
             </div>
 

@@ -203,7 +203,7 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 			className={`dark:bg-[#151619] border  rounded card-gradient cursor-pointer ${searchParams.get("selected_epic") === epic?._id ? "border-primary" : ""}`}
 		>
 			<HYDialog
-				className="max-w-6xl"
+				className="max-w-6xl dark:bg-[#23252A]"
 				content={<EpicDetailView data={epic} />}
 			>
 				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
