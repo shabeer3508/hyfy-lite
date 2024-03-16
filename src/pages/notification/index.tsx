@@ -31,7 +31,7 @@ const Notification = () => {
         </div>
 
         <div className="flex flex-col gap-y-5">
-          <Card className="flex w-3/5 h-28 dark:bg-[#131417]">
+          <Card className="flex w-3/5 h-28 dark:bg-[#202228]">
             <div className="flex m-5 ">
               <div className="flex w-7 h-10 pt-1 ">
                 <img className="w-5 h-5 " src="/task_icon.svg" alt="Project" />
@@ -52,7 +52,7 @@ const Notification = () => {
             </div>
           </Card>
 
-          <Card className="flex w-3/5 h-28 dark:bg-[#131417]">
+          <Card className="flex w-3/5 h-28 dark:bg-[#202228]">
             <div className="flex m-5 ">
               <div className="flex w-7 h-10 pt-1  ">
                 <img className="w-5 h-5 " src={taskdone} alt="Project" />
@@ -75,7 +75,7 @@ const Notification = () => {
             </div>
           </Card>
 
-          <Card className="flex w-3/5 h-20 dark:bg-[#131417]">
+          <Card className="flex w-3/5 h-20 dark:bg-[#202228]">
             <div className="flex my-4 ml-5 ">
               <div className="flex w-7 h-10 pt-1   ">
                 <img className="w-5 h-5 " src={repeatblue} alt="Project" />
@@ -94,7 +94,7 @@ const Notification = () => {
             </div>
           </Card>
 
-          <Card className="flex w-3/5 h-20 dark:bg-[#131417]">
+          <Card className="flex w-3/5 h-20 dark:bg-[#202228]">
             <div className="flex ml-5 my-4">
               <div className="flex w-7 h-10 pt-1  ">
                 <img className="w-5 h-5 " src={repeatyellow} alt="Project" />
@@ -112,7 +112,7 @@ const Notification = () => {
               </div>
             </div>
           </Card>
-          <Card className="flex w-3/5 h-28 dark:bg-[#131417]">
+          <Card className="flex w-3/5 h-28 dark:bg-[#202228]">
             <div className="flex m-5 ">
               <div className="flex w-7 h-10 pt-1 ">
                 <img className="w-5 h-5 " src={icon_comment} alt="Project" />
