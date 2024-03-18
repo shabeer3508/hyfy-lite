@@ -71,7 +71,7 @@ export function HYUserSelect({
                     role="combobox"
                     aria-expanded={open}
                     onClick={(e) => e.stopPropagation()}
-                    className={`w-[200px] px-3 justify-between dark:bg-[#23252A] border-border text-xs  ${buttonClassName} `}
+                    className={`w-[200px] px-3 justify-between dark:bg-card border-border text-xs  ${buttonClassName} `}
                 >
                     {label && (
                         <span className="whitespace-nowrap text-[#9499A5] mr-2">

@@ -33,7 +33,7 @@ const VerifyEmailPage: React.FC = () => {
 		(dispatch(postAction({ signupVerifyEmail: Urls.signup_verify_email }, postData)) as any).then(res => {
 			if (res.payload?.status === 200) {
 
-				toast.success(`${res.payload?.data?.message}`);
+				toast.success(`${res.payload?.data?.message}`, { position: "bottom-center" });
 				dispatch(setCurrentUser(res.payload?.data?.data?.user));
 				Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 2, secure: true })
 
@@ -67,7 +67,7 @@ const VerifyEmailPage: React.FC = () => {
 	/*  ######################################################################################## */
 
 	return <div className="flex justify-center h-screen items-center dark:bg-background">
-		<Card className="w-[500px] dark:bg-[#23252A]">
+		<Card className="w-[500px] dark:bg-card">
 			<CardHeader>
 				<CardTitle className="text-primary mb-5">Hyfy</CardTitle>
 				<CardDescription className="">Verify Email</CardDescription>
@@ -78,14 +78,14 @@ const VerifyEmailPage: React.FC = () => {
 			<CardContent className="">
 				<form onSubmit={handleSubmit(handleVerifyEmail)}>
 					<div className="grid w-full items-center gap-3">
-						<div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+						<div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
 							<Input
 								required
 								autoFocus
 								autoComplete="off"
 								{...register("code")}
 								placeholder="Enter the code ...."
-								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
 							/>
 						</div>
 						<Button disabled={postSignupInfoInfo.loading} className="w-full text-white hover:bg-primary">

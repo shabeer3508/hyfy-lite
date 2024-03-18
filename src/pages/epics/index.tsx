@@ -2,25 +2,26 @@ import { useEffect } from 'react';
 import Urls from '@/redux/actions/Urls';
 import { BiDirections } from 'react-icons/bi'
 import { Button } from '@/components/ui/button'
+import { IssueCard } from '../issues/issue-card-1';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HYSearch from '@/components/hy-components/HYSearch'
 import HYDialog from '@/components/hy-components/HYDialog';
 import HYTooltip from '@/components/hy-components/HYTooltip';
 import HYDropDown from '@/components/hy-components/HYDropDown';
+import NoProjectScreen from '../empty-screens/NoProjectScreen';
 import EpicCreationForm from '@/pages/epics/forms/epic-creation';
+import IssueCreationCardMini from '../issues/issue-creation-mini';
 import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
 import { getAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
 import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
+import { EpicTypes, IssueStatusTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
 import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
 import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import NoProjectScreen from '../empty-screens/NoProjectScreen';
-import IssueCreationCardMini from '../issues/issue-creation-mini';
-import { IssueCard } from '../issues/issue-card-1';
 
 
 const EpicScreen = () => {
@@ -30,16 +31,17 @@ const EpicScreen = () => {
 
     const releaseReducerName = reducerNameFromUrl("release", "GET");
     const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
+    const releaseItems = releaseList?.data?.items as ReleaseTypes[]
 
     const epicsReducerName = reducerNameFromUrl("epic", "GET");
     const epicList = useSelector((state: any) => state?.[epicsReducerName]);
-    const epicItems = epicList?.data?.items;
+    const epicItems = epicList?.data?.items as EpicTypes[];
 
     const issuesListData = useSelector((state: any) => state?.GetIssues);
-    const issuesItems = issuesListData?.data?.items;
+    const issuesItems = issuesListData?.data?.items as IssueTypes[];
 
     const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
     /*  ######################################################################################## */
 
@@ -56,7 +58,7 @@ const EpicScreen = () => {
     /*  ######################################################################################## */
 
     const releaseOptions =
-        releaseList?.data?.items?.map((relse) => ({
+        releaseItems?.map((relse) => ({
             value: relse?._id,
             label: relse?.name,
         })) ?? [];
@@ -200,15 +202,13 @@ const EpicScreen = () => {
                                                 >
                                                     <div className="flex justify-between items-center w-full">
                                                         <div className="mr-1">
-                                                            <Button type="button" variant="ghost" className="p-0 hover:bg-background" >
-                                                                <AccordionTrigger className="p-3" />
-                                                            </Button>
+                                                            <AccordionTrigger className="p-3" />
                                                         </div>
                                                         <div className="flex justify-between items-center w-full">
                                                             <div className="flex gap-1 items-center">
                                                                 <HiBookOpen className={`w-5 h-5 mr-2 ${logoColors[i % 6]}`} />
                                                                 <HYDialog
-                                                                    className="max-w-6xl dark:bg-[#23252A]"
+                                                                    className="max-w-6xl dark:bg-card"
                                                                     content={<EpicDetailView data={epic} />}
                                                                 >
                                                                     <div className="sm:w-[100px] md:w-[120px] 2xl:w-[200px] capitalize truncate cursor-pointer">
@@ -222,7 +222,7 @@ const EpicScreen = () => {
                                                                         label={"Release : "}
                                                                         unSelectable={true}
                                                                         options={releaseOptions}
-                                                                        defaultValue={epic?.releases}
+                                                                        defaultValue={typeof epic?.release_id === "string" && epic?.release_id}
                                                                         buttonClassName="max-w-[200px]"
                                                                     />
                                                                 </div>

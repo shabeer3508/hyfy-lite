@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDispatch, useSelector } from "react-redux";
+import { EpicTypes, ReleaseTypes } from "@/interfaces";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
@@ -31,10 +32,10 @@ const EpicsColumn = () => {
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
-	const epicItems = epicsListData?.data?.items;
+	const epicItems = epicsListData?.data?.items as EpicTypes[];
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName])?.data?.items as ReleaseTypes[];
 
 	/*  ######################################################################################## */
 
@@ -60,7 +61,7 @@ const EpicsColumn = () => {
 	const filteredEpicsItems = epicItems?.filter(epic => epic.project_id === appProfileInfo?.project_id)
 
 	const releaseOptions =
-		releaseList?.data?.items?.map((relse) => ({
+		releaseList?.map((relse) => ({
 			value: relse?._id,
 			label: relse?.name,
 		})) ?? [];
@@ -183,7 +184,7 @@ const EpicsColumn = () => {
 
 export default EpicsColumn;
 
-const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
+const EpicCard = ({ epic, index }: { epic: EpicTypes; index: number }) => {
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const logoColors = [
@@ -203,7 +204,7 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 			className={`dark:bg-[#151619] border  rounded card-gradient cursor-pointer ${searchParams.get("selected_epic") === epic?._id ? "border-primary" : ""}`}
 		>
 			<HYDialog
-				className="max-w-6xl dark:bg-[#23252A]"
+				className="max-w-6xl dark:bg-card"
 				content={<EpicDetailView data={epic} />}
 			>
 				<div className="flex gap-3 justify-between items-center text-sm px-3 py-3">
@@ -214,11 +215,11 @@ const EpicCard = ({ epic, index }: { epic: any; index: number }) => {
 						<div>{epic?.name}</div>
 					</div>
 					<div className="text-[#737377]">
-						{epic?.expand?.releases?.name}
+						{typeof epic?.release_id !== "string" && epic?.release_id?.[0]?.name}
 					</div>
 					<div className=" text-[#737377]">|</div>
 					<div className="text-[#737377]">
-						{epic?.issues?.length} Issues
+						{/* {epic?.issues?.length} Issues */}
 					</div>
 					<HiOutlineDotsVertical className="text-[#737377]" />
 				</div>

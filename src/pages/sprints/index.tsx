@@ -118,7 +118,7 @@ const Sprints = () => {
 									>
 										<div className="flex justify-between items-center w-full">
 											<HYDialog
-												className="max-w-6xl dark:bg-[#23252A]"
+												className="max-w-6xl dark:bg-card"
 												content={<SprintDetailView data={sprint} />}
 											>
 												<div className="flex justify-between items-center w-full">
@@ -154,9 +154,9 @@ const Sprints = () => {
 												</div>
 											</HYDialog>
 											<div className="pl-2">
-												<Button type="button" variant="ghost" className="p-0" >
-													<AccordionTrigger className="p-3" />
-												</Button>
+												{/* <Button type="button" variant="ghost" className="p-0" > */}
+												<AccordionTrigger className="p-3" />
+												{/* </Button> */}
 											</div>
 										</div>
 										<AccordionContent className="flex flex-col gap-2">

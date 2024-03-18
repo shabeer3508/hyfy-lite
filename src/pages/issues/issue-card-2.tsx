@@ -6,15 +6,21 @@ import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
-const IssueMiniCard = ({ data }: any) => {
+interface IssueMiniCardProps {
+	data: IssueTypes;
+}
+
+const IssueMiniCard: React.FC<IssueMiniCardProps> = ({ data }) => {
 	const dispatch = useDispatch()
+
 	const usersReducerName = reducerNameFromUrl("users", "GET");
-	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	/*  ######################################################################################## */
 
@@ -25,12 +31,10 @@ const IssueMiniCard = ({ data }: any) => {
 	/*  ######################################################################################## */
 
 	const usersOptions =
-		usersList?.data?.items?.map((user) => ({
+		usersList?.map((user) => ({
 			value: user?._id,
-			label: user?.name,
+			label: user?.user_name,
 		})) ?? [];
-
-	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
 
 	const pointsOptions = [
 		{ label: "5", value: "5" },
@@ -47,11 +51,13 @@ const IssueMiniCard = ({ data }: any) => {
 		{ label: "5", value: "5" },
 	]
 
+	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
+
 	/*  ######################################################################################## */
 
 
 	return (
-		<Card className="dark:bg-[#23252A] dark:border-[#FFFFFF1A] card-gradient" >
+		<Card className="dark:bg-card dark:border-[#FFFFFF1A] card-gradient" >
 			<CardContent className="px-0 py-1 grid grid-cols-5 gap-3">
 				<div className="px-3 flex items-center gap-3">
 					{data?.type === "task" && (
@@ -70,14 +76,14 @@ const IssueMiniCard = ({ data }: any) => {
 					<HYCombobox
 						label={<HiDatabase />}
 						options={pointsOptions}
-						buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+						buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
 						defaultValue={data?.points?.toString()}
 						onValueChange={(value) => upadateIssueByType(value, "points")}
 					/>
 				</div>
 				<div>
 					<HYCombobox
-						buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+						buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
 						label={<HiOutlineClock />}
 						options={estimatedHoursOptions}
 						defaultValue={data?.estimated_hours?.toString()}
@@ -89,7 +95,7 @@ const IssueMiniCard = ({ data }: any) => {
 						id="status"
 						unSelectable={false}
 						options={statusOptions}
-						buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+						buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
 						defaultValue={data?.status}
 						onValueChange={(value) => upadateIssueByType(value, "status")}
 					/>

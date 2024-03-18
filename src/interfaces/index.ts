@@ -68,7 +68,7 @@ export interface EpicTypes {
     dependency?: string;
     dependency_type?: "blocking";
     project_id: string;
-    release_id?: string;
+    release_id?: string | ReleaseTypes[];
     stories?: string[];
     is_deleted?: boolean;
     created_by?: string;
@@ -92,7 +92,7 @@ export interface IssueTypes {
     priority: "critical" | "high" | "medium" | "low";
     assign_to?: string[];
     sub_tasks?: string[];
-    epic_id?: string;
+    epic_id?: string | EpicTypes[];
     sprint_id?: string;
     release_id?: string;
     project_id: string;

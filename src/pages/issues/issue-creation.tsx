@@ -1,16 +1,19 @@
 import { z } from "zod";
-import { useEffect, useState } from "react";
 import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { HiMiniXMark } from "react-icons/hi2";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 import { HiDatabase, HiOutlineClock } from "react-icons/hi";
-import { HiMiniXMark } from "react-icons/hi2";
 import HYSelect from "@/components/hy-components/HYSelect";
+import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { EpicTypes, IssueStatusTypes, IssueTypes } from "@/interfaces";
+import { HYUserSelect } from "@/components/hy-components/HYUserSelect";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Dialog,
@@ -28,8 +31,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
-import HYAvatar from "@/components/hy-components/HYAvatar";
-import { HYUserSelect } from "@/components/hy-components/HYUserSelect";
 
 const IssueCreationForm = ({ children }: any) => {
 	const dispatch = useDispatch();
@@ -38,15 +39,15 @@ const IssueCreationForm = ({ children }: any) => {
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET")
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
-	const epicItems = epicsListData?.data?.items;
+	const epicItems = epicsListData?.data?.items as EpicTypes[];
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issueItems = issuesListData?.data?.items;
+	const issueItems = issuesListData?.data?.items as IssueTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	/*  ######################################################################################## */
 
@@ -94,7 +95,7 @@ const IssueCreationForm = ({ children }: any) => {
 	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
 		const postData = { ...values, assign_to: selectedUsers?.map((user) => user?._id) || [] }
 		const resp = (await dispatch(postAction({ issues: Urls.issues }, postData))) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);
 			setOpenForm(false);
@@ -172,7 +173,7 @@ const IssueCreationForm = ({ children }: any) => {
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="max-w-4xl h-[75vh] dark:bg-[#23252A]">
+			<DialogContent className="max-w-4xl h-[75vh] dark:bg-card">
 				<DialogHeader>
 					<DialogTitle>Add Issue</DialogTitle>
 				</DialogHeader>
@@ -187,7 +188,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<FormLabel className="text-xs text-[#9499A5]">Story Title</FormLabel>
 										<Input
 											placeholder="Title"
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-[#36363A] dark:bg-[#23252A]"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-[#36363A] dark:bg-card"
 											{...field}
 										/>
 										<FormMessage />
@@ -202,7 +203,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<FormLabel className="text-xs text-[#9499A5]">Type</FormLabel>
 										<HYCombobox
 											defaultValue="story"
-											buttonClassName="w-full dark:bg-[#23252A] dark:border-[#36363A]"
+											buttonClassName="w-full dark:bg-card dark:border-[#36363A]"
 											id="type"
 											form={form}
 											options={typeOptions}
@@ -223,7 +224,7 @@ const IssueCreationForm = ({ children }: any) => {
 											Epic
 										</FormLabel>
 										<HYCombobox
-											buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+											buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
 											id="epic_id"
 											form={form}
 											options={epicOptions}
@@ -241,7 +242,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<HYCombobox
 											defaultValue="5"
 											label={<HiDatabase />}
-											buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+											buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
 											id="points"
 											form={form}
 											options={pointOptions}
@@ -264,7 +265,7 @@ const IssueCreationForm = ({ children }: any) => {
 
 											<HYCombobox
 												defaultValue={form?.getValues()?.status}
-												buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+												buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
 												id="status"
 												form={form}
 												options={statusOptions}
@@ -283,7 +284,7 @@ const IssueCreationForm = ({ children }: any) => {
 											<FormItem>
 												<FormLabel className="text-xs text-[#9499A5]">Dependency</FormLabel>
 												<HYCombobox
-													buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+													buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
 													id="dependency"
 													form={form}
 													options={issueOptions}
@@ -301,7 +302,7 @@ const IssueCreationForm = ({ children }: any) => {
 												<HYSelect
 													field={field}
 													id="dependency_type"
-													className="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+													className="w-full  dark:bg-card dark:border-[#36363A]"
 													options={["blocking"]}
 												/>
 												<FormMessage />
@@ -317,7 +318,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<FormItem className="flex flex-col my-2">
 											<FormLabel className="text-xs text-[#9499A5]">Priority</FormLabel>
 											<HYCombobox
-												buttonClassName="w-full  dark:bg-[#23252A] dark:border-[#36363A]"
+												buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
 												id="priority"
 												form={form}
 												options={priorityOptions}
@@ -335,7 +336,7 @@ const IssueCreationForm = ({ children }: any) => {
 											<FormLabel className="text-xs text-[#9499A5]">Estimated Hours</FormLabel>
 											<HYCombobox
 												label={<HiOutlineClock />}
-												buttonClassName="w-full dark:bg-[#23252A] dark:border-[#36363A]"
+												buttonClassName="w-full dark:bg-card dark:border-[#36363A]"
 												id="estimated_hours"
 												form={form}
 												options={estimatedHours}
@@ -349,7 +350,7 @@ const IssueCreationForm = ({ children }: any) => {
 							<div className="w-1/2 text-xs flex flex-col">
 								<div className="flex flex-col justify-between pt-1">
 									<div className="text-[#9499A5]">Assign to</div>
-									<HYUserSelect showSearch buttonClassName="w-full my-3 dark:bg-[#23252A] dark:border-[#36363A]" onValueChange={handleUserSelection} />
+									<HYUserSelect showSearch buttonClassName="w-full my-3 dark:bg-card dark:border-[#36363A]" onValueChange={handleUserSelection} />
 								</div>
 								<div className="border dark:border-[#36363A] h-[210px] my-2 rounded p-1 flex flex-col gap-1 overflow-auto">
 
@@ -384,7 +385,7 @@ const IssueCreationForm = ({ children }: any) => {
 									<FormControl>
 										<Input
 											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] dark:border-[#36363A]"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card dark:border-[#36363A]"
 											{...field}
 										/>
 									</FormControl>
@@ -403,7 +404,7 @@ const IssueCreationForm = ({ children }: any) => {
 										<Input
 											disabled
 											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] dark:border-[#36363A]"
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card dark:border-[#36363A]"
 											{...field}
 										/>
 									</FormControl>
@@ -412,11 +413,11 @@ const IssueCreationForm = ({ children }: any) => {
 							)}
 						/> */}
 
-						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-[#23252A] dark:border-[#36363A]">
+						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-card dark:border-[#36363A]">
 							<Button
 								type="reset"
 								variant="outline"
-								className="dark:bg-[#23252A] dark:border-primary text-primary"
+								className="dark:bg-card dark:border-primary text-primary"
 								onClick={() => setOpenForm(false)}
 							>
 								Cancel

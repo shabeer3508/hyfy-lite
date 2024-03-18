@@ -65,7 +65,7 @@ const OrganizationSetupPage: React.FC = () => {
         (dispatch(postAction({ signupSetupOrganization: Urls.signup_setup_organization }, data)) as any).then(res => {
             if (res.payload?.status === 200) {
                 Cookies.set('hyfy_auth_token', res.payload?.data?.data?.token, { expires: 2, secure: true })
-                toast.success(`Organization created successfully`);
+                toast.success(`Organization created successfully`, { position: "bottom-center" });
                 navigate("/signup/billing")
             }
         })
@@ -74,7 +74,7 @@ const OrganizationSetupPage: React.FC = () => {
     /*  ######################################################################################## */
 
     return <div className="flex justify-center h-screen items-center dark:bg-background">
-        <Card className="w-[500px] dark:bg-[#23252A]">
+        <Card className="w-[500px] dark:bg-card">
             <CardHeader>
                 <CardTitle className="text-primary mb-5">Hyfy</CardTitle>
                 <CardDescription className="dark:text-white text-base">Setup Organization</CardDescription>
@@ -93,7 +93,7 @@ const OrganizationSetupPage: React.FC = () => {
                                             required
                                             autoComplete="off"
                                             placeholder="Enter the name of your organization"
-                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                             {...field}
                                         />
                                         <FormMessage />
@@ -112,7 +112,7 @@ const OrganizationSetupPage: React.FC = () => {
                                         <Input
                                             required
                                             placeholder="Branch Name"
-                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                             {...field}
                                         />
                                         <FormMessage />
@@ -128,7 +128,7 @@ const OrganizationSetupPage: React.FC = () => {
                                         <Input
                                             required
                                             placeholder="Address"
-                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                             {...field}
                                         />
                                         <FormMessage />
@@ -144,7 +144,7 @@ const OrganizationSetupPage: React.FC = () => {
                                             <Input
                                                 required
                                                 placeholder="State"
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                                 {...field}
                                             />
                                             <FormMessage />
@@ -159,7 +159,7 @@ const OrganizationSetupPage: React.FC = () => {
                                             <Input
                                                 required
                                                 placeholder="Country"
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                                 {...field}
                                             />
                                             <FormMessage />
@@ -176,7 +176,7 @@ const OrganizationSetupPage: React.FC = () => {
                                         <Input
                                             required
                                             placeholder="Pincode"
-                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-[#23252A]"
+                                            className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border dark:border-[#FFFFFF1A] dark:bg-card"
                                             {...field}
                                         />
                                         <FormMessage />

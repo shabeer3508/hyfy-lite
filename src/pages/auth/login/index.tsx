@@ -41,13 +41,13 @@ const Login = () => {
 				}
 			});
 		} catch (e) {
-			toast.error(e.message);
+			toast.error(e.message, { position: "bottom-center" });
 		}
 	};
 
 	return (
 		<div className="flex flex-col justify-center h-screen items-center dark:bg-background">
-			<Card className="w-[300px] md:w-[400px] xl:w-[500px] dark:bg-[#23252A]">
+			<Card className="w-[300px] md:w-[400px] xl:w-[500px] dark:bg-card">
 				<CardHeader>
 					<CardTitle className="text-primary">Hyfy</CardTitle>
 					<CardDescription className="text-foreground text-sm font-semibold pt-3">Login</CardDescription>
@@ -58,11 +58,11 @@ const Login = () => {
 							Enter your email to start working with Hyfy
 						</Label>
 
-						<div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+						<div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
 							<HiMail className="mr-2" />
 							<Input
 								autoFocus
-								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+								className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
 								type="email"
 								id="identity"
 								required
@@ -72,7 +72,7 @@ const Login = () => {
 						</div>
 						<div className="flex flex-col space-y-1.5 mt-3">
 							<Label className="text-xs dark:text-foreground">Enter Secure password</Label>
-							<div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+							<div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
 								<HiLockClosed className="mr-2" />
 								<Input
 									required
@@ -81,7 +81,7 @@ const Login = () => {
 									minLength={8}
 									placeholder="- - - - - - - -"
 									{...register("password")}
-									className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-[#23252A] border-0 dark:border-[#FFFFFF1A]"
+									className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card border-0 dark:border-[#FFFFFF1A]"
 								/>
 								{showPassword
 									? <HiOutlineEyeOff className="cursor-pointer text-[#707173] h-5 w-5 select-none" onClick={() => setShowPassword((prev) => !prev)} />

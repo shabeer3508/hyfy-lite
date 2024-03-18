@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 						invert
 						richColors
 						closeButton
-						position="bottom-center"
+						position="bottom-right"
 						toastOptions={{ duration: 2000 }}
 					/>
 				</Provider>

@@ -22,7 +22,7 @@ const AddMembersPage: React.FC = () => {
 
 	return (
 		<div className="flex justify-center h-screen items-center dark:bg-background">
-			<Card className="w-[600px] dark:bg-[#23252A]">
+			<Card className="w-[600px] dark:bg-card">
 				<CardHeader>
 					<CardTitle className="text-primary mb-5">Hyfy</CardTitle>
 					<CardDescription className="">Add Members</CardDescription>
