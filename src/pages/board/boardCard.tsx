@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { HiBookOpen } from "react-icons/hi2";
+import { IssueTypes, UsersTypes } from "@/interfaces";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -7,11 +8,15 @@ import { HiDatabase, HiOutlineUser } from "react-icons/hi";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
 import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
 
-const BoardCard = ({ data }: any) => {
+interface BoardCardProps {
+	data: IssueTypes
+}
+
+const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
-	const userItems = usersList?.data?.items
+	const userItems = usersList?.data?.items as UsersTypes[]
 
 	const logoColors = [
 		"bg-[#71A4FF]",
@@ -31,7 +36,7 @@ const BoardCard = ({ data }: any) => {
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog
-					className="max-w-6xl dark:bg-[#23252A]"
+					className="max-w-6xl dark:bg-card"
 					content={<IssueDetailView data={data} />}
 				>
 					<div className="min-h-[110px] justify-between flex flex-col ">

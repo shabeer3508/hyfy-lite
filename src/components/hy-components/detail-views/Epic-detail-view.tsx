@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
-import { EpicTypes } from "@/interfaces";
 import { HYCombobox } from "../HYCombobox";
 import HYEditableDiv from "../HYEditableDiv";
+import HYAlertDialog from "../HYAlertDialog";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import IssueMiniCard from "@/pages/issues/issue-card-2";
+import { EpicTypes, IssueTypes, ReleaseTypes } from "@/interfaces";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 	const dispatch = useDispatch();
@@ -17,10 +19,11 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const issueListData = useSelector((state: any) => state?.GetIssues);
-	const issueListItems = issueListData?.data?.items;
+	const issueListItems = issueListData?.data?.items as IssueTypes[];
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector((state: any) => state?.[releaseReducerName]);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName])?.data?.items as ReleaseTypes[];
+
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
@@ -47,17 +50,25 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 
 	const updateEpicData = async (key: string | number, value: string | boolean) => {
 		const resp = (await dispatch(patchAction({ epic: Urls.epic }, { [key]: value !== "" ? value : null }, data?._id))) as any
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			getEpics();
 		}
+	}
+
+	const handleEpicDelete = () => {
+		(dispatch(deleteAction(Urls.epic, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getEpics();
+			}
+		})
 	}
 
 
 	/*  ######################################################################################## */
 
 	const releaseOptions =
-		releaseList?.data?.items?.map((release) => ({
+		releaseList?.map((release) => ({
 			value: release?._id,
 			label: release?.name,
 		})) ?? [];
@@ -74,7 +85,7 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 	return (
 		<div>
 			<div className="text-xl">
-				<HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => updateEpicData("name", value)} />
+				<HYEditableDiv className="text-xl dark:bg-card" defaultText={data?.name} handleChange={(value) => updateEpicData("name", value)} />
 			</div>
 			<div className="my-3 space-y-3">
 				<div className="text-xs text-[#9499A5]">Description</div>
@@ -88,15 +99,24 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 					/>
 				</div>
 			</div>
-			<div>
+			<div className="flex justify-between mr-4">
 				<HYCombobox
 					label="Release"
 					unSelectable={true}
 					options={releaseOptions}
-					defaultValue={data?.release_id}
-					buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+					buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
 					onValueChange={(value) => updateEpicData("release_id", value)}
+					defaultValue={typeof data?.release_id === "string" && data?.release_id}
 				/>
+				<HYAlertDialog submitAction={handleEpicDelete} >
+					<Button
+						type="button"
+						variant="ghost"
+						className="border border-destructive text-destructive hover:text-destructive"
+					>
+						Delete
+					</Button>
+				</HYAlertDialog>
 			</div>
 			<Separator className="my-2 dark:bg-[#FFFFFF1A]" />
 			<div className="flex justify-between items-center my-2">
@@ -120,7 +140,7 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 					</div>
 				</div>
 				<div className="pr-5 ">
-					<HYSearch className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]" inputClassName="dark:bg-[#23252A]" />
+					<HYSearch className="dark:bg-card dark:border-[#FFFFFF1A]" inputClassName="dark:bg-card" />
 				</div>
 			</div>
 			<ScrollArea className="max-h-[calc(100vh-600px)] overflow-auto w-full">

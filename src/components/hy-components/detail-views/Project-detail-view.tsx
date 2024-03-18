@@ -2,23 +2,26 @@ import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import Urls from "@/redux/actions/Urls";
 import { HYCombobox } from "../HYCombobox";
-import { ProjectType } from "@/interfaces";
 import HYEditableDiv from "../HYEditableDiv";
+import HYAlertDialog from "../HYAlertDialog";
+import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { CommentCard } from "./Issue-detail-view";
 import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
 import CommentCreation from "../forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { CommentsTypes, ProjectType } from "@/interfaces";
+import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const ProjectDetailView = ({ data }: { data: ProjectType }) => {
     const dispatch = useDispatch()
 
     const authInfo = useSelector((state: any) => state.UserReducer);
+
     const commentsReducerName = reducerNameFromUrl("comments", "GET");
     const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
-    const commentsItems = commentsList?.data?.items
+    const commentsItems = commentsList?.data?.items as CommentsTypes[];
 
 
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
@@ -47,6 +50,14 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
         })
     }
 
+    const handleProjectDelete = () => {
+        (dispatch(deleteAction(Urls.project, data?._id)) as any).then((res) => {
+            if (res.payload?.status === 200) {
+                getProjects();
+            }
+        })
+    }
+
     /*  ######################################################################################## */
 
     const statusOptions = [
@@ -68,13 +79,22 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
     return (
         <div className="">
             <div className="flex gap-2 text-xl capitalize mx-1 ">
-                <HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.title} handleChange={(value) => handleProjectEdit(value, "title")} />
+                <HYEditableDiv className="text-xl dark:bg-card" defaultText={data?.title} handleChange={(value) => handleProjectEdit(value, "title")} />
             </div>
             <div className="flex justify-between py-3 text-xs items-center my-3 mx-1">
                 <div className="flex gap-2 items-center">
                     <HiCalendarDays className="text-[#707173]" />{data?.start_date && formatter.format(new Date(data?.start_date))} to
                     <HiCalendarDays className="text-[#707173]" />{data?.end_date && formatter.format(new Date(data?.end_date))}
                 </div>
+                <HYAlertDialog submitAction={handleProjectDelete} >
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        className="border border-destructive text-destructive hover:text-destructive"
+                    >
+                        Delete
+                    </Button>
+                </HYAlertDialog>
             </div>
             <div className="grid grid-cols-5 pb-1 mx-1">
                 <div className="flex justify-between pr-3">
@@ -117,15 +137,19 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
                 <div className="space-y-2 mx-1">
                     <div className="text-xs text-[#9499A5]">Description</div>
                     <div className="min-h-2 py-3">
-                        <HYEditableDiv className="text-base dark:bg-[#23252A]" defaultText={data?.description} handleChange={(value) => handleProjectEdit(value, "description")} />
+                        <HYEditableDiv
+                            defaultText={data?.description}
+                            className="text-base dark:bg-card"
+                            handleChange={(value) => handleProjectEdit(value, "description")}
+                        />
                     </div>
 
                     <div className="text-xs text-[#9499A5]">Status</div>
                     <div className="">
                         <HYCombobox
-                            buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
                             options={statusOptions}
                             defaultValue={data?.status}
+                            buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
                             onValueChange={(value) => handleProjectEdit(value, "status")}
                         />
                     </div>

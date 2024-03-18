@@ -1,16 +1,16 @@
 import { useSelector } from 'react-redux';
+import { ProjectType } from '@/interfaces';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { HiOutlineInbox } from 'react-icons/hi2'
 import { reducerNameFromUrl, } from '@/redux/actions/AppActions';
-import { Button } from '@/components/ui/button';
 
 const NoProjectScreen = () => {
     const navigate = useNavigate();
     const reducerName = reducerNameFromUrl("project", "GET");
-    const projectList = useSelector((state: any) => state?.[reducerName]);
+    const projectList = useSelector((state: any) => state?.[reducerName])?.data?.items as ProjectType[];
 
-
-    const hasProjects = projectList?.data?.items > 0;
+    const hasProjects = projectList?.length > 0;
 
     return (
         <div className='flex flex-col justify-center h-full items-center'>

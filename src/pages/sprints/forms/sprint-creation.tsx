@@ -1,5 +1,23 @@
+import { z } from "zod";
 import { useState } from "react";
+import Urls from "@/redux/actions/Urls";
+import { useForm } from "react-hook-form";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+import HYSelect from "../../../components/hy-components/HYSelect";
+import { getAction, postAction } from "@/redux/actions/AppActions";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import HYInputDate from "../../../components/hy-components/HYInputDate";
+import { HYCombobox } from "../../../components/hy-components/HYCombobox";
+import {
+	Form,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
 import {
 	Dialog,
 	DialogContent,
@@ -8,26 +26,9 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import HYSelect from "../../../components/hy-components/HYSelect";
-import { useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-	Form,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { getAction, postAction } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import HYInputDate from "../../../components/hy-components/HYInputDate";
-import { HYCombobox } from "../../../components/hy-components/HYCombobox";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
-const SprintCreationForm = ({ children }: { children: any }) => {
+
+const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -73,7 +74,7 @@ const SprintCreationForm = ({ children }: { children: any }) => {
 			dispatch(getAction({ sprints: Urls.sprints + query }));
 		};
 		const resp = (await dispatch(postAction({ sprints: Urls.sprints }, values))) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			form.reset(defaultFormValues);
 			setOpenForm(false);

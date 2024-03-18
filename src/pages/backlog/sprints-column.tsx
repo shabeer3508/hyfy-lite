@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Urls from "@/redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
 import { Button } from "@/components/ui/button";
+import { IssueCard } from "../issues/issue-card-1";
 import { HiPlus, HiDatabase } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { HiOutlineArrowsUpDown } from "react-icons/hi2";
@@ -13,6 +14,7 @@ import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
 import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
+import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import {
@@ -21,21 +23,22 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import { IssueCard } from "../issues/issue-card-1";
 
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
 
+	const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
-	const sprintItems = sprintListData?.data?.items;
+	const sprintItems = sprintListData?.data?.items as SprintTypes[];
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issuesItems = issuesListData?.data?.items;
+	const issuesItems = issuesListData?.data?.items as IssueTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	/*  ######################################################################################## */
 
@@ -45,7 +48,7 @@ const SprintsColumn = () => {
 	};
 
 	const getIssues = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -59,15 +62,27 @@ const SprintsColumn = () => {
 		const resp = (await dispatch(
 			patchAction({ issues: Urls.issues }, { sprint_id: sprintId, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id }, issueId)
 		)) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			getIssues();
 		}
+
+		// let postData: any = {
+		// 	issue_ids: [issueId],
+		// 	sprint_id: sprintId,
+		// 	status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id
+		// };
+
+		// (dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, "sprint")) as any).then(res => {
+		// 	if (res.payload?.status == 200) {
+		// 		getIssues();
+		// 	}
+		// })
+
+
 	}
 
 	/*  ######################################################################################## */
-
-	const filteredSprints = sprintItems?.filter(sprnt => true)
 
 	const sortoptions = [
 		{ label: "New", action: () => { } },
@@ -127,11 +142,11 @@ const SprintsColumn = () => {
 				</div>
 			</div>
 			<div>
-				{filteredSprints?.length > 0 && (
+				{sprintItems?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full ">
 
 						<div className="py-4 px-6 space-y-2">
-							{filteredSprints.map((sprint, i) => {
+							{sprintItems.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(
 									(issue) => issue?.sprint_id === sprint?._id
@@ -156,9 +171,9 @@ const SprintsColumn = () => {
 												value="item-1"
 												className="border-0 p-0 m-0"
 											>
-												<div className="flex justify-between items-center w-full">
+												<div className="flex justify-between items-center w-full min-h-12">
 													<HYDialog
-														className="max-w-6xl dark:bg-[#23252A]"
+														className="max-w-6xl dark:bg-card"
 														content={<SprintDetailView data={sprint} />}
 													>
 														<div className="flex justify-between items-center w-full">
@@ -172,23 +187,18 @@ const SprintsColumn = () => {
 															</div>
 															<div>
 																<div
-																	className={`${sprint?.status ===
-																		"in-progress" &&
-																		"bg-[#56972E]"
-																		} ${sprint?.status ===
-																		"backlog" &&
-																		"bg-[#5F5F5F]"
-																		} ${sprint?.status ===
-																		"retro" &&
-																		"bg-[#DF8430]"
-																		}  text-white px-3 py-0.5 whitespace-nowrap mx-2 capitalize rounded-full text-[11px] `}
+																	className={`
+																		${sprint?.status === "in-progress" && "bg-[#56972E]"} 
+																		${sprint?.status === "backlog" && "bg-[#5F5F5F]"}
+																		${sprint?.status === "retro" && "bg-[#DF8430]"}
+																		text-white px-3 py-0.5 whitespace-nowrap mx-2 capitalize rounded-full text-[11px] `}
 																>
 																	{sprint?.status}
 																</div>
 															</div>
-															<div className="flex gap-2 items-center text-[#737377]">
+															<div className="flex gap-2 xl:gap-5 items-center text-[#737377]">
 																<div className="text-xs">
-																	4 Apr - 12 Apr
+																	{formatter.format(new Date(sprint?.start_date))} - {formatter.format(new Date(sprint?.end_date))}
 																</div>
 																<div className="flex gap-1 items-center">
 																	<HiDatabase className="" />{" "}
@@ -198,15 +208,13 @@ const SprintsColumn = () => {
 														</div>
 													</HYDialog>
 													<div className="pl-2">
-														<Button type="button" variant="ghost" className="p-0" ><AccordionTrigger className="p-3" /></Button>
+														<AccordionTrigger className="p-3" />
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
 													{sprintIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
 
-													<IssueCreationCardMini
-														sprintId={sprint?._id}
-													/>
+													<IssueCreationCardMini sprintId={sprint?._id} />
 												</AccordionContent>
 											</AccordionItem>
 										</Accordion>
@@ -216,7 +224,7 @@ const SprintsColumn = () => {
 						</div>
 					</ScrollArea>
 				)}
-				{filteredSprints?.length === 0 && (
+				{sprintItems?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-200px)] items-center mt-[30px]">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">

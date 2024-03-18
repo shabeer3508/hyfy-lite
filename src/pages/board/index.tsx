@@ -10,21 +10,24 @@ import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import { IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
 
 const Board = () => {
 	const dispatch = useDispatch();
 
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
+	const sprintItems = sprintListData?.data?.items as SprintTypes[];
+
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issueListItems = issuesListData?.data?.items
+	const issueListItems = issuesListData?.data?.items as IssueTypes[];
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
-	const userItems = usersList?.data?.items
+	const userItems = usersList?.data?.items as UsersTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
@@ -73,28 +76,25 @@ const Board = () => {
 
 	const updateItemStatus = async (id: string, status_name: string) => {
 		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: issueStatusList?.find(issueStatus => issueStatus?.name === status_name)?._id }, id))) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) { getIssues() }
 	};
 
 	/*  ######################################################################################## */
 
 	const sprintOptions =
-		sprintListData?.data?.items?.map((sprnt) => ({
+		sprintItems?.map((sprnt) => ({
 			value: sprnt?._id,
 			label: sprnt?.name,
 		})) ?? [];
 
-	const selectedSprintInfo = sprintListData?.data?.items?.find(
+	const selectedSprintInfo = sprintItems?.find(
 		(sprnt) => sprnt?._id === boardInfo?.selected_sprint
 	);
-
-
 
 	const taskFilterOptions = userItems?.map(usr => {
 		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.user_name })
 	}) || []
-
 
 
 	const typeFilterOptions = [
@@ -109,7 +109,6 @@ const Board = () => {
 		{ label: "Highest", value: "points" },
 		{ label: "Lowest", value: "-points" },
 	]
-
 
 	/*  ######################################################################################## */
 

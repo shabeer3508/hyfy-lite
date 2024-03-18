@@ -89,7 +89,7 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
             <form onSubmit={handleInviteUsers}>
                 <div className="flex flex-col gap-3">
                     <div className="flex w-full justify-between items-center gap-2">
-                        <div className="flex items-center dark:bg-[#23252A] flex-1 rounded px-3 border dark:border-[#FFFFFF1A] border-border ">
+                        <div className="flex items-center dark:bg-card flex-1 rounded px-3 border dark:border-[#FFFFFF1A] border-border ">
                             <HiMail className="mr-2" />
                             <Input
                                 autoFocus
@@ -97,7 +97,7 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
                                 autoComplete="off"
                                 placeholder="Email"
                                 value={formData?.inputUser?.email}
-                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A] h-[38px]"
+                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card h-[38px]"
                                 onChange={({ target }) => setFormData((prevData) => ({ ...prevData, inputUser: { ...prevData?.inputUser, email: target.value } }))}
                             />
                         </div>
@@ -106,7 +106,7 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
                             unSelectable={false}
                             options={rolesOptions}
                             defaultValue={formData?.inputUser?.role}
-                            buttonClassName="dark:bg-[#23252A]  dark:border-[#FFFFFF1A]   border w-1/3"
+                            buttonClassName="dark:bg-card  dark:border-[#FFFFFF1A]   border w-1/3"
                             onValueChange={(value) => setFormData((prevData) => ({ ...prevData, inputUser: { ...prevData?.inputUser, role: value } }))}
                         />
 
@@ -114,7 +114,7 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
                             type="button"
                             variant="outline"
                             onClick={() => handleAddMembers()}
-                            className="text-primary dark:bg-[#23252A] border-primary border"
+                            className="text-primary dark:bg-card border-primary border"
                         >
                             Add
                         </Button>
@@ -135,7 +135,7 @@ const InviteUsers: React.FC<InviteUserProps> = () => {
                                                 unSelectable={false}
                                                 options={rolesOptions}
                                                 defaultValue={user?.role}
-                                                buttonClassName="dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+                                                buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
                                                 onValueChange={(value) => handleUserRoleChange(user?.id, value)}
                                             />
                                         </div>

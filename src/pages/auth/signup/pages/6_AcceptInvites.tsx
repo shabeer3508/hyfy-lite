@@ -1,9 +1,9 @@
 import Cookies from "js-cookie"
 import Urls from "@/redux/actions/Urls";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useDispatch, useSelector } from "react-redux";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { getAction, patchAction, reducerNameFromUrl, setCurrentUser } from "@/redux/actions/AppActions";
 import {
@@ -48,7 +48,7 @@ const AcceptInvitesPage = () => {
 
     return (
         <div className="flex justify-center h-screen items-center dark:bg-background">
-            <Card className="w-[500px] dark:bg-[#23252A]">
+            <Card className="w-[500px] dark:bg-card">
                 <CardHeader className="pb-3">
                     <CardTitle className="text-primary mb-5">Hyfy</CardTitle>
                     <CardDescription className="text-white text-base">

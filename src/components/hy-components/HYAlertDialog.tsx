@@ -15,7 +15,7 @@ interface HYAlertDialogProps {
     submitText?: string;
     description?: string;
     closeText?: string;
-    children?: any
+    children?: React.ReactNode;
     submitAction: () => void;
 }
 

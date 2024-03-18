@@ -63,7 +63,7 @@ const CreateAccountPage: React.FC = () => {
 
         (dispatch(postAction({ signupSendEmail: Urls.signup_send_email }, postData)) as any).then(res => {
             if (res.payload?.status === 200) {
-                toast.success(`${res.payload?.data?.message}`)
+                toast.success(`${res.payload?.data?.message}`, { position: "bottom-center" })
                 navigate("/signup/verify_email", { state: { authInfo: postData } })
             }
         })
@@ -80,7 +80,7 @@ const CreateAccountPage: React.FC = () => {
 
 
     return <div className="flex justify-center h-screen items-center dark:bg-background">
-        <Card className="w-[500px] dark:bg-[#23252A]">
+        <Card className="w-[500px] dark:bg-card">
             <CardHeader>
                 <CardTitle className="text-primary mb-5 text-3xl">Hyfy</CardTitle>
                 <CardDescription className="dark:text-white text-xl">Create Account</CardDescription>
@@ -106,7 +106,7 @@ const CreateAccountPage: React.FC = () => {
                                 name="user_name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+                                        <div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
                                             <HiUser className="mr-2" />
                                             <Input
                                                 required
@@ -114,7 +114,7 @@ const CreateAccountPage: React.FC = () => {
                                                 {...field}
                                                 autoComplete="off"
                                                 placeholder="Name"
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
                                             />
                                         </div>
                                         <FormMessage />
@@ -126,7 +126,7 @@ const CreateAccountPage: React.FC = () => {
                                 name="email"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+                                        <div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
                                             <HiMail className="mr-2" />
                                             <Input
                                                 required
@@ -134,7 +134,7 @@ const CreateAccountPage: React.FC = () => {
                                                 id="identity"
                                                 autoComplete="off"
                                                 placeholder="Email"
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
                                             />
                                         </div>
                                         <FormMessage />
@@ -147,7 +147,7 @@ const CreateAccountPage: React.FC = () => {
                                 name="password"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+                                        <div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
                                             <HiLockClosed className="mr-2" />
                                             <Input
                                                 required
@@ -156,7 +156,7 @@ const CreateAccountPage: React.FC = () => {
                                                 autoComplete="off"
                                                 placeholder="Password"
                                                 type={showPassword.initialPassword ? "text" : "password"}
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
                                             />
 
                                             {showPassword.initialPassword ?
@@ -182,7 +182,7 @@ const CreateAccountPage: React.FC = () => {
                                 name="confirmPassword"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <div className="flex items-center dark:bg-[#23252A] rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
+                                        <div className="flex items-center dark:bg-card rounded px-3 border dark:border-[#FFFFFF1A] border-border mt-1">
                                             <HiLockClosed className="mr-2" />
                                             <Input
                                                 required
@@ -191,7 +191,7 @@ const CreateAccountPage: React.FC = () => {
                                                 autoComplete="off"
                                                 placeholder="Confirm Password"
                                                 type={showPassword.confirmPassword ? "text" : "password"}
-                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-[#23252A]"
+                                                className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 dark:bg-card"
                                             />
                                             {showPassword.confirmPassword ?
                                                 <HiOutlineEyeOff

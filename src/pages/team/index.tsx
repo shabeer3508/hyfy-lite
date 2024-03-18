@@ -98,7 +98,7 @@ const Team = () => {
 								<HYSearch />
 								<HYDialog
 									title={"Add members"}
-									className="dark:bg-[#23252A]"
+									className="dark:bg-card"
 									content={<InviteUsers />}
 								>
 									<Button className="text-white">Invite Member</Button>

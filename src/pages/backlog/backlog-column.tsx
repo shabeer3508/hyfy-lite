@@ -1,27 +1,27 @@
+import { toast } from "sonner";
 import Urls from "@/redux/actions/Urls";
 import { useEffect, useState } from "react";
+import { BiDirections } from "react-icons/bi";
 import { TbSquareCheck } from "react-icons/tb";
 import { Button } from "@/components/ui/button";
+import { IssueCard } from "../issues/issue-card-1";
 import { useDispatch, useSelector } from "react-redux";
+import HYModal from "@/components/hy-components/HYModal";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropDown from "@/components/hy-components/HYDropDown";
+import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
 import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { EpicTypes, IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
-import { toast } from "sonner";
-import { IssueCard } from "../issues/issue-card-1";
-import HYModal from "@/components/hy-components/HYModal";
-import { BiDirections } from "react-icons/bi";
-import { IssueStatusTypes } from "@/interfaces";
 
-const BacklogColumn = () => {
+const BacklogColumn: React.FC = () => {
 	const dispatch = useDispatch();
 
 	const [issueTransfer, setIssueTransfer] = useState({
@@ -31,17 +31,17 @@ const BacklogColumn = () => {
 	})
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
-	const issueItems = issuesListData?.data?.items;
+	const issueItems = issuesListData?.data?.items as IssueTypes[];
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
-	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
-	const epicItems = epicsListData?.data?.items;
+	const epicItems = epicsListData?.data?.items as EpicTypes[];
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
@@ -70,7 +70,7 @@ const BacklogColumn = () => {
 		const resp = (await dispatch(
 			patchAction({ issues: Urls.issues }, { sprint_id: null, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
 		)) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			getIssues();
 		}
@@ -94,7 +94,7 @@ const BacklogColumn = () => {
 	}
 
 	const closeTransferModal = () => {
-		setIssueTransfer((prevData) => ({ selectedIssues: [], isSelectionOn: false, openTranserModal: false }));
+		setIssueTransfer({ selectedIssues: [], isSelectionOn: false, openTranserModal: false });
 	}
 
 
@@ -104,7 +104,7 @@ const BacklogColumn = () => {
 		issueItems?.filter((issue) => issue?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id) ?? [];
 
 	const usersOptions =
-		usersList?.data?.items?.map((user) => ({
+		usersList?.map((user) => ({
 			value: user?._id,
 			label: user?.user_name,
 		})) ?? [];
@@ -308,7 +308,7 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 		}
 
 		(dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, type)) as any).then(res => {
-			if (res.payload.status == 200) {
+			if (res.payload?.status == 200) {
 				toast.success("Issue moved successfully");
 				getIssues();
 				handleClose();

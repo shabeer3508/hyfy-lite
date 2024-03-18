@@ -1,7 +1,7 @@
 import EpicsColumn from "./epics-column";
+import { useSelector } from "react-redux";
 import BacklogColumn from "./backlog-column";
 import SprintsColumn from "./sprints-column";
-import { useSelector } from "react-redux";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";

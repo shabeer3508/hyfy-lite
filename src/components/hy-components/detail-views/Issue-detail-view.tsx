@@ -149,7 +149,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 					<img src="/bug_icon.svg" alt="bug" height={25} width={25} />
 				)}
 				<div className="flex-1">
-					<HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => handleIssueEdit(value, "name")} />
+					<HYEditableDiv className="text-xl dark:bg-card" defaultText={data?.name} handleChange={(value) => handleIssueEdit(value, "name")} />
 				</div>
 			</div>
 			<div className="grid grid-cols-7 pt-5">
@@ -160,8 +160,8 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={epicOptions}
-								buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
-								defaultValue={data?.epic_id}
+								buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
+								defaultValue={typeof data?.epic_id === "string" && data?.epic_id}
 								onValueChange={(value) => handleIssueEdit(value, "epic_id")}
 							/>
 						</div>
@@ -175,7 +175,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={sprintOptions}
-								buttonClassName="w-full dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
 								defaultValue={data?.sprint_id}
 								onValueChange={(value) => handleIssueEdit(value, "sprint_id")}
 							/>
@@ -192,7 +192,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								label={<HiDatabase />}
 								options={pointOptions}
-								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
 								defaultValue={data?.points?.toString()}
 								onValueChange={(value) => handleIssueEdit(value, "points")}
 							/>
@@ -207,7 +207,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								label={<HiOutlineClock />}
 								options={estimatedHours}
-								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
 								defaultValue={data?.estimated_hours?.toString()}
 								onValueChange={(value) => handleIssueEdit(value, "estimated_hours")}
 
@@ -223,7 +223,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								unSelectable={true}
 								options={issueOptions}
-								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
 								defaultValue={data?.dependency}
 								onValueChange={(value) => handleIssueEdit(value, "dependency")}
 							/>
@@ -238,7 +238,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							<HYCombobox
 								defaultValue={data?.status}
 								options={statusOptions}
-								buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+								buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
 								onValueChange={(value) => handleIssueEdit(value, "status")}
 							/>
 						</div>
@@ -281,7 +281,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 									{data?.assign_to?.map(userId => {
 										const userInfo = usersList?.find(user => user._id === userId);
 										return (
-											<div className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] px-3 py-1 rounded w-full group">
+											<div key={`${userId}`} className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] px-3 py-1 rounded w-full group">
 												<div className="flex gap-3">
 													<HYAvatar name={userInfo?.user_name} />
 													<div className="text-xs">
@@ -313,7 +313,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 								<div className="mt-2 w-full">
 									<HYCombobox
 										options={usersOptions}
-										buttonClassName="w-full mr-4 dark:bg-[#23252A] dark:border-[#FFFFFF1A]"
+										buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
 										optionsClassName="w-[200px]"
 										onValueChange={(value: string) => handleAssignIssueUser(value, "assign")}
 									/>
@@ -367,7 +367,7 @@ export default IssueDetailView;
 
 export const CommentCard = ({ data }: { data: any }) => {
 	return (
-		<Card className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]">
+		<Card className="dark:bg-card dark:border-[#FFFFFF1A]">
 			<CardContent className="p-3 text-xs">
 				<div className="flex justify-between items-center mb-3">
 					<div className="flex gap-2">

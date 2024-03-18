@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import ReleaseCard from "./ReleaseCard";
 import Urls from "@/redux/actions/Urls";
+import { ReleaseTypes } from "@/interfaces";
 import { HiViewBoards } from "react-icons/hi";
 import { BiDirections } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -17,8 +19,6 @@ import {
 	reducerNameFromUrl,
 	setReleasePageData,
 } from "@/redux/actions/AppActions";
-import NoProjectScreen from "../empty-screens/NoProjectScreen";
-import { ReleaseTypes } from "@/interfaces";
 
 
 
@@ -41,7 +41,7 @@ const Releases = () => {
 
 	const updateItemStatus = async (id: string, stage: string) => {
 		const resp = (await dispatch(patchAction({ release: Urls.release }, { status: stage }, id))) as any;
-		const success = resp.payload.status == 200;
+		const success = resp.payload?.status == 200;
 		if (success) {
 			getReleases();
 		}

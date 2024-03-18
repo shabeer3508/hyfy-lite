@@ -3,16 +3,17 @@ import { useEffect } from "react";
 import HYAvatar from "../HYAvatar";
 import HYSearch from "../HYSearch";
 import Urls from "@/redux/actions/Urls";
-import { SprintTypes } from "@/interfaces";
 import HYEditableDiv from "../HYEditableDiv";
+import HYAlertDialog from "../HYAlertDialog";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";
 import IssueMiniCard from "@/pages/issues/issue-card-2";
+import { IssueTypes, SprintTypes } from "@/interfaces";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const SprintDetailView = ({ data }: { data: SprintTypes }) => {
     const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
 
     const issuesReducerName = reducerNameFromUrl("issues", "GET");
     const issueListData = useSelector((state: any) => state?.[issuesReducerName]);
-    const issueListItems = issueListData?.data?.items;
+    const issueListItems = issueListData?.data?.items as IssueTypes[];
 
     /*  ######################################################################################## */
 
@@ -39,10 +40,19 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
 
     const updateSprintInfo = async (key: string | number, value: string | boolean) => {
         const resp = (await dispatch(patchAction({ sprints: Urls.sprints }, { [key]: value }, data?._id))) as any
-        const success = resp.payload.status == 200;
+        const success = resp.payload?.status == 200;
         if (success) {
             getSprints();
         }
+    }
+
+
+    const handleSprintDelete = () => {
+        (dispatch(deleteAction(Urls.sprints, data?._id)) as any).then((res) => {
+            if (res.payload?.status === 200) {
+                getSprints();
+            }
+        })
     }
 
     /*  ######################################################################################## */
@@ -71,16 +81,25 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
     return (
         <div className="">
             <div className="text-xl">
-                <HYEditableDiv className="text-xl dark:bg-[#23252A]" defaultText={data?.name} handleChange={(value) => updateSprintInfo("name", value)} />
+                <HYEditableDiv className="text-xl dark:bg-card" defaultText={data?.name} handleChange={(value) => updateSprintInfo("name", value)} />
             </div>
             <div className="flex justify-between py-3 text-xs items-center">
                 <div className="flex gap-2 items-center">
                     <HiCalendarDays className="text-[#707173]" />{data?.start_date && formatter.format(new Date(data?.start_date))} to
                     <HiCalendarDays className="text-[#707173]" />{data?.end_date && formatter.format(new Date(data?.end_date))}
                 </div>
-                <div>
+                <div className="space-x-2">
+                    <HYAlertDialog submitAction={handleSprintDelete} >
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            className="border border-destructive text-destructive hover:text-destructive"
+                        >
+                            Delete
+                        </Button>
+                    </HYAlertDialog>
                     {data?.is_started ?
-                        <Button onClick={() => updateSprintInfo("is_started", false)} variant="destructive" className="w-[100px] text-white" >Stop</Button> :
+                        <Button onClick={() => updateSprintInfo("is_started", false)} className="w-[100px] text-white bg-gray-500 hover:bg-gray-500" >Stop</Button> :
                         <Button onClick={() => updateSprintInfo("is_started", true)} className="w-[100px] text-white">Start</Button>}
                 </div>
             </div>
@@ -125,7 +144,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                             Description
                         </div>
                         <div className="flex flex-1 items-center">
-                            <HYEditableDiv className="text-base dark:bg-[#23252A]" defaultText={data?.description} handleChange={(value) => updateSprintInfo("description", value)} />
+                            <HYEditableDiv className="text-base dark:bg-card" defaultText={data?.description} handleChange={(value) => updateSprintInfo("description", value)} />
                         </div>
                     </div>
                 </div>
@@ -154,7 +173,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                     </div>
                 </div>
                 <div className="pr-5">
-                    <HYSearch className="dark:bg-[#23252A] dark:border-[#FFFFFF1A]" inputClassName="dark:bg-[#23252A]" />
+                    <HYSearch className="dark:bg-card dark:border-[#FFFFFF1A]" inputClassName="dark:bg-card" />
                 </div>
             </div>
 

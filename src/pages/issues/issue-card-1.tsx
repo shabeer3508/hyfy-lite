@@ -1,23 +1,38 @@
 
+import { IssueTypes, UsersTypes } from "@/interfaces";
 import { Card } from "@/components/ui/card";
 import { HiBookOpen } from "react-icons/hi2";
 import { Checkbox } from "@/components/ui/checkbox";
 import HYDialog from "@/components/hy-components/HYDialog";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
-import { HiOutlineArrowNarrowUp, HiDatabase } from "react-icons/hi";
+import { HiOutlineArrowNarrowUp, HiDatabase, HiOutlineUser } from "react-icons/hi";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
-
-
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { useSelector } from "react-redux";
+import { reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 interface IssueCardProps {
-    issue: any;
+    issue: IssueTypes;
     index: number;
     showSelection?: boolean;
     handleSelection?: (issueId: string, isChecked: boolean) => void;
 }
 
 export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelection = false, handleSelection }) => {
+
+    const usersReducerName = reducerNameFromUrl("users", "GET");
+    const usersList = useSelector((state: any) => state?.[usersReducerName]);
+    const userItems = usersList?.data?.items as UsersTypes[];
+
+    const logoColors = [
+        "bg-[#71A4FF]",
+        "bg-[#4C4878]",
+        "bg-[#A4599A]",
+        "bg-[#E2A766]",
+        "bg-[#389C98]",
+        "bg-[#FF6481]",
+    ];
 
     const handleIssueSelection = (checked) => {
         handleSelection?.(issue?._id, checked);
@@ -31,7 +46,7 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
             className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
         >
             <HYDialog
-                className="max-w-6xl  dark:bg-[#23252A]"
+                className="max-w-6xl  dark:bg-card"
                 content={<IssueDetailView data={issue} />}
             >
                 <div className={`flex gap-3 justify-between items-center text-sm px-3 ${showSelection ? "py-1" : "py-2.5"}`}>
@@ -55,17 +70,32 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
                         )}
 
                         <div className="text-[#737377]">{issue?.name}</div>
-                        <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{issue?.epic_id?.[0]?.name}</div>
+                        <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{typeof issue?.epic_id !== "string" && issue?.epic_id?.[0]?.name}</div>
                     </div>
                     <div className="flex gap-4 items-center text-[#737377]">
-                        <div className="">
-                            <Avatar className="h-5 w-5">
-                                <AvatarImage
-                                    src="https://github.com/shadcn.png"
-                                    alt="@shadcn"
+                        <div className="flex">
+
+                            {issue?.assign_to?.map((usr, i) => {
+                                const currentUser = userItems?.find((u) => u?._id === usr)
+                                return <HYAvatar
+                                    key={usr}
+                                    className="cursor-default size-6 first:ml-0 -ml-2 border text-white"
+                                    name={currentUser?.user_name}
+                                    color={`${logoColors[i]}`}
                                 />
-                                <AvatarFallback>user</AvatarFallback>
-                            </Avatar>
+                            }
+                            )}
+
+                            {issue?.assign_to?.length === 0 &&
+                                <div
+                                    onClick={(e) => e?.stopPropagation()}
+                                    title="Unassigned"
+                                    className="cursor-default aspect-square border rounded-full flex justify-center items-center size-6 bg-gray-500" >
+                                    <HiOutlineUser className="text-white" />
+                                </div>
+                            }
+
+
                         </div>
                         {index % 2 === 0 && (
                             <HiOutlineArrowNarrowUp className="text-red-500" />
