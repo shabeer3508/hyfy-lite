@@ -21,15 +21,18 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const Sprints = () => {
 	const dispatch = useDispatch();
 
-	const issueListData = useSelector((state: any) => state?.GetIssues);
-	const sprintListData = useSelector((state: any) => state?.GetSprints);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
+
+	const issueListData = useSelector((state: any) => state?.GetIssues);
+	const issueListItems = issueListData?.data?.items as IssueTypes[]
+
+	const sprintListData = useSelector((state: any) => state?.GetSprints);
+	const sprintListItems = sprintListData?.data?.items as SprintTypes[]
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
-	const issueListItems = issueListData?.data?.items as IssueTypes[]
-	const sprintListItems = sprintListData?.data?.items as SprintTypes[]
 
 	/*  ######################################################################################## */
 
@@ -116,7 +119,7 @@ const Sprints = () => {
 										value="item-1"
 										className="border-0 p-0 m-0"
 									>
-										<div className="flex justify-between items-center w-full">
+										<div className="flex justify-between items-center w-full min-h-14">
 											<HYDialog
 												className="max-w-6xl dark:bg-card"
 												content={<SprintDetailView data={sprint} />}
@@ -144,7 +147,7 @@ const Sprints = () => {
 													</div>
 													<div className="flex gap-2 items-center text-[#737377]">
 														<div className="text-xs">
-															4 Apr - 12 Apr
+															{formatter.format(new Date(sprint?.start_date))} - {formatter.format(new Date(sprint?.end_date))}
 														</div>
 														<div className="flex gap-1 items-center">
 															<HiDatabase className="" />{" "}
@@ -154,9 +157,7 @@ const Sprints = () => {
 												</div>
 											</HYDialog>
 											<div className="pl-2">
-												{/* <Button type="button" variant="ghost" className="p-0" > */}
 												<AccordionTrigger className="p-3" />
-												{/* </Button> */}
 											</div>
 										</div>
 										<AccordionContent className="flex flex-col gap-2">

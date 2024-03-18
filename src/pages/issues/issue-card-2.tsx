@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { HiBookOpen } from "react-icons/hi2";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
-import { HiDatabase, HiOutlineClock } from "react-icons/hi";
+import { HiDatabase, HiOutlineClock, HiOutlineUser } from "react-icons/hi";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -21,6 +21,8 @@ const IssueMiniCard: React.FC<IssueMiniCardProps> = ({ data }) => {
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+
+
 
 	/*  ######################################################################################## */
 
@@ -50,6 +52,15 @@ const IssueMiniCard: React.FC<IssueMiniCardProps> = ({ data }) => {
 		{ label: "4", value: "4" },
 		{ label: "5", value: "5" },
 	]
+
+	const logoColors = [
+		"bg-[#71A4FF]",
+		"bg-[#4C4878]",
+		"bg-[#A4599A]",
+		"bg-[#E2A766]",
+		"bg-[#389C98]",
+		"bg-[#FF6481]",
+	];
 
 	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
 
@@ -100,7 +111,29 @@ const IssueMiniCard: React.FC<IssueMiniCardProps> = ({ data }) => {
 						onValueChange={(value) => upadateIssueByType(value, "status")}
 					/>
 				</div>
-				<div>
+				<div className="flex  items-center">
+
+					{data?.assign_to?.map((user, i) => {
+						const currentUser = usersList?.find((u) => u?._id === user);
+						return (
+							<HYAvatar
+								name={currentUser?.user_name}
+								color={`${logoColors[i]}`}
+								className="cursor-default size-6 text-xs first:ml-0 -ml-2 border text-white flex items-center justify-center"
+							/>
+						)
+					}
+					)}
+
+					{data?.assign_to?.length === 0 &&
+						<div
+							onClick={(e) => e?.stopPropagation()}
+							title="Unassigned"
+							className="cursor-default aspect-square border rounded-full flex justify-center items-center size-6 bg-gray-500" >
+							<HiOutlineUser className="text-white" />
+						</div>
+					}
+
 					{/*  TODO : Change this component to multiple user selction drop down */}
 					{/* <HYCombobox
 						label={

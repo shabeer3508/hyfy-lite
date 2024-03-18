@@ -14,7 +14,7 @@ import EpicCreationForm from '@/pages/epics/forms/epic-creation';
 import IssueCreationCardMini from '../issues/issue-creation-mini';
 import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
-import { getAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
+import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
 import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
@@ -54,6 +54,14 @@ const EpicScreen = () => {
         let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ epic: Urls.epic + query }));
     };
+
+    const updateEpicData = async (epicId: string, key: string | number, value: string | boolean) => {
+        const resp = (await dispatch(patchAction({ epic: Urls.epic }, { [key]: value !== "" ? value : null }, epicId))) as any
+        const success = resp.payload?.status == 200;
+        if (success) {
+            getEpics();
+        }
+    }
 
     /*  ######################################################################################## */
 
@@ -224,6 +232,7 @@ const EpicScreen = () => {
                                                                         options={releaseOptions}
                                                                         defaultValue={typeof epic?.release_id === "string" && epic?.release_id}
                                                                         buttonClassName="max-w-[200px]"
+                                                                        onValueChange={(value) => updateEpicData(epic?._id, "release_id", value)}
                                                                     />
                                                                 </div>
                                                                 <div className="flex gap-2 items-center text-[#737377] px-4 py-2 ">

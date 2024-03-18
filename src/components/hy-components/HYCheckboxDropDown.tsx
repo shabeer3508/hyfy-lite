@@ -18,7 +18,7 @@ const HYDropdownMenuCheckbox = ({
 	showInnerLabel = false,
 	innerLabel,
 }: {
-	children: any;
+	children: React.ReactNode;
 	showInnerLabel?: boolean;
 	innerLabel?: string;
 }) => {

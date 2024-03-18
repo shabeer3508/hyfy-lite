@@ -27,7 +27,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-const ReleaseCreationForm = ({ children }: any) => {
+const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 

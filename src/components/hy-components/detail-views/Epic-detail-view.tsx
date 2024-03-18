@@ -104,9 +104,9 @@ const EpicDetailView = ({ data }: { data: EpicTypes }) => {
 					label="Release"
 					unSelectable={true}
 					options={releaseOptions}
-					defaultValue={data?.release_id}
 					buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
 					onValueChange={(value) => updateEpicData("release_id", value)}
+					defaultValue={typeof data?.release_id === "string" && data?.release_id}
 				/>
 				<HYAlertDialog submitAction={handleEpicDelete} >
 					<Button

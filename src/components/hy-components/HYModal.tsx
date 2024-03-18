@@ -11,8 +11,7 @@ interface HYModalProps {
     title?: any;
     className?: string;
     description?: any;
-    children?: any;
-    content?: any;
+    content?: React.ReactNode;
     open: boolean;
     showCloseButton?: boolean;
     handleClose?: () => void;
@@ -21,7 +20,6 @@ interface HYModalProps {
 const HYModal: React.FC<HYModalProps> = ({
     title,
     description,
-    children,
     className,
     content,
     open,

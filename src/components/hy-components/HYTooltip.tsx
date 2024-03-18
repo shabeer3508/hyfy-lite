@@ -1,7 +1,7 @@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger, } from "@/components/ui/tooltip"
 
 interface TooltipProps {
-	children: any
+	children: React.ReactNode;
 	message: string
 	className?: string
 }

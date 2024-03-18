@@ -1,11 +1,13 @@
 import { z } from "zod";
-import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "@/redux/actions/Urls";
+import { UsersTypes } from "@/interfaces";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import HYInputDate from "../../../components/hy-components/HYInputDate";
 import { HYCombobox } from "../../../components/hy-components/HYCombobox";
@@ -13,17 +15,18 @@ import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppAc
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-const ProjectCreationForm = ({ children }: { children: any }) => {
+const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
-	const usersList = useSelector((state: any) => state?.[usersReducerName]);
+	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes;
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
-	const formSchema = z.object({
+	const projectFormSchema = z.object({
 		title: z.string().min(2, {
 			message: "Username must be at least 2 characters.",
 		}),
@@ -31,18 +34,20 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		end_date: z.date().optional().nullable(),
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
-		status: z.string(),
+		status: z.enum(["open", "in-progress", "pending", "done"]),
 	});
 
-	const defaultFormValues = {
+	type ProjectFormValues = z.infer<typeof projectFormSchema>
+
+	const defaultValues: Partial<ProjectFormValues> = {
 		title: "",
 		status: "open",
 		description: ""
 	};
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: defaultFormValues,
+	const form = useForm<ProjectFormValues>({
+		resolver: zodResolver(projectFormSchema),
+		defaultValues,
 	});
 
 	/*  ######################################################################################## */
@@ -57,11 +62,11 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 		dispatch(getAction({ project: Urls.project + query }));
 	};
 
-	const handleProjectCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleProjectCreation = async (values: ProjectFormValues) => {
 		const resp = (await dispatch(postAction({ project: Urls.project }, values))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
-			form.reset(defaultFormValues);
+			form.reset(defaultValues);
 			setOpenForm(false);
 			getProjects();
 		}
@@ -70,7 +75,7 @@ const ProjectCreationForm = ({ children }: { children: any }) => {
 	/*  ######################################################################################## */
 
 	// const usersOptions =
-	// 	usersList?.data?.items?.map((user) => ({
+	// 	usersList?.map((user) => ({
 	// 		value: user?._id,
 	// 		label: user?.user_name,
 	// 	})) ?? [];

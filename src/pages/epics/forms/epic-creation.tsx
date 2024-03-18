@@ -26,7 +26,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-const EpicCreationForm = ({ children }: { children: any }) => {
+const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 

@@ -19,7 +19,7 @@ const HYDropDown = ({
 	children,
 	options,
 }: {
-	children: any;
+	children: React.ReactNode;
 	options: DropdownMenuOption[];
 }) => {
 	return (

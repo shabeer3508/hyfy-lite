@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/dialog";
 
 
-const SprintCreationForm = ({ children }: { children: any }) => {
+const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;

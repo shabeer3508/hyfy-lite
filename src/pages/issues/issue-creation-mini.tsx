@@ -11,6 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { HiBookOpen } from "react-icons/hi2";
 
 const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId?: string }) => {
 	const dispatch = useDispatch();
@@ -82,14 +83,14 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 				<SelectTrigger className="w-[80px] focus:ring-0 focus:ring-offset-0 border-0 text-primary">
 					<SelectValue placeholder="" />
 				</SelectTrigger>
-				<SelectContent className="w-1 ">
+				<SelectContent className="w-10 ">
 					<SelectItem value="story">
-						<img src="/story_icon.svg" alt="story" />
+						<HiBookOpen className="w-4 h-4" />
 					</SelectItem>
 					<SelectItem value="task">
 						<img src="/task_icon.svg" alt="task" />
 					</SelectItem>
-					<SelectItem value="bug">
+					<SelectItem value="bug" >
 						<img src="/bug_icon.svg" alt="bug" />
 					</SelectItem>
 				</SelectContent>

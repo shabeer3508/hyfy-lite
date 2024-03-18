@@ -27,6 +27,8 @@ import {
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
 
+	const formatter = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" });
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const sprintListData = useSelector((state: any) => state?.GetSprints);
@@ -169,7 +171,7 @@ const SprintsColumn = () => {
 												value="item-1"
 												className="border-0 p-0 m-0"
 											>
-												<div className="flex justify-between items-center w-full">
+												<div className="flex justify-between items-center w-full min-h-12">
 													<HYDialog
 														className="max-w-6xl dark:bg-card"
 														content={<SprintDetailView data={sprint} />}
@@ -194,9 +196,9 @@ const SprintsColumn = () => {
 																	{sprint?.status}
 																</div>
 															</div>
-															<div className="flex gap-2 items-center text-[#737377]">
+															<div className="flex gap-2 xl:gap-5 items-center text-[#737377]">
 																<div className="text-xs">
-																	4 Apr - 12 Apr
+																	{formatter.format(new Date(sprint?.start_date))} - {formatter.format(new Date(sprint?.end_date))}
 																</div>
 																<div className="flex gap-1 items-center">
 																	<HiDatabase className="" />{" "}
