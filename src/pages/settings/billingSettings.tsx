@@ -14,59 +14,79 @@ import {
 } from "@/components/ui/table";
 import icons_dwnld from "@/assets/icons/header-icons/icons_dwnld.svg";
 import { HiOutlineDownload } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const BillingSettings = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="overflow-auto max-h-[calc(100vh-100px)] ">
-      <div className="dark:text-foreground flex flex-col gap-y-[37px] my-6 px-6 w-full    ">
-        <div className="flex w-4/6  items-center ">
-          <h5 className="text-[#737377]"> Settings </h5>
+    <div className="overflow-auto max-h-[calc(100vh-100px)]">
+      <div className="dark:text-foreground flex flex-col  gap-[37px]  px-6 w-full ">
+        <div className="flex w-4/6 mt-[37px] items-center ">
+          <div onClick={() => navigate("/settings")}>
+            <h5 className="text-[#737377] font-medium hover:cursor-pointer">
+              {" "}
+              Settings{" "}
+            </h5>
+          </div>
           <LuChevronRight className="w-5 h-5" />
-          <h5>Billing</h5>
+          <h5 className="font-medium">Billing</h5>
         </div>
 
-        <div className="flex w-4/6  flex-col gap-6 mb-10">
-          <Card className="flex w-full  gap-y-8 flex-col dark:bg-[#131417]">
+        <div className="flex w-4/6  flex-col gap-6 mb-10 ">
+          <Card className="flex w-full  gap-y-8 flex-col dark:bg-[#131417] ">
             <div className="flex mx-[18px] mt-[18px]  flex-col  gap-y-4">
-              <div className="text-sm text-[#737377]">Plan Details</div>
-              <div className="flex w-full items-end  ">
-                <div className="flex flex-col w-2/5  ">
-                  <h5 className="flex text-xl">₹ 24,XXX.XX</h5>
-                  <Label className="flex text-sm">
+              <div className="text-sm text-[#737377] font-medium">
+                Plan Details
+              </div>
+              <div className="flex w-full items-end">
+                <div className="flex flex-col w-1/4  gap-y-2 flex-wrap">
+                  <div className="flex  text-xl whitespace-nowrap">
+                    ₹ 24,XXX.XX
+                  </div>
+                  <div className="flex text-sm">
                     Platinum - Quarterly Billing
-                  </Label>
+                  </div>
                 </div>
-                <div className="flex w-3/5 justify-end items-end gap-4  ">
-                  <Card className="flex text-sm gap-4 dark:bg-[#272729]">
-                    <span className="text-[#9499A5]">Purchased on</span>
-                    <span>24 Jun 2023</span>
+                <div className="flex w-3/4 justify-end items-end gap-4 flex-wrap  ">
+                  <Card className="flex items-center dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33]">
+                    <div className="flex  text-sm gap-4 mx-4 my-[7.5px] ">
+                      <span className="flex text-[#9499A5] ">Purchased on</span>
+                      <span className="flex ">24 Jun 2023</span>
+                    </div>
                   </Card>
-                  <Card className="flex text-sm gap-4 dark:bg-[#272729]">
-                    <span className="text-[#9499A5]">Ending on</span>
-                    <span>24 Jun 2025</span>
+                  <Card className="flex text-sm items-center dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33] ">
+                    <div className="flex  text-sm gap-4 mx-4 my-[7.5px]">
+                      <span className="text-[#9499A5]">Ending on</span>
+                      <span>24 Jun 2025</span>
+                    </div>
                   </Card>
-                  <Card className="flex text-sm gap-1 items-center dark:bg-[#272729]">
-                    <img
-                      className=" w-4 h-4 "
-                      src={icons_success}
-                      alt="success icon"
-                    />
-                    365 Days Left
+                  <Card className="flex  dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33]">
+                    <div className="flex  text-sm items-center mx-4 my-[7.5px] ">
+                      <img
+                        className=" w-4 h-4 "
+                        src={icons_success}
+                        alt="success icon"
+                      />
+                      <div>365 Days Left</div>
+                    </div>
                   </Card>
                 </div>
               </div>
             </div>
             <div className="flex mx-[18px] mb-[18px] ">
-              <Button className="h-8 w-[120-px]">Upgrade</Button>
+              <Button className="flex text-[#FFFFFF] w-[120px] ">
+                Upgrade
+              </Button>
             </div>
           </Card>
 
           <div className="flex w-full gap-6 ">
-            <Card className="flex w-1/2 h-[231px] dark:bg-[#131417] ">
+            <Card className="flex w-1/2 min-h-[231px] dark:bg-[#131417] ">
               <div className="flex flex-col p-[18px] gap-y-4">
-                <Label className="flex text-[#737377] text-sm">
+                <div className="flex text-[#737377] text-sm font-medium">
                   Billing Address
-                </Label>
+                </div>
                 <title className="flex">Roshan D'zousa</title>
                 <p className="flex flex-col text-[#9499A5] text-sm ">
                   <span>Techgebra Software LLP,</span>
@@ -80,13 +100,18 @@ const BillingSettings = () => {
               </div>
             </Card>
 
-            <Card className="flex w-1/2 h-[94px] dark:bg-[#131417]">
+            <Card className="flex w-1/2 min-h-[94px] dark:bg-[#131417]">
               <div className="flex flex-col w-full h-full p-[18px] justify-center  gap-y-4  ">
                 <div className="flex h-1/2 gap-4 ">
-                  <Label className="flex w-3/4 text-sm text-[#737377]">
-                    Payment Method{" "}
-                  </Label>
-                  <Button className="flex w-1/4 h-4">Update</Button>
+                  <div className="flex w-3/4 text-sm text-[#737377]">
+                    Payment Method
+                  </div>
+                  <Button
+                    variant="ghost"
+                    className="flex w-1/4 h-4 text-[#3E72F8]  "
+                  >
+                    Update
+                  </Button>
                 </div>
                 <div className="flex h-1/2 gap-4 ">
                   <title className="flex w-3/5 text-lg">VISA</title>
@@ -98,9 +123,9 @@ const BillingSettings = () => {
             </Card>
           </div>
 
-          <Card className="flex w-full dark:bg-[#131417]">
-            <div className="m-[18px]">
-              <div className="">Invoices</div>
+          <Card className=" w-full dark:bg-[#131417]">
+            <div className=" m-[18px] ">
+              <div className="mx-2 text-[#737377] font-medium">Invoices</div>
               <Table className="">
                 <TableHeader className="">
                   <TableRow className=" ">

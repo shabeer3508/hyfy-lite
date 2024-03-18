@@ -11,24 +11,20 @@ const Settings = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="dark:text-foreground h-screen ml-6">
-      <div className="flex justify-between items-center">
-        <div className="text-xl flex h-10 items-center">
-          Settings
-        </div>
+    <div className="dark:text-foreground h-screen ml-6 gap-6">
+      <div className="flex justify-between items-center mt-[37px]">
+        <h5 className="font-medium">Settings</h5>
       </div>
 
       <div className="flex flex-col gap-4 my-3 xl:w-2/3 mr-6 xl:mr-0">
-        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
+        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
               <HiBuildingLibrary className="h-6 w-6 text-[#737377] group-hover:text-primary" />
               <div className=" h-6 text-[#737377] ">Organization</div>
             </div>
             <div className="flex gap-2 col-span-2 items-center h-full">
-              <div className=" text-[#737377] text-sm ">
-                Active
-              </div>
+              <div className=" text-[#737377] text-sm ">Active</div>
               <div className="text-sm">ABC Software LLP</div>
             </div>
             <div className=""></div>
@@ -38,7 +34,7 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
           <div className="grid grid-cols-3 w-full">
             <div className="flex items-center gap-4 ">
               <TbReceipt className="w-7 h-7 text-background fill-[#737377]  group-hover:fill-primary" />
@@ -72,7 +68,7 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
+        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center col-span-2">
               <HiBell className="h-6 w-6 text-[#737377] group-hover:text-primary" />
@@ -84,7 +80,7 @@ const Settings = () => {
           </div>
         </Card>
 
-        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary" >
+        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
               <HiUser className="h-6 w-6 text-[#737377] group-hover:text-primary" />
