@@ -39,7 +39,7 @@ const TheLayout = () => {
 			<div
 				className={`hidden md:block 
 					${sidebar.sidebarShow ? "translate-x-0" : " -translate-x-full md:translate-x-0"}  
-					absolute shadow-2xl md:shadow-none z-50 bg-white dark:bg-slate-950 md:dark:bg-black  md:relative print:hidden  
+					absolute shadow-2xl md:shadow-none z-50 bg-white dark:bg-slate-950 md:dark:bg-black  md:relative 
 					${sidebar.minimize ? "w-16" : "w-[219px]"} 
 					transform-gpu transition-all duration-300 ease-in 
 					${sidebar.sidebarShow ? "ml-0" : `${sidebar.minimize ? "-ml-16" : "-ml-[219px]"}`}`
@@ -48,7 +48,7 @@ const TheLayout = () => {
 				<TheSidebar onClickClose={() => dispatch({ type: "set", sidebarShow: false })} />
 			</div>
 			<div className="relative flex grow flex-col ">
-				<div className=" left-0 right-0 top-0 z-40 print:hidden ">
+				<div className=" left-0 right-0 top-0 z-40 ">
 					<TheHeader />
 				</div>
 				<div className="flex grow transform-gpu flex-col overflow-clip">

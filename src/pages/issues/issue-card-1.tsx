@@ -100,10 +100,11 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
 
 
                         </div>
-                        {index % 2 === 0 && (
-                            <HiOutlineArrowNarrowUp className="text-red-500" />
-                        )}
+
+                        {issue?.priority === "critical" && <HiOutlineArrowNarrowUp title="Priority" className="text-red-500" />}
+
                         <PiLinkSimpleHorizontalBold />
+
                         <div className="flex gap-1 items-center">
                             <HiDatabase className="" /> {issue?.points}
                         </div>

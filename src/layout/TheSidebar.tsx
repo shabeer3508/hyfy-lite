@@ -42,8 +42,8 @@ const TheSidebar = ({ onClickClose }: TheSidebarProps) => {
 			</div>
 
 			<div className="   flex-1 overflow-y-auto border-r scrollbar-hide">
-				<div className=" mx-2 -mt-[1px]"></div>
-				<div className={`${minimize ? "items-center p-0 px-0 pt-4" : ""} flex flex-col gap-2 `}>
+				{/* <div className=" mx-2 -mt-[1px]"></div> */}
+				<div className={`${minimize ? "items-center p-0 px-0" : ""} flex flex-col gap-2 `}>
 					{navItems.map((item, idx) => <NavItem onClick={() => setIndex(idx)} key={`ni_${idx}`} item={item} minimize={minimize} />)}
 				</div>
 			</div>
