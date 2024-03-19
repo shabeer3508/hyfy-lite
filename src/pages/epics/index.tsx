@@ -245,7 +245,7 @@ const EpicScreen = () => {
                                                                             <div
                                                                                 className={`
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Done")?._id && "bg-[#56972E]"}
-                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#FFFFFF66]"} 
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#6D6E74]"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Ongoing")?._id && "bg-cyan-500"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#006EEF]"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Pending")?._id && "bg-[#D63B00]"} `}

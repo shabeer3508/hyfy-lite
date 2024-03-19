@@ -18,7 +18,7 @@ import IssueCreationForm from "@/pages/issues/forms/issue-creation";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { EpicTypes, IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
@@ -67,9 +67,9 @@ const BacklogColumn: React.FC = () => {
 	};
 
 
-	const updateIssueToBacklog = async (issueId: string) => {
+	const updateIssueToBacklog = async (issueId: string, sprintId: string) => {
 		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues }, { sprint_id: null, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
+			patchAction({ issues: Urls.issues + `/movetobacklog` }, { sprint_id: sprintId, status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
 		)) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
@@ -216,7 +216,7 @@ const BacklogColumn: React.FC = () => {
 				onDragOver={(e) => e.preventDefault()}
 				onDrop={(e) => {
 					e.preventDefault();
-					updateIssueToBacklog(e?.dataTransfer?.getData("id"))
+					updateIssueToBacklog(e?.dataTransfer?.getData("id"), e?.dataTransfer?.getData("sprint_id"))
 				}}>
 
 				{backlogIssues?.length > 0 && (
@@ -281,8 +281,8 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 
 	const dispatch = useDispatch();
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
-	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items;
-	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items;
+	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items as EpicTypes[];
+	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items as SprintTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
 	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
@@ -342,7 +342,7 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 							{epicsListData?.map(epic =>
 								<div
 									onClick={() => setTargetId({ epic_id: epic?._id })}
-									className={`${targetId?.epic_id === epic?._id && "bg-[#2E3035]"} py-1 px-3 border rounded cursor-pointer text-sm`}
+									className={`${targetId?.epic_id === epic?._id && "dark:bg-[#2E3035] bg-gray-300"} py-1 px-3 border rounded cursor-pointer text-sm`}
 								>
 									{epic?.name}
 								</div>
@@ -364,7 +364,7 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
 							{sprintListData?.map(sprint =>
 								<div
 									onClick={() => setTargetId({ sprint_id: sprint?._id })}
-									className={`${targetId?.sprint_id === sprint?._id && "bg-[#2E3035]"} py-1 px-3 border rounded cursor-pointer text-sm`}
+									className={`${targetId?.sprint_id === sprint?._id && "dark:bg-[#2E3035] bg-gray-300"} py-1 px-3 border rounded cursor-pointer text-sm`}
 								>
 									{sprint?.name}
 								</div>

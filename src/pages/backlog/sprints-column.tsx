@@ -15,8 +15,8 @@ import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
-import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
+import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
 	Accordion,
@@ -60,27 +60,17 @@ const SprintsColumn = () => {
 	};
 
 	const updateDropedIssueToSprint = async (issueId: string, sprintId: string) => {
-		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues }, { sprint_id: sprintId, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id }, issueId)
-		)) as any;
-		const success = resp.payload?.status == 200;
-		if (success) {
-			getIssues();
-		}
+		let postData: any = {
+			issue_ids: [issueId],
+			sprint_id: sprintId,
+			status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id
+		};
 
-		// let postData: any = {
-		// 	issue_ids: [issueId],
-		// 	sprint_id: sprintId,
-		// 	status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id
-		// };
-
-		// (dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, "sprint")) as any).then(res => {
-		// 	if (res.payload?.status == 200) {
-		// 		getIssues();
-		// 	}
-		// })
-
-
+		(dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, "sprint")) as any).then(res => {
+			if (res.payload?.status == 200) {
+				getIssues();
+			}
+		})
 	}
 
 	/*  ######################################################################################## */

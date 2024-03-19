@@ -220,7 +220,7 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 										<div
 											className={`
                                          		${issue?.status === findIssueStatusIdByName("Done") && "bg-[#56972E]"}
-                                         		${issue?.status === findIssueStatusIdByName("Backlog") && "bg-[#FFFFFF66]"} 
+                                         		${issue?.status === findIssueStatusIdByName("Backlog") && "bg-[#6D6E74]"} 
                                          		${issue?.status === findIssueStatusIdByName("Ongoing") && "bg-cyan-500"} 
                                          		${issue?.status === findIssueStatusIdByName("Todo") && "bg-[#006EEF]"} 
                                          		${issue?.status === findIssueStatusIdByName("Pending") && "bg-[#D63B00]"} `}

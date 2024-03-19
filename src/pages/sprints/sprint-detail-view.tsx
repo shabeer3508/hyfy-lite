@@ -1,18 +1,19 @@
 
 import { useEffect } from "react";
-import HYAvatar from "../../components/hy-components/HYAvatar";
-import HYSearch from "../../components/hy-components/HYSearch";
-import Urls from "@/redux/actions/Urls";
-import HYEditableDiv from "../../components/hy-components/HYEditableDiv";
-import HYAlertDialog from "../../components/hy-components/HYAlertDialog";
-import { Button } from "@/components/ui/button";
-import { HiCalendarDays } from "react-icons/hi2";
-import { Separator } from "@/components/ui/separator";
-import IssueMiniCard from "@/pages/issues/issue-card-2";
-import { IssueTypes, SprintTypes } from "@/interfaces";
+import { HiBookOpen, HiCalendarDays } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "@/redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { IssueTypes, SprintTypes } from "@/interfaces";
+import IssueMiniCard from "@/pages/issues/issue-card-2";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYSearch from "@/components/hy-components/HYSearch";
+import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const SprintDetailView = ({ data }: { data: SprintTypes }) => {
@@ -26,6 +27,10 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
     const issueListData = useSelector((state: any) => state?.[issuesReducerName]);
     const issueListItems = issueListData?.data?.items as IssueTypes[];
 
+
+    const sprintMembersReducerName = reducerNameFromUrl("sprintMembers", "GET");
+    const memberslist = useSelector((state: any) => state?.[sprintMembersReducerName])?.data?.data;
+
     /*  ######################################################################################## */
 
     const getIssues = () => {
@@ -37,6 +42,10 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
         let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
         dispatch(getAction({ sprints: Urls.sprints + query }));
     };
+
+    const getMembersList = () => {
+        dispatch(getAction({ sprintMembers: Urls.sprint_members + `/${data?._id}` }));
+    }
 
     const updateSprintInfo = async (key: string | number, value: string | boolean) => {
         const resp = (await dispatch(patchAction({ sprints: Urls.sprints }, { [key]: value }, data?._id))) as any
@@ -74,6 +83,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
 
     useEffect(() => {
         getIssues();
+        getMembersList();
     }, []);
 
     /*  ######################################################################################## */
@@ -111,9 +121,9 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                             <HYAvatar
                                 className="size-6"
                                 url="https://github.com/shadcn.png"
-                                name={"Jhon"}
+                                name={typeof data?.created_by !== "string" && data?.created_by?.[0]?.user_name}
                             />
-                            <span className="mx-2 truncate w-[150px]">
+                            <span className="mx-2 truncate w-[150px] text-xs">
                                 {typeof data?.created_by !== "string" &&
                                     (isCurrentUser(data?.created_by?.[0]?._id) ? "You" : data?.created_by?.[0]?.user_name)}
                             </span>
@@ -125,8 +135,8 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                     <div className="flex flex-col gap-3">
                         <div className="text-xs text-[#9499A5]">Assigned to</div>
                         <div className="flex flex-1 items-center">
-                            { /* TODO : update  user data for the avatars according to response */}
-                            {/* {data?.members?.length > 0 && data?.members?.map(member => */}
+                            { /* TODO : sprint members user data for the avatars according to response */}
+                            {/* {memberslist > 0 && memberslist?.map(member => */}
                             <HYAvatar
                                 // key={member?._id}
                                 className="size-6"
@@ -158,15 +168,15 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                     <div className="flex gap-3 text-xs items-center">
                         <div className="border flex items-center">{`(`}</div>
                         <div className="flex gap-1 ">
-                            <img src="/story_icon.svg" alt="Project" />
+                            <HiBookOpen className="w-4 h-4" />
                             <span>{findIssueCount("story")}</span>
                         </div>
                         <div className="flex gap-1">
-                            <img src="/task_icon.svg" alt="Project" />
+                            <img src="/task_icon.svg" alt="task" />
                             <span>{findIssueCount("task")}</span>
                         </div>
                         <div className="flex gap-1">
-                            <img src="/bug_icon.svg" alt="Project" />
+                            <img src="/bug_icon.svg" alt="bug" />
                             <span>{findIssueCount("bug")}</span>
                         </div>
                         {`)`}

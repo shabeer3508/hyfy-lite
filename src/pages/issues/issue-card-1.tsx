@@ -42,7 +42,10 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
         <Card
             draggable
             key={issue?._id}
-            onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
+            onDragStart={(e) => {
+                e.dataTransfer.setData("id", issue?._id);
+                e.dataTransfer.setData("sprint_id", issue?.sprint_id);
+            }}
             className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
         >
             <HYDialog
