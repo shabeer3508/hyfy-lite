@@ -12,12 +12,15 @@ const Settings = () => {
 
   return (
     <div className="dark:text-foreground h-screen ml-6 gap-6">
-      <div className="flex justify-between items-center mt-[37px]">
-        <h5 className="font-medium">Settings</h5>
+      <div className="flex justify-between items-center mt-2">
+        <h5 className=" text-xl">Settings</h5>
       </div>
 
-      <div className="flex flex-col gap-4 my-3 xl:w-2/3 mr-6 xl:mr-0">
-        <Card className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
+      <div className="flex flex-col gap-4 my-6 xl:w-2/3 mr-6 xl:mr-0 ">
+        <Card
+          onClick={() => navigate("/settings/organization")}
+          className="flex justify-between items-center  min-h-20  dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
+        >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
               <HiBuildingLibrary className="h-6 w-6 text-[#737377] group-hover:text-primary" />
@@ -29,12 +32,15 @@ const Settings = () => {
             </div>
             <div className=""></div>
           </div>
-          <div onClick={() => navigate("/settings/organization")}>
-            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
+          <div>
+            <MdKeyboardArrowRight className="h-5 w-5 " />
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
+        <Card
+          onClick={() => navigate("/settings/billing")}
+          className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
+        >
           <div className="grid grid-cols-3 w-full">
             <div className="flex items-center gap-4 ">
               <TbReceipt className="w-7 h-7 text-background fill-[#737377]  group-hover:fill-primary" />
@@ -63,24 +69,30 @@ const Settings = () => {
               </Button>
             </div>
           </div>
-          <div onClick={() => navigate("/settings/billing")}>
+          <div>
             <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
 
-        <Card className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
+        <Card
+          onClick={() => navigate("/settings/notification")}
+          className="flex  items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
+        >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center col-span-2">
               <HiBell className="h-6 w-6 text-[#737377] group-hover:text-primary" />
               <div className="h-6 text-[#737377] ">Notifications</div>
             </div>
           </div>
-          <div onClick={() => navigate("/settings/notification")}>
+          <div>
             <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
 
-        <Card className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary">
+        <Card
+          onClick={() => navigate("/settings/roles")}
+          className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
+        >
           <div className="grid grid-cols-3 w-full">
             <div className="flex gap-4 items-center">
               <HiUser className="h-6 w-6 text-[#737377] group-hover:text-primary" />
@@ -88,7 +100,7 @@ const Settings = () => {
             </div>
             <div></div>
           </div>
-          <div onClick={() => navigate("/settings/roles")}>
+          <div>
             <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>

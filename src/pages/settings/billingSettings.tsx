@@ -15,36 +15,39 @@ import {
 import icons_dwnld from "@/assets/icons/header-icons/icons_dwnld.svg";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 const BillingSettings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
-      <div className="dark:text-foreground flex flex-col  gap-[37px]  px-6 w-full ">
-        <div className="flex w-4/6 mt-[37px] items-center ">
-          <div onClick={() => navigate("/settings")}>
-            <h5 className="text-[#737377] font-medium hover:cursor-pointer">
-              {" "}
-              Settings{" "}
-            </h5>
-          </div>
-          <LuChevronRight className="w-5 h-5" />
-          <h5 className="font-medium">Billing</h5>
+      <div className="dark:text-foreground flex flex-col gap-6 ml-6 w-full ">
+        <div className="flex w-4/6 mt-2  items-center  ">
+          <Button variant="outline" className="w- p-0">
+            <MdKeyboardArrowLeft
+              onClick={() => navigate("/settings")}
+              className=" size-7  cursor-pointer  "
+            />
+
+            <h5 className="ml-4 text-[#737377] text-xl">Settings</h5>
+          </Button>
+          <MdKeyboardArrowRight className="text-[#737377] size-7 " />
+          <h5 className=" text-xl">Billing</h5>
         </div>
 
         <div className="flex w-4/6  flex-col gap-6 mb-10 ">
           <Card className="flex w-full  gap-y-8 flex-col dark:bg-[#131417] ">
-            <div className="flex mx-[18px] mt-[18px]  flex-col  gap-y-4">
+            <div className="flex mx-[18px] mt-[18px]  flex-col  gap-y-4 ">
               <div className="text-sm text-[#737377] font-medium">
                 Plan Details
               </div>
               <div className="flex w-full items-end">
                 <div className="flex flex-col w-1/4  gap-y-2 flex-wrap">
-                  <div className="flex  text-xl whitespace-nowrap">
+                  <h5 className="flex  text-xl whitespace-nowrap">
                     ₹ 24,XXX.XX
-                  </div>
-                  <div className="flex text-sm">
+                  </h5>
+                  <div className="flex flex-wrap text-sm">
                     Platinum - Quarterly Billing
                   </div>
                 </div>
@@ -75,9 +78,7 @@ const BillingSettings = () => {
               </div>
             </div>
             <div className="flex mx-[18px] mb-[18px] ">
-              <Button className="flex text-[#FFFFFF] w-[120px] ">
-                Upgrade
-              </Button>
+              <Button className="flex text-[#FFFFFF]  ">Upgrade</Button>
             </div>
           </Card>
 
@@ -100,24 +101,22 @@ const BillingSettings = () => {
               </div>
             </Card>
 
-            <Card className="flex w-1/2 min-h-[94px] dark:bg-[#131417]">
-              <div className="flex flex-col w-full h-full p-[18px] justify-center  gap-y-4  ">
-                <div className="flex h-1/2 gap-4 ">
-                  <div className="flex w-3/4 text-sm text-[#737377]">
+            <Card className="flex w-1/2 lg:h-[94px] md:min-h-[94px] dark:bg-[#131417]  ">
+              <div className="flex flex-col w-full   m-[18px]   ">
+                <div className="flex h-1/2 justify-between items-center  ">
+                  <div className="flex font-medium text-sm text-[#737377]">
                     Payment Method
                   </div>
                   <Button
                     variant="ghost"
-                    className="flex w-1/4 h-4 text-[#3E72F8]  "
+                    className="flex  text-[#3E72F8] px-0 py-0 "
                   >
                     Update
                   </Button>
                 </div>
-                <div className="flex h-1/2 gap-4 ">
-                  <title className="flex w-3/5 text-lg">VISA</title>
-                  <title className="flex w-2/5 text-lg justify-end">
-                    **** **** ****5659
-                  </title>
+                <div className="flex h-1/2 justify-between items-center">
+                  <div className="flex">VISA</div>
+                  <div className="flex text-end">**** **** ****5659</div>
                 </div>
               </div>
             </Card>
@@ -128,14 +127,14 @@ const BillingSettings = () => {
               <div className="mx-2 text-[#737377] font-medium">Invoices</div>
               <Table className="">
                 <TableHeader className="">
-                  <TableRow className=" ">
+                  <TableRow className=" border-none">
                     <TableHead>Date</TableHead>
                     <TableHead>Tax invoice Number</TableHead>
                     <TableHead>Total Amount</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody className="">
-                  <TableRow className=" ">
+                  <TableRow className="border-none ">
                     <TableCell className=" ">15 Dec 2024</TableCell>
                     <TableCell className="">1454464354</TableCell>
                     <TableCell className="">₹ 24,XXX.XX</TableCell>
@@ -143,7 +142,7 @@ const BillingSettings = () => {
                       <HiOutlineDownload className="h-6 w-6 stroke-1" />
                     </TableCell>
                   </TableRow>
-                  <TableRow className="  ">
+                  <TableRow className=" border-none ">
                     <TableCell className=" ">15 Dec 2024</TableCell>
                     <TableCell className=" ">1454464354</TableCell>
                     <TableCell className=" ">₹0</TableCell>

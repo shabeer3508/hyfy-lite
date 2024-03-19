@@ -2,24 +2,26 @@ import { Card } from "@/components/ui/card";
 import { LuChevronRight } from "react-icons/lu";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
+import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 
 const NotificationSettings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
-      <div className="dark:text-foreground flex flex-col  gap-y-6  w-full  px-6  ">
-        <div className="flex w-4/6 mt-[37px] items-center ">
-          <div onClick={() => navigate("/settings")}>
-            <h5 className="text-[#737377] font-medium hover:cursor-pointer">
-              {" "}
-              Settings{" "}
-            </h5>
-          </div>
-          <LuChevronRight className="w-5 h-5" />
-          <h5 className="font-medium">Notifications</h5>
+      <div className="dark:text-foreground flex flex-col  gap-6  w-full  px-6  ">
+        <div className="flex w-4/6 mt-2 items-center ">
+          <MdKeyboardArrowLeft
+            onClick={() => navigate("/settings")}
+            className="h-7 w-7 cursor-pointer  "
+          />
+          <h5 className="text-[#737377] font-medium hover:cursor-pointer text-xl">
+            Settings
+          </h5>
+          <MdKeyboardArrowRight className="w-7 h-7" />
+          <h5 className=" text-xl">Notifications</h5>
         </div>
-        <Card className="flex w-3/6 flex-col gap-6 dark:bg-[#131417] mt-4 ">
+        <Card className="flex w-3/6 flex-col gap-6 dark:bg-[#131417]  ">
           <div className="flex flex-col m-4 gap-6">
             <div className="flex ">Email Notification</div>
             <div className="flex flex-col  gap-y-4 ">
