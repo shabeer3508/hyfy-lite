@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
-import Urls from '@/redux/actions/Urls';
 import { BiDirections } from 'react-icons/bi'
-import { Button } from '@/components/ui/button'
-import { IssueCard } from '../issues/issue-card-1';
 import { useDispatch, useSelector } from 'react-redux';
+import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
+import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
+
+import Urls from '@/redux/actions/Urls';
+import { Button } from '@/components/ui/button'
+import EpicDetailView from './epic-detail-view';
+import { IssueCard } from '../issues/issue-card-1';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HYSearch from '@/components/hy-components/HYSearch'
 import HYDialog from '@/components/hy-components/HYDialog';
@@ -11,16 +15,13 @@ import HYTooltip from '@/components/hy-components/HYTooltip';
 import HYDropDown from '@/components/hy-components/HYDropDown';
 import NoProjectScreen from '../empty-screens/NoProjectScreen';
 import EpicCreationForm from '@/pages/epics/forms/epic-creation';
-import IssueCreationCardMini from '../issues/issue-creation-mini';
+import IssueCreationCardMini from '../issues/forms/issue-creation-mini';
 import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
-import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
-import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
 import { EpicTypes, IssueStatusTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
-import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
-import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
+import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
@@ -244,7 +245,7 @@ const EpicScreen = () => {
                                                                             <div
                                                                                 className={`
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Done")?._id && "bg-[#56972E]"}
-                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#FFFFFF66]"} 
+                                                                                ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id && "bg-[#6D6E74]"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Ongoing")?._id && "bg-cyan-500"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id && "bg-[#006EEF]"} 
                                                                                 ${itm?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Pending")?._id && "bg-[#D63B00]"} `}

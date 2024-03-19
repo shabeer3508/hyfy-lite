@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import ReleaseCard from "./ReleaseCard";
-import Urls from "@/redux/actions/Urls";
-import { ReleaseTypes } from "@/interfaces";
 import { HiViewBoards } from "react-icons/hi";
 import { BiDirections } from "react-icons/bi";
-import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "@/redux/actions/Urls";
+import ReleaseCard from "./release-card";
+import { ReleaseTypes } from "@/interfaces";
+import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";

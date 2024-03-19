@@ -1,17 +1,18 @@
 import { useEffect } from "react";
-import HYAvatar from "../HYAvatar";
-import Urls from "@/redux/actions/Urls";
-import { HYCombobox } from "../HYCombobox";
-import HYEditableDiv from "../HYEditableDiv";
-import HYAlertDialog from "../HYAlertDialog";
-import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
-import { CommentCard } from "./Issue-detail-view";
-import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
-import CommentCreation from "../forms/comment-creation";
+
+import Urls from "@/redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { CommentsTypes, ProjectType } from "@/interfaces";
+import { CommentsTypes, ProjectType, UsersTypes } from "@/interfaces";
+import { CommentCard } from "../issues/issue-detail-view";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
+import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
+import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const ProjectDetailView = ({ data }: { data: ProjectType }) => {
@@ -22,6 +23,9 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
     const commentsReducerName = reducerNameFromUrl("comments", "GET");
     const commentsList = useSelector((state: any) => state?.[commentsReducerName]);
     const commentsItems = commentsList?.data?.items as CommentsTypes[];
+
+    const usersReducerName = reducerNameFromUrl("users", "GET");
+    const usersListData = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
 
     const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
@@ -67,6 +71,15 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
         { label: "Done", value: "done" }
     ]
 
+    const logoColors = [
+        "bg-[#71A4FF]",
+        "bg-[#4C4878]",
+        "bg-[#A4599A]",
+        "bg-[#E2A766]",
+        "bg-[#389C98]",
+        "bg-[#FF6481]",
+    ];
+
     /*  ######################################################################################## */
 
     useEffect(() => {
@@ -106,27 +119,32 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
                                 url="https://github.com/shadcn.png"
                                 name={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
                             />
-                            <span className="mx-2 truncate w-[150px]">{typeof data?.owner !== "string" && (isCurrentUser(data?.owner?.[0]?._id) ? "You" : data?.owner?.[0]?.user_name)}</span>
+                            <span className="mx-2 truncate w-[150px] text-xs">{typeof data?.owner !== "string" && (isCurrentUser(data?.owner?.[0]?._id) ? "You" : data?.owner?.[0]?.user_name)}</span>
                         </div>
                     </div>
                     <Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
                 </div>
-                <div className="flex justify-between pr-3">
-                    <div className="flex flex-col gap-3">
+                <div className="flex justify-between pr-3 flex-1 col-span-4">
+                    <div className="flex flex-col gap-3 w-full ">
                         <div className="text-xs text-[#9499A5]">Team</div>
-                        <div className="flex flex-1 items-center">
-                            { /* TODO : update  user data for the avatars according to response */}
-                            {data?.members?.length > 0 && data?.members?.map(member =>
-                                <HYAvatar
-                                    key={member}
-                                    className="size-6"
-                                    url="https://github.com/shadcn.png"
-                                    name={"Jhon"}
-                                />
+                        <div className="flex flex-1 items-center gap-4">
+                            {data?.members?.length > 0 && data?.members?.map((member, i) => {
+                                const currentUser = usersListData?.find(user => user._id === member);
+                                return (
+                                    <div className="flex gap-1 text-xs items-center">
+                                        <HYAvatar
+                                            key={member}
+                                            className="size-6 text-white"
+                                            name={currentUser?.user_name}
+                                            color={`${logoColors[i]}`}
+                                        />
+                                        {currentUser?.user_name}
+                                    </div>
+                                )
+                            }
                             )}
                         </div>
                     </div>
-                    <Separator orientation="vertical" />
                 </div>
             </div>
             <div className="pr-5">

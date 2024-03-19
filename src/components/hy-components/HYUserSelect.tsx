@@ -1,9 +1,15 @@
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { cn } from "@/lib/utils";
+import Urls from "@/redux/actions/Urls";
+import { UsersTypes } from "@/interfaces";
 import { ScrollArea } from "../ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { UseFormReturn } from "react-hook-form";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
     Command,
     CommandEmpty,
@@ -11,15 +17,6 @@ import {
     CommandInput,
     CommandItem,
 } from "@/components/ui/command";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { useDispatch, useSelector } from "react-redux";
-import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import Urls from "@/redux/actions/Urls";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 
 export function HYUserSelect({
     id,
@@ -41,20 +38,17 @@ export function HYUserSelect({
 
     const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
     const usersReducerName = reducerNameFromUrl("users", "GET");
-    const usersListData = useSelector((state: any) => state?.[usersReducerName]);
+    const usersListData = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
-    const options = usersListData?.data?.items?.map(user => ({ label: user?.user_name || user?.name, value: user?._id, role: user?.role }))
+    const options = usersListData?.map(user => ({ label: user?.user_name, value: user?._id, role: user?.role }))
 
-    const getUsers = (prams?: string) => {
+    const getUsers = () => {
         let query = `?perPage=300`;
-        // &filter=project_id=${appProfileInfo.project_id}`;
-
-        if (prams) { query = query + prams }
         dispatch(getAction({ users: Urls.users + query }));
     };
 
     const handleOnSelect = (currentValue: string) => {
-        const currentUser = usersListData?.data?.items?.find(user => user._id === currentValue)
+        const currentUser = usersListData?.find(user => user._id === currentValue)
         currentUser && onValueChange?.(currentUser);
         setOpen(false);
     }

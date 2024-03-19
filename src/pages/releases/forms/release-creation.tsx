@@ -1,12 +1,13 @@
 import { z } from "zod";
 import { useState } from "react";
-import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
 import { JsonToFormData } from "@/utils/utils";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch, useSelector } from "react-redux";
 import HYInputDate from "@/components/hy-components/HYInputDate";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
@@ -35,7 +36,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
-	const formSchema = z.object({
+	const releaseFormSchema = z.object({
 		name: z.string().min(2, {
 			message: "Username must be at least 2 characters.",
 		}),
@@ -46,7 +47,9 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		project_id: z.string(),
 	});
 
-	const formDefaultValues = {
+	type ReleaseFormValues = z.infer<typeof releaseFormSchema>
+
+	const defaultValues: Partial<ReleaseFormValues> = {
 		name: "",
 		status: "planning",
 		description: "",
@@ -54,9 +57,9 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		project_id: appProfileInfo?.project_id,
 	}
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: formDefaultValues,
+	const form = useForm<ReleaseFormValues>({
+		resolver: zodResolver(releaseFormSchema),
+		defaultValues,
 	});
 
 	/*  ######################################################################################## */
@@ -66,14 +69,14 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		dispatch(getAction({ release: Urls.release + query }));
 	}
 
-	const handleReleaseCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleReleaseCreation = async (values: ReleaseFormValues) => {
 		const postData = JsonToFormData(values)
 
 		// TODO: Add tag & file name 
 		const resp = (await dispatch(postAction({ release: Urls.release }, postData))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
-			form.reset(formDefaultValues);
+			form.reset(defaultValues);
 			setOpenForm(false);
 			getReleases();
 		}

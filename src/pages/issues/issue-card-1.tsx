@@ -1,16 +1,16 @@
-
-import { IssueTypes, UsersTypes } from "@/interfaces";
-import { Card } from "@/components/ui/card";
+import { useSelector } from "react-redux";
 import { HiBookOpen } from "react-icons/hi2";
-import { Checkbox } from "@/components/ui/checkbox";
-import HYDialog from "@/components/hy-components/HYDialog";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { HiOutlineArrowNarrowUp, HiDatabase, HiOutlineUser } from "react-icons/hi";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
+
+import { Card } from "@/components/ui/card";
+import IssueDetailView from "./issue-detail-view";
+import { Checkbox } from "@/components/ui/checkbox";
+import { IssueTypes, UsersTypes } from "@/interfaces";
+import HYDialog from "@/components/hy-components/HYDialog";
 import HYAvatar from "@/components/hy-components/HYAvatar";
-import { useSelector } from "react-redux";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IssueCardProps {
     issue: IssueTypes;
@@ -42,7 +42,10 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
         <Card
             draggable
             key={issue?._id}
-            onDragStart={(e) => e.dataTransfer.setData("id", issue?._id)}
+            onDragStart={(e) => {
+                e.dataTransfer.setData("id", issue?._id);
+                e.dataTransfer.setData("sprint_id", issue?.sprint_id);
+            }}
             className=" border rounded card-gradient cursor-pointer dark:bg-[#151619]"
         >
             <HYDialog
@@ -97,10 +100,11 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
 
 
                         </div>
-                        {index % 2 === 0 && (
-                            <HiOutlineArrowNarrowUp className="text-red-500" />
-                        )}
+
+                        {issue?.priority === "critical" && <HiOutlineArrowNarrowUp title="Priority" className="text-red-500" />}
+
                         <PiLinkSimpleHorizontalBold />
+
                         <div className="flex gap-1 items-center">
                             <HiDatabase className="" /> {issue?.points}
                         </div>

@@ -1,32 +1,32 @@
 import Urls from "../redux/actions/Urls";
 
 const ApiConfig: { [key: string]: string } = {
-	users: Urls.users,
-	profile: Urls.profile,
-	organization: Urls.organization,
+    users: Urls.users,
+    profile: Urls.profile,
+    organization: Urls.organization,
 
-	//login
-	login: Urls.authenticate,
+    //login
+    login: Urls.authenticate,
 
-	//signup
-	signupSendEmail: Urls.signup_send_email,
-	signupVerifyEmail: Urls.signup_verify_email,
-	signupSetupOrganization: Urls.signup_setup_organization,
+    //signup
+    signupSendEmail: Urls.signup_send_email,
+    signupVerifyEmail: Urls.signup_verify_email,
+    signupSetupOrganization: Urls.signup_setup_organization,
 
-	invitaions: Urls.invitations,
-	invitations_skip: Urls.invitations_skip,
+    invitaions: Urls.invitations,
+    invitations_skip: Urls.invitations_skip,
 
-	invite: Urls.invite_user,
+    invite: Urls.invite_user,
 
-	epic: Urls.epic,
-	release: Urls.release,
-	issues: Urls.issues,
-	sprints: Urls.sprints,
-	project: Urls.project,
+    epic: Urls.epic,
+    release: Urls.release,
+    issues: Urls.issues,
+    sprints: Urls.sprints,
+    project: Urls.project,
 
-	comments: Urls.comments,
-
-	issueStatus: Urls.issue_status,
+    comments: Urls.comments,
+    sprintMembers: Urls.sprint_members,
+    issueStatus: Urls.issue_status,
 };
 
 export default ApiConfig;

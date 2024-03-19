@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { HiDotsVertical, HiFolder } from "react-icons/hi";
+
 import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import ProjectDetailView from "./project-detail-view";
 import { IssueTypes, ProjectType } from "@/interfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { HiDotsVertical, HiFolder } from "react-icons/hi";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { ScrollArea, } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -14,7 +16,6 @@ import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import ProjectCreationForm from "@/pages/projects/forms/project-creation";
-import ProjectDetailView from "@/components/hy-components/detail-views/Project-detail-view";
 import { getAction, patchAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 
@@ -219,7 +220,7 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 										<div
 											className={`
                                          		${issue?.status === findIssueStatusIdByName("Done") && "bg-[#56972E]"}
-                                         		${issue?.status === findIssueStatusIdByName("Backlog") && "bg-[#FFFFFF66]"} 
+                                         		${issue?.status === findIssueStatusIdByName("Backlog") && "bg-[#6D6E74]"} 
                                          		${issue?.status === findIssueStatusIdByName("Ongoing") && "bg-cyan-500"} 
                                          		${issue?.status === findIssueStatusIdByName("Todo") && "bg-[#006EEF]"} 
                                          		${issue?.status === findIssueStatusIdByName("Pending") && "bg-[#D63B00]"} `}

@@ -1,11 +1,13 @@
 import { z } from "zod";
-import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "@/redux/actions/Urls";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { EpicTypes, ReleaseTypes } from "@/interfaces";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -35,16 +37,14 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
-	const epicItems = epicsListData?.data?.items;
+	const epicItems = epicsListData?.data?.items as EpicTypes[];
 
 	const releaseReducerName = reducerNameFromUrl("release", "GET");
-	const releaseList = useSelector(
-		(state: any) => state?.[releaseReducerName]
-	);
+	const releaseList = useSelector((state: any) => state?.[releaseReducerName])?.data?.items as ReleaseTypes[];
 
 	/*  ######################################################################################## */
 
-	const formSchema = z.object({
+	const epicFormSchema = z.object({
 		name: z.string().min(2, {
 			message: "Username must be at least 2 characters.",
 		}),
@@ -57,17 +57,18 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		project_id: z.string(),
 	});
 
+	type EpicFormValues = z.infer<typeof epicFormSchema>
 
-	const formDefaultValues = {
+	const defaultValues: Partial<EpicFormValues> = {
 		name: "",
 		status: "open",
 		priority: "medium",
 		project_id: appProfileInfo.project_id,
 	}
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: formDefaultValues,
+	const form = useForm<EpicFormValues>({
+		resolver: zodResolver(epicFormSchema),
+		defaultValues,
 	});
 
 	/*  ######################################################################################## */
@@ -89,13 +90,13 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		dispatch(getAction({ epic: Urls.epic + query }));
 	};
 
-	const handleEpicCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleEpicCreation = async (values: EpicFormValues) => {
 		const resp = (await dispatch(postAction({ epic: Urls.epic }, values))) as any;
 
 		const success = resp.payload.status == 200;
 
 		if (success) {
-			form.reset(formDefaultValues)
+			form.reset(defaultValues)
 			setOpenForm(false);
 			getEpics();
 		}
@@ -104,7 +105,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	/*  ######################################################################################## */
 
 	const releaseOptions =
-		releaseList?.data?.items?.map((relse) => ({
+		releaseList?.map((relse) => ({
 			value: relse?._id,
 			label: relse?.name,
 		})) ?? [];

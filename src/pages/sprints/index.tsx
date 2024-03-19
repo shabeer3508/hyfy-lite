@@ -1,21 +1,22 @@
 import { useEffect } from "react";
-import Urls from "../../redux/actions/Urls";
 import { IoIosFlash } from "react-icons/io";
 import { HiDatabase } from "react-icons/hi";
-import { Button } from "@/components/ui/button";
 import { HiOutlineInbox } from "react-icons/hi2";
-import { IssueCard } from "../issues/issue-card-1";
 import { useDispatch, useSelector } from "react-redux";
+
+import Urls from "../../redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import { IssueCard } from "../issues/issue-card-1";
+import SprintDetailView from "./sprint-detail-view";
 import SprintCreationForm from "./forms/sprint-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYDialog from "@/components/hy-components/HYDialog";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
-import IssueCreationCardMini from "../issues/issue-creation-mini";
+import IssueCreationCardMini from "../issues/forms/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import SprintDetailView from "@/components/hy-components/detail-views/Sprint-detail-view";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const Sprints = () => {

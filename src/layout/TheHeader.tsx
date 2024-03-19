@@ -59,7 +59,7 @@ const TheHeader = () => {
 	/*  ######################################################################################## */
 
 	return (
-		<div className="w-full transition-all duration-200 ease-in ">
+		<div className="w-full transition-all duration-200 ease-in">
 			<div className="flex h-20 items-center px-6 w-full gap-2">
 				<div className="font-semibold  flex items-center  dark:text-foreground">
 					{showProjectSelection &&
