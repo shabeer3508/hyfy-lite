@@ -1,10 +1,10 @@
 
 import { useEffect } from "react";
-import HYAvatar from "../HYAvatar";
-import HYSearch from "../HYSearch";
+import HYAvatar from "../../components/hy-components/HYAvatar";
+import HYSearch from "../../components/hy-components/HYSearch";
 import Urls from "@/redux/actions/Urls";
-import HYEditableDiv from "../HYEditableDiv";
-import HYAlertDialog from "../HYAlertDialog";
+import HYEditableDiv from "../../components/hy-components/HYEditableDiv";
+import HYAlertDialog from "../../components/hy-components/HYAlertDialog";
 import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
 import { Separator } from "@/components/ui/separator";

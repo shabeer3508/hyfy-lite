@@ -1,10 +1,12 @@
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { HiDotsVertical, HiFolder } from "react-icons/hi";
+
 import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { IssueTypes, ProjectType } from "@/interfaces";
-import { useDispatch, useSelector } from "react-redux";
-import { HiDotsVertical, HiFolder } from "react-icons/hi";
+import ProjectDetailView from "./Project-detail-view";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { ScrollArea, } from "@/components/ui/scroll-area";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -14,7 +16,6 @@ import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import ProjectCreationForm from "@/pages/projects/forms/project-creation";
-import ProjectDetailView from "@/components/hy-components/detail-views/Project-detail-view";
 import { getAction, patchAction, reducerNameFromUrl, setProjectData } from "@/redux/actions/AppActions";
 
 

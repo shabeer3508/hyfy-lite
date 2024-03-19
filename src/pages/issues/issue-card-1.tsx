@@ -1,16 +1,16 @@
-
-import { IssueTypes, UsersTypes } from "@/interfaces";
-import { Card } from "@/components/ui/card";
+import { useSelector } from "react-redux";
 import { HiBookOpen } from "react-icons/hi2";
-import { Checkbox } from "@/components/ui/checkbox";
-import HYDialog from "@/components/hy-components/HYDialog";
 import { PiLinkSimpleHorizontalBold } from "react-icons/pi";
 import { HiOutlineArrowNarrowUp, HiDatabase, HiOutlineUser } from "react-icons/hi";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import IssueDetailView from "@/components/hy-components/detail-views/Issue-detail-view";
+
+import { Card } from "@/components/ui/card";
+import IssueDetailView from "./issue-detail-view";
+import { Checkbox } from "@/components/ui/checkbox";
+import { IssueTypes, UsersTypes } from "@/interfaces";
+import HYDialog from "@/components/hy-components/HYDialog";
 import HYAvatar from "@/components/hy-components/HYAvatar";
-import { useSelector } from "react-redux";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IssueCardProps {
     issue: IssueTypes;

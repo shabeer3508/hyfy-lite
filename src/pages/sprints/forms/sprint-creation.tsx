@@ -1,16 +1,17 @@
 import { z } from "zod";
 import { useState } from "react";
-import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
-import HYSelect from "../../../components/hy-components/HYSelect";
+
+import Urls from "@/redux/actions/Urls";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import HYSelect from "@/components/hy-components/HYSelect";
 import { getAction, postAction } from "@/redux/actions/AppActions";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import HYInputDate from "../../../components/hy-components/HYInputDate";
-import { HYCombobox } from "../../../components/hy-components/HYCombobox";
+import HYInputDate from "@/components/hy-components/HYInputDate";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import {
 	Form,
 	FormField,
@@ -37,7 +38,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
-	const formSchema = z.object({
+	const sprintFormSchema = z.object({
 		name: z.string().min(2, {
 			message: "Username must be at least 2 characters.",
 		}),
@@ -53,7 +54,9 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		issues: z.string().optional().nullable(),
 	});
 
-	const defaultFormValues = {
+	type SprintFormValues = z.infer<typeof sprintFormSchema>
+
+	const defaultValues: Partial<SprintFormValues> = {
 		name: "",
 		status: "backlog",
 		project_id: appProfileInfo?.project_id,
@@ -61,14 +64,14 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		description: ""
 	}
 
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: defaultFormValues,
+	const form = useForm<SprintFormValues>({
+		resolver: zodResolver(sprintFormSchema),
+		defaultValues,
 	});
 
 	/*  ######################################################################################## */
 
-	const handleSprintCreation = async (values: z.infer<typeof formSchema>) => {
+	const handleSprintCreation = async (values: SprintFormValues) => {
 		const getSprints = () => {
 			let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
 			dispatch(getAction({ sprints: Urls.sprints + query }));
@@ -76,7 +79,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		const resp = (await dispatch(postAction({ sprints: Urls.sprints }, values))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
-			form.reset(defaultFormValues);
+			form.reset(defaultValues);
 			setOpenForm(false);
 			getSprints();
 		}

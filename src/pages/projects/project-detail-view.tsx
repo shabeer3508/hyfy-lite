@@ -1,17 +1,18 @@
 import { useEffect } from "react";
-import HYAvatar from "../HYAvatar";
-import Urls from "@/redux/actions/Urls";
-import { HYCombobox } from "../HYCombobox";
-import HYEditableDiv from "../HYEditableDiv";
-import HYAlertDialog from "../HYAlertDialog";
-import { Button } from "@/components/ui/button";
 import { HiCalendarDays } from "react-icons/hi2";
-import { CommentCard } from "./Issue-detail-view";
-import { Separator } from "@/components/ui/separator";
 import { useDispatch, useSelector } from "react-redux";
-import CommentCreation from "../forms/comment-creation";
+
+import Urls from "@/redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CommentsTypes, ProjectType } from "@/interfaces";
+import { CommentCard } from "../issues/issue-detail-view";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
+import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
+import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 const ProjectDetailView = ({ data }: { data: ProjectType }) => {

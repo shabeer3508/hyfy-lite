@@ -1,12 +1,20 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { HiOutlineArrowsUpDown } from "react-icons/hi2";
+import {
+	HiPlus,
+	HiFilter,
+	HiBookOpen,
+	HiOutlineDotsVertical,
+} from "react-icons/hi";
+
 import Urls from "@/redux/actions/Urls";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useSearchParams } from "react-router-dom";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useDispatch, useSelector } from "react-redux";
+import EpicDetailView from "../epics/epic-detail-view";
 import { EpicTypes, ReleaseTypes } from "@/interfaces";
-import { HiOutlineArrowsUpDown } from "react-icons/hi2";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import HYDialog from "@/components/hy-components/HYDialog";
@@ -16,13 +24,6 @@ import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
-import EpicDetailView from "@/components/hy-components/detail-views/Epic-detail-view";
-import {
-	HiPlus,
-	HiFilter,
-	HiBookOpen,
-	HiOutlineDotsVertical,
-} from "react-icons/hi";
 
 const EpicsColumn = () => {
 	const dispatch = useDispatch();

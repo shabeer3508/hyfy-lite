@@ -1,9 +1,10 @@
 import { useEffect } from "react";
-import BoardCard from "./boardCard";
-import Urls from "@/redux/actions/Urls";
 import { HiDatabase } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
+
+import BoardCard from "./board-card";
+import Urls from "@/redux/actions/Urls";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";

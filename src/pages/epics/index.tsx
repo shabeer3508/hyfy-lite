@@ -1,9 +1,13 @@
 import { useEffect } from 'react';
-import Urls from '@/redux/actions/Urls';
 import { BiDirections } from 'react-icons/bi'
-import { Button } from '@/components/ui/button'
-import { IssueCard } from '../issues/issue-card-1';
 import { useDispatch, useSelector } from 'react-redux';
+import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
+import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
+
+import Urls from '@/redux/actions/Urls';
+import { Button } from '@/components/ui/button'
+import EpicDetailView from './epic-detail-view';
+import { IssueCard } from '../issues/issue-card-1';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import HYSearch from '@/components/hy-components/HYSearch'
 import HYDialog from '@/components/hy-components/HYDialog';
@@ -11,16 +15,13 @@ import HYTooltip from '@/components/hy-components/HYTooltip';
 import HYDropDown from '@/components/hy-components/HYDropDown';
 import NoProjectScreen from '../empty-screens/NoProjectScreen';
 import EpicCreationForm from '@/pages/epics/forms/epic-creation';
-import IssueCreationCardMini from '../issues/issue-creation-mini';
+import IssueCreationCardMini from '../issues/forms/issue-creation-mini';
 import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
-import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
-import { HiBookOpen, HiFilter, HiOutlineDotsVertical } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
 import { EpicTypes, IssueStatusTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
-import EpicDetailView from '@/components/hy-components/detail-views/Epic-detail-view';
-import { HiMiniListBullet, HiOutlineArrowsUpDown, HiOutlineInbox } from "react-icons/hi2";
+import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 

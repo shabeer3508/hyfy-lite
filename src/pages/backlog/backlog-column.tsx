@@ -1,21 +1,22 @@
 import { toast } from "sonner";
-import Urls from "@/redux/actions/Urls";
 import { useEffect, useState } from "react";
 import { BiDirections } from "react-icons/bi";
 import { TbSquareCheck } from "react-icons/tb";
+import { useDispatch, useSelector } from "react-redux";
+import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
+import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
+
+import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { IssueCard } from "../issues/issue-card-1";
-import { useDispatch, useSelector } from "react-redux";
 import HYModal from "@/components/hy-components/HYModal";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
-import IssueCreationForm from "@/pages/issues/issue-creation";
 import HYDropDown from "@/components/hy-components/HYDropDown";
-import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import IssueCreationForm from "@/pages/issues/forms/issue-creation";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import IssueCreationCardMini from "@/pages/issues/issue-creation-mini";
-import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
+import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { EpicTypes, IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";

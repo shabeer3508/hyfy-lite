@@ -1,14 +1,15 @@
 import { useEffect } from "react";
-import HYSearch from "../HYSearch";
+import { useDispatch, useSelector } from "react-redux";
+
 import Urls from "@/redux/actions/Urls";
-import { HYCombobox } from "../HYCombobox";
-import HYEditableDiv from "../HYEditableDiv";
-import HYAlertDialog from "../HYAlertDialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useDispatch, useSelector } from "react-redux";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import IssueMiniCard from "@/pages/issues/issue-card-2";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import HYSearch from "@/components/hy-components/HYSearch";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
+import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
 import { EpicTypes, IssueTypes, ReleaseTypes } from "@/interfaces";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
