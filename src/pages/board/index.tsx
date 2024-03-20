@@ -34,7 +34,7 @@ const Board = () => {
 
 	const authInfo = useSelector((state: any) => state.UserReducer);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-	const boardInfo = appProfileInfo?.board
+	const boardInfo = appProfileInfo?.board;
 
 	/*  ######################################################################################## */
 
@@ -70,9 +70,19 @@ const Board = () => {
 
 	const getIssuesByTypes = (issueStatus: "Todo" | "Ongoing" | "Pending" | "Done") => {
 		return issueListItems?.filter((issue) =>
-			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id &&
-			boardInfo?.selected_sprint && issue?.sprint_id === boardInfo?.selected_sprint);
+			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id && isUserIncludes(issue));
 	};
+
+
+	const isUserIncludes = (issueInfo: IssueTypes) => {
+		if (boardInfo?.task_filter_value === "all") {
+			return true
+		} else if (boardInfo?.task_filter_value === "unassigned") {
+			return issueInfo?.assign_to?.length == 0;
+		} else {
+			return issueInfo?.assign_to?.some(user => user === boardInfo?.task_filter_value);
+		}
+	}
 
 
 	const updateItemStatus = async (id: string, status_name: string) => {
@@ -160,7 +170,11 @@ const Board = () => {
 						<HYCombobox
 							label={"Assignee"}
 							unSelectable={false}
-							options={[{ label: "All", value: "all" }, ...taskFilterOptions]}
+							options={[
+								{ label: "All", value: "all" },
+								...taskFilterOptions,
+								{ label: "Unassigned", value: "unassigned" }
+							]}
 							defaultValue={boardInfo?.task_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
 						/>
@@ -191,7 +205,7 @@ const Board = () => {
 					</div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
-				<div>
+				<div className="">
 					<ResizablePanelGroup
 						direction="horizontal"
 						className={`rounded-lg`}
