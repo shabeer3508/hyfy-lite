@@ -26,16 +26,27 @@ export interface ReleaseStates {
     order_filter_value?: string
 }
 
-interface BacklogStates {
-    epics: any,
-    backlog: any,
-    sprints: any
+export interface BacklogStates {
+    backlog_sort_value?: string;
+    backlog_filter_values?: string[];
+    backlog_assignee_value?: string;
+    backlog_epic_value?: string;
+
+    sprint_sort_value?: string;
+    sprint_status_value?: string;
+}
+
+export interface EpicStates {
+    sort_value?: string,
+    filter_value: string
+    release_filter_value?: string
 }
 
 export interface AppProfileTypes {
     project_id: string,
     board: BoardStates,
     backlog: BacklogStates,
+    epic: EpicStates,
     sprints: SprintStates,
     releases: ReleaseStates,
     projects: ProjectStates,
@@ -51,9 +62,15 @@ const initialState: AppProfileTypes = {
         points_filter_value: "all"
     },
     backlog: {
-        epics: {},
-        backlog: {},
-        sprints: {}
+        backlog_assignee_value: "all",
+        backlog_epic_value: "all",
+        backlog_sort_value: "-createdAt",
+
+        sprint_sort_value: "-createdAt",
+        sprint_status_value: "all",
+    },
+    epic: {
+        filter_value: "all"
     },
     sprints: {
         selected_sprint: ""
@@ -81,12 +98,16 @@ export default function AppProfileReducer() {
                 return { ...initialState, project_id: action.payload };
             case Actions.SET_BOARD_PAGE_DATA:
                 return { ...state, board: { ...state.board, [action.payload?.key]: action.payload?.data } };
+            case Actions.SET_BACKLOG_PAGE_DATA:
+                return { ...state, backlog: { ...state.backlog, [action.payload?.key]: action.payload?.data } };
+            case Actions.SET_EPIC_PAGE_DATA:
+                return { ...state, epic: { ...state.epic, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_SPRINTS_PAGE_DATA:
                 return { ...state, sprints: { ...state.sprints, [action.payload?.key]: action.payload?.data } };
-            case Actions.SET_PROJECT_PAGE_DATA:
-                return { ...state, projects: { ...state.projects, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_RELEASE_PAGE_DATA:
                 return { ...state, releases: { ...state.releases, [action.payload?.key]: action.payload?.data } };
+            case Actions.SET_PROJECT_PAGE_DATA:
+                return { ...state, projects: { ...state.projects, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_TEAMS_PAGE_DATA:
                 return { ...state, teams: { ...state.teams, [action.payload?.key]: action.payload?.data } };
             default:

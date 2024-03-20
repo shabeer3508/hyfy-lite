@@ -15,13 +15,13 @@ import HYTooltip from '@/components/hy-components/HYTooltip';
 import HYDropDown from '@/components/hy-components/HYDropDown';
 import NoProjectScreen from '../empty-screens/NoProjectScreen';
 import EpicCreationForm from '@/pages/epics/forms/epic-creation';
-import IssueCreationCardMini from '../issues/forms/issue-creation-mini';
 import { HYCombobox } from '@/components/hy-components/HYCombobox';
 import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
+import IssueCreationCardMini from '../issues/forms/issue-creation-mini';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
 import { EpicTypes, IssueStatusTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
-import { getAction, patchAction, reducerNameFromUrl } from '@/redux/actions/AppActions';
+import { getAction, patchAction, reducerNameFromUrl, setEpicData } from '@/redux/actions/AppActions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
@@ -47,13 +47,21 @@ const EpicScreen = () => {
     /*  ######################################################################################## */
 
     const getIssues = () => {
-        let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+        let query = `?perPage=300
+            &filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ issues: Urls.issues + query }));
     };
 
     const getEpics = () => {
-        let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+        let query = `?perPage=300
+            &sort=${appProfileInfo?.epic?.sort_value}
+            &filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ epic: Urls.epic + query }));
+    };
+
+    const getUsers = () => {
+        let query = `?perPage=300`;
+        dispatch(getAction({ users: Urls.users + query }));
     };
 
     const updateEpicData = async (epicId: string, key: string | number, value: string | boolean) => {
@@ -66,18 +74,27 @@ const EpicScreen = () => {
 
     /*  ######################################################################################## */
 
+    const epicFiltered = epicItems?.filter(epic => {
+        if (appProfileInfo?.epic?.release_filter_value === "all") {
+            return epic
+        }
+        else {
+            return epic?.release_id === appProfileInfo?.epic?.release_filter_value
+        }
+    })
+
     const releaseOptions =
         releaseItems?.map((relse) => ({
             value: relse?._id,
             label: relse?.name,
         })) ?? [];
 
-    const sortoptions = [
-        { label: "New", action: () => { } },
-        { label: "Oldest", action: () => { } },
-        { label: "Recently Edited", action: () => { } },
-        { label: "A-Z", action: () => { } },
-        { label: "Z-A", action: () => { } },
+    const sortOptions = [
+        { label: "New", action: () => dispatch(setEpicData("-createdAt", "sort_value")) },
+        { label: "Oldest", action: () => dispatch(setEpicData("createdAt", "sort_value")) },
+        { label: "Recently Edited", action: () => dispatch(setEpicData("-updatedAt", "sort_value")) },
+        { label: "A-Z", action: () => dispatch(setEpicData("name", "sort_value")) },
+        { label: "Z-A", action: () => dispatch(setEpicData("-name", "sort_value")) },
     ];
 
     const logoColors = [
@@ -94,9 +111,19 @@ const EpicScreen = () => {
     useEffect(() => {
         if (appProfileInfo.project_id) {
             getIssues();
-            getEpics();
         }
     }, [appProfileInfo.project_id]);
+
+
+    useEffect(() => {
+        if (appProfileInfo.project_id) {
+            getEpics();
+        }
+    }, [appProfileInfo.project_id, appProfileInfo?.epic?.sort_value])
+
+    useEffect(() => {
+        getUsers();
+    }, [])
 
     /*  ######################################################################################## */
 
@@ -151,7 +178,7 @@ const EpicScreen = () => {
                 </div>
                 <TabsContent value="list">
                     <div className="flex gap-2">
-                        <HYDropDown options={sortoptions}>
+                        <HYDropDown options={sortOptions}>
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -175,6 +202,7 @@ const EpicScreen = () => {
                             unSelectable={false}
                             buttonClassName="max-w-[200px]"
                             options={[{ label: "All", value: "all" }, ...releaseOptions]}
+                            onValueChange={(value) => dispatch(setEpicData(value, "release_filter_value"))}
                         />
                     </div>
                     <div >
@@ -182,7 +210,7 @@ const EpicScreen = () => {
                         <ScrollArea className="h-[calc(100vh-200px)] w-full">
 
                             <div className="py-4 pr-4 space-y-2">
-                                {epicItems.map((epic, i) => {
+                                {epicFiltered.map((epic, i) => {
 
                                     const epicIssues = issuesItems?.filter(
                                         (issue) => issue?.epic_id === epic?._id
@@ -237,7 +265,7 @@ const EpicScreen = () => {
                                                                     />
                                                                 </div>
                                                                 <div className="flex gap-2 items-center text-[#737377] px-4 py-2 ">
-                                                                    {epicIssues?.length} Stories
+                                                                    {epicIssues?.length} Issues
                                                                 </div>
                                                                 <div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[500px] h-2 overflow-hidden mr-3">
                                                                     {epicIssues?.map((itm => (

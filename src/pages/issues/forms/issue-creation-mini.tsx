@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
+import { IssueStatusTypes } from "@/interfaces";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
@@ -19,7 +20,7 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items;
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	const defaultPostData = {
 		name: "",
@@ -34,7 +35,10 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300
+				&expand=epic_id
+				&sort=${appProfileInfo?.backlog?.backlog_sort_value}
+				&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 

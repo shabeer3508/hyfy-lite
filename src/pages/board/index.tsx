@@ -3,10 +3,10 @@ import { HiDatabase } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 
-import BoardCard from "./board-card";
 import Urls from "@/redux/actions/Urls";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import BoardCard, { BoardCardSkeleton } from "./board-card";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
@@ -34,7 +34,7 @@ const Board = () => {
 
 	const authInfo = useSelector((state: any) => state.UserReducer);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
-	const boardInfo = appProfileInfo?.board
+	const boardInfo = appProfileInfo?.board;
 
 	/*  ######################################################################################## */
 
@@ -70,9 +70,19 @@ const Board = () => {
 
 	const getIssuesByTypes = (issueStatus: "Todo" | "Ongoing" | "Pending" | "Done") => {
 		return issueListItems?.filter((issue) =>
-			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id &&
-			boardInfo?.selected_sprint && issue?.sprint_id === boardInfo?.selected_sprint);
+			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id && isUserIncludes(issue));
 	};
+
+
+	const isUserIncludes = (issueInfo: IssueTypes) => {
+		if (boardInfo?.task_filter_value === "all") {
+			return true
+		} else if (boardInfo?.task_filter_value === "unassigned") {
+			return issueInfo?.assign_to?.length == 0;
+		} else {
+			return issueInfo?.assign_to?.some(user => user === boardInfo?.task_filter_value);
+		}
+	}
 
 
 	const updateItemStatus = async (id: string, status_name: string) => {
@@ -107,8 +117,8 @@ const Board = () => {
 
 	const pointsFilterData = [
 		{ label: "All", value: "all" },
-		{ label: "Highest", value: "points" },
-		{ label: "Lowest", value: "-points" },
+		{ label: "Highest", value: "-points" },
+		{ label: "Lowest", value: "points" },
 	]
 
 	/*  ######################################################################################## */
@@ -160,7 +170,11 @@ const Board = () => {
 						<HYCombobox
 							label={"Assignee"}
 							unSelectable={false}
-							options={[{ label: "All", value: "all" }, ...taskFilterOptions]}
+							options={[
+								{ label: "All", value: "all" },
+								...taskFilterOptions,
+								{ label: "Unassigned", value: "unassigned" }
+							]}
 							defaultValue={boardInfo?.task_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
 						/>
@@ -191,7 +205,7 @@ const Board = () => {
 					</div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
-				<div>
+				<div className="">
 					<ResizablePanelGroup
 						direction="horizontal"
 						className={`rounded-lg`}
@@ -214,7 +228,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)] ">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -238,7 +253,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -261,7 +277,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -284,7 +301,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>

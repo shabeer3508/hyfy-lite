@@ -8,6 +8,7 @@ import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYDialog from "@/components/hy-components/HYDialog";
 import IssueDetailView from "../issues/issue-detail-view";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BoardCardProps {
 	data: IssueTypes
@@ -40,7 +41,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 					className="max-w-6xl dark:bg-card"
 					content={<IssueDetailView data={data} />}
 				>
-					<div className="min-h-[110px] justify-between flex flex-col ">
+					<div className="h-auto justify-between flex flex-col gap-2 ">
 						<div className="text-left flex gap-2 items-center min-h-6">
 							{data?.type === "story" && (
 								<HiBookOpen className="w-4 h-4" />
@@ -55,9 +56,13 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 							)}
 							{data?.name}
 						</div>
-						<div className="text-left py-3 truncate max-w-[200px] dark:text-[#9499A5]">
-							{data?.description}
-						</div>
+
+						{data?.description &&
+							<div className="text-left truncate max-w-[200px] dark:text-[#9499A5]">
+								{data?.description}
+							</div>
+						}
+
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
 								{data?.assign_to?.map((usr, i) => {
@@ -92,3 +97,17 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 };
 
 export default BoardCard;
+
+
+export const BoardCardSkeleton = () => {
+	return <div className="flex flex-col border h-24">
+		<div className="p-2 h-1/2">
+			<Skeleton className="w-full h-full " />
+
+		</div>
+		<div className="flex justify-between p-2">
+			<Skeleton className="w-8 h-8 rounded-full" />
+			<Skeleton className="w-8 h-8" />
+		</div>
+	</div>
+}
