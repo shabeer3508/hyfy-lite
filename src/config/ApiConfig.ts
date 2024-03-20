@@ -1,6 +1,6 @@
 import Urls from "../redux/actions/Urls";
 
-const ApiConfig: { [key: string]: string } = {
+const ApiConfig = {
     users: Urls.users,
     profile: Urls.profile,
     organization: Urls.organization,

@@ -146,6 +146,8 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 		return issueStatusList?.find((status) => status?.name === statusName)?._id
 	}
 
+
+	// TODO: update projectIssue  from project issue count api response 
 	const projectIssues = issuesItems?.filter(
 		(issue) => issue?.project_id === data?._id
 	);

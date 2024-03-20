@@ -3,6 +3,7 @@ import { capitalizeFirstLetter } from "../../utils/utils";
 import {
     BacklogStates,
     BoardStates,
+    EpicStates,
     ProjectStates,
     ReleaseStates,
     SprintStates,
@@ -194,6 +195,13 @@ export function setBoardData(data: any, data_key: keyof BoardStates) {
 export function setBacklogData(data: any, data_key: keyof BacklogStates) {
     return {
         type: Actions.SET_BACKLOG_PAGE_DATA,
+        payload: { data: data, key: data_key },
+    };
+}
+
+export function setEpicData(data: any, data_key: keyof EpicStates) {
+    return {
+        type: Actions.SET_EPIC_PAGE_DATA,
         payload: { data: data, key: data_key },
     };
 }

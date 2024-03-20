@@ -3,10 +3,10 @@ import { HiDatabase } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 
-import BoardCard from "./board-card";
 import Urls from "@/redux/actions/Urls";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import BoardCard, { BoardCardSkeleton } from "./board-card";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
@@ -228,7 +228,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)] ">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -252,7 +253,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -275,7 +277,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>
@@ -298,7 +301,8 @@ const Board = () => {
 								</div>
 								<ScrollArea className="h-[calc(100vh-220px)]">
 									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+										{issuesListData?.loading && <BoardCardSkeleton />}
+										{!issuesListData?.loading && getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
 									</div>
 								</ScrollArea>
 							</div>

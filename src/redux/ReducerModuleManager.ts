@@ -4,13 +4,9 @@ import ApiConfig from "../config/ApiConfig";
 import { actionTypeFromUrl, reducerNameFromUrl } from "./actions/AppActions";
 import NetworkReducer from "./reducers/NetworkReducer";
 
-interface ApiConfigReducersReturnType {
-    [key: string]: Reducer<any, any>; // Or whatever type your reducers have
-}
-
 const ReducerModuleManger = {
     /// Crud Module
-    ApiConfigReducers: (): ApiConfigReducersReturnType => {
+    ApiConfigReducers: () => {
         return Object.keys(ApiConfig)?.reduce((prv, apiName: string) => {
             // const apiNameCap = capitalizeFirstLetter(apiName);
             const GetType = actionTypeFromUrl(apiName, "GET");

@@ -36,10 +36,17 @@ export interface BacklogStates {
     sprint_status_value?: string;
 }
 
+export interface EpicStates {
+    sort_value?: string,
+    filter_value: string
+    release_filter_value?: string
+}
+
 export interface AppProfileTypes {
     project_id: string,
     board: BoardStates,
     backlog: BacklogStates,
+    epic: EpicStates,
     sprints: SprintStates,
     releases: ReleaseStates,
     projects: ProjectStates,
@@ -61,6 +68,9 @@ const initialState: AppProfileTypes = {
 
         sprint_sort_value: "-createdAt",
         sprint_status_value: "all",
+    },
+    epic: {
+        filter_value: "all"
     },
     sprints: {
         selected_sprint: ""
@@ -90,6 +100,8 @@ export default function AppProfileReducer() {
                 return { ...state, board: { ...state.board, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_BACKLOG_PAGE_DATA:
                 return { ...state, backlog: { ...state.backlog, [action.payload?.key]: action.payload?.data } };
+            case Actions.SET_EPIC_PAGE_DATA:
+                return { ...state, epic: { ...state.epic, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_SPRINTS_PAGE_DATA:
                 return { ...state, sprints: { ...state.sprints, [action.payload?.key]: action.payload?.data } };
             case Actions.SET_RELEASE_PAGE_DATA:

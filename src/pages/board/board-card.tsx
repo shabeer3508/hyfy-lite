@@ -8,6 +8,7 @@ import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYDialog from "@/components/hy-components/HYDialog";
 import IssueDetailView from "../issues/issue-detail-view";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface BoardCardProps {
 	data: IssueTypes
@@ -96,3 +97,17 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 };
 
 export default BoardCard;
+
+
+export const BoardCardSkeleton = () => {
+	return <div className="flex flex-col border h-24">
+		<div className="p-2 h-1/2">
+			<Skeleton className="w-full h-full " />
+
+		</div>
+		<div className="flex justify-between p-2">
+			<Skeleton className="w-8 h-8 rounded-full" />
+			<Skeleton className="w-8 h-8" />
+		</div>
+	</div>
+}
