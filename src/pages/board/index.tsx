@@ -117,8 +117,8 @@ const Board = () => {
 
 	const pointsFilterData = [
 		{ label: "All", value: "all" },
-		{ label: "Highest", value: "points" },
-		{ label: "Lowest", value: "-points" },
+		{ label: "Highest", value: "-points" },
+		{ label: "Lowest", value: "points" },
 	]
 
 	/*  ######################################################################################## */

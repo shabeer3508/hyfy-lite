@@ -40,7 +40,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 					className="max-w-6xl dark:bg-card"
 					content={<IssueDetailView data={data} />}
 				>
-					<div className="min-h-[110px] justify-between flex flex-col ">
+					<div className="h-auto justify-between flex flex-col gap-2 ">
 						<div className="text-left flex gap-2 items-center min-h-6">
 							{data?.type === "story" && (
 								<HiBookOpen className="w-4 h-4" />
@@ -55,9 +55,13 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 							)}
 							{data?.name}
 						</div>
-						<div className="text-left py-3 truncate max-w-[200px] dark:text-[#9499A5]">
-							{data?.description}
-						</div>
+
+						{data?.description &&
+							<div className="text-left truncate max-w-[200px] dark:text-[#9499A5]">
+								{data?.description}
+							</div>
+						}
+
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
 								{data?.assign_to?.map((usr, i) => {

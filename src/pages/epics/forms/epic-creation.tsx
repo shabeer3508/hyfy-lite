@@ -192,7 +192,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								<FormItem className="flex flex-col">
 									<FormLabel>Release</FormLabel>
 									<HYCombobox
-										id="release"
+										id="release_id"
 										form={form}
 										options={releaseOptions}
 										buttonClassName="w-full"

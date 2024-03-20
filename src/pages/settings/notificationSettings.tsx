@@ -3,6 +3,8 @@ import { LuChevronRight } from "react-icons/lu";
 import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { TbSettingsFilled } from "react-icons/tb";
+import { Button } from "@/components/ui/button";
 
 const NotificationSettings = () => {
   const navigate = useNavigate();
@@ -10,16 +12,17 @@ const NotificationSettings = () => {
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
       <div className="dark:text-foreground flex flex-col  gap-6  w-full  px-6  ">
-        <div className="flex w-4/6 mt-2 items-center ">
-          <MdKeyboardArrowLeft
+        <div className="flex w-4/6 mt-2 items-end ">
+          <Button
             onClick={() => navigate("/settings")}
-            className="h-7 w-7 cursor-pointer  "
-          />
-          <h5 className="text-[#737377] font-medium hover:cursor-pointer text-xl">
-            Settings
-          </h5>
-          <MdKeyboardArrowRight className="w-7 h-7" />
-          <h5 className=" text-xl">Notifications</h5>
+            variant="ghost"
+            className=" h-7 hover:text-[#3E72F8]"
+          >
+            <TbSettingsFilled className="size-5" />
+            <h5 className="ml-4 text-[#737377] text-xl ">Settings</h5>
+          </Button>
+          <MdKeyboardArrowRight className="text-[#737377] size-5 " />
+          <h5 className=" text-xl ml-2">Notifications</h5>
         </div>
         <Card className="flex w-3/6 flex-col gap-6 dark:bg-[#131417]  ">
           <div className="flex flex-col m-4 gap-6">
