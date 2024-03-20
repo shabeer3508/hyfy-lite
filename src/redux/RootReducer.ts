@@ -7,19 +7,19 @@ import AppProfileReducer from "./reducers/AppProfileReducer";
 const apiConfigReducers = ReducerModuleManger.ApiConfigReducers();
 
 const AllReducers = {
-	UserReducer: UserReducer(),
-	AppProfile: AppProfileReducer(),
-	SidebarReducer: SidebarReducer(),
+    UserReducer: UserReducer(),
+    AppProfile: AppProfileReducer(),
+    SidebarReducer: SidebarReducer(),
 
-	...apiConfigReducers,
+    ...apiConfigReducers,
 };
 
 const RootReducer = combineReducers(AllReducers);
 
 const whitelistReducers: string[] = [
-	"UserReducer",
-	"AppProfile",
-	"SidebarReducer",
+    "UserReducer",
+    "AppProfile",
+    "SidebarReducer",
 ];
 
 export { whitelistReducers, RootReducer };

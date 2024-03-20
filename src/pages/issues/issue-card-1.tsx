@@ -10,7 +10,6 @@ import { IssueTypes, UsersTypes } from "@/interfaces";
 import HYDialog from "@/components/hy-components/HYDialog";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface IssueCardProps {
     issue: IssueTypes;
@@ -97,11 +96,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
                                     <HiOutlineUser className="text-white" />
                                 </div>
                             }
-
-
                         </div>
 
-                        {issue?.priority === "critical" && <HiOutlineArrowNarrowUp title="Priority" className="text-red-500" />}
+                        {issue?.priority === "critical" && <HiOutlineArrowNarrowUp title="Critical" className="text-red-500" />}
 
                         <PiLinkSimpleHorizontalBold />
 

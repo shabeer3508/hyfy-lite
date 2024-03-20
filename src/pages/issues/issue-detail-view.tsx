@@ -1,19 +1,20 @@
 import dayjs from "dayjs";
-import HYAvatar from "../../components/hy-components/HYAvatar";
-import Urls from "@/redux/actions/Urls";
-import { HYCombobox } from "../../components/hy-components/HYCombobox";
 import { useEffect, useState } from "react";
-import HYEditableDiv from "../../components/hy-components/HYEditableDiv";
-import HYAlertDialog from "../../components/hy-components/HYAlertDialog";
 import { HiBookOpen } from "react-icons/hi2";
+import { useDispatch, useSelector } from "react-redux";
+import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineX } from "react-icons/hi";
+
+import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useDispatch, useSelector } from "react-redux";
-import CommentCreation from "../../components/hy-components/forms/comment-creation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
+import HYAvatar from "@/components/hy-components/HYAvatar";
+import { HYCombobox } from "@/components/hy-components/HYCombobox";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
+import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineX } from "react-icons/hi";
+import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { CommentsTypes, EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 
@@ -49,7 +50,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	}
 
 	const getIssues = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -161,8 +162,8 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 								unSelectable={true}
 								options={epicOptions}
 								buttonClassName="w-full dark:bg-card dark:border-[#FFFFFF1A]"
-								defaultValue={typeof data?.epic_id === "string" && data?.epic_id}
 								onValueChange={(value) => handleIssueEdit(value, "epic_id")}
+								defaultValue={typeof data?.epic_id === "string" ? data?.epic_id : data?.epic_id?.[0]?._id}
 							/>
 						</div>
 					</div>

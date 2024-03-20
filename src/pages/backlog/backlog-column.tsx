@@ -1,10 +1,9 @@
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { BiDirections } from "react-icons/bi";
 import { TbSquareCheck } from "react-icons/tb";
+import { HiPlus, HiFilter, } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
-import { HiPlus, HiFilter, HiViewBoards, } from "react-icons/hi";
-import { HiOutlineArrowsUpDown, HiCheck, HiMiniXMark } from "react-icons/hi2";
+import { HiOutlineArrowsUpDown, HiMiniXMark } from "react-icons/hi2";
 
 import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
@@ -12,15 +11,15 @@ import { IssueCard } from "../issues/issue-card-1";
 import HYModal from "@/components/hy-components/HYModal";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import HYSearch from "@/components/hy-components/HYSearch";
+import IssueTransferModal from "./modals/issue-transfer-modal";
 import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import IssueCreationForm from "@/pages/issues/forms/issue-creation";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { EpicTypes, IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { getAction, patchAction, reducerNameFromUrl, setBacklogData } from "@/redux/actions/AppActions";
 
 const BacklogColumn: React.FC = () => {
 	const dispatch = useDispatch();
@@ -30,6 +29,8 @@ const BacklogColumn: React.FC = () => {
 		openTranserModal: false,
 		selectedIssues: [],
 	})
+
+	const authInfo = useSelector((state: any) => state.UserReducer);
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueItems = issuesListData?.data?.items as IssueTypes[];
@@ -49,7 +50,10 @@ const BacklogColumn: React.FC = () => {
 	/*  ######################################################################################## */
 
 	const getIssues = () => {
-		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300
+				&expand=epic_id
+				&sort=${appProfileInfo?.backlog?.backlog_sort_value}
+				&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -68,12 +72,14 @@ const BacklogColumn: React.FC = () => {
 
 
 	const updateIssueToBacklog = async (issueId: string, sprintId: string) => {
-		const resp = (await dispatch(
-			patchAction({ issues: Urls.issues + `/movetobacklog` }, { sprint_id: sprintId, status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
-		)) as any;
-		const success = resp.payload?.status == 200;
-		if (success) {
-			getIssues();
+		if (sprintId !== "null") {
+			const resp = (await dispatch(
+				patchAction({ issues: Urls.issues + `/movetobacklog` }, { sprint_id: sprintId, status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id }, issueId)
+			)) as any;
+			const success = resp.payload?.status == 200;
+			if (success) {
+				getIssues();
+			}
 		}
 	}
 
@@ -99,16 +105,40 @@ const BacklogColumn: React.FC = () => {
 	}
 
 
+	const isUserIncludes = (issueInfo: IssueTypes) => {
+		if (appProfileInfo?.backlog?.backlog_assignee_value === "all") {
+			return true
+		} else if (appProfileInfo?.backlog?.backlog_assignee_value === "unassigned") {
+			return issueInfo?.assign_to?.length == 0;
+		} else {
+			return issueInfo?.assign_to?.some(user => user === appProfileInfo?.backlog?.backlog_assignee_value);
+		}
+	}
+
+	const handleEpicFilter = (issue: IssueTypes) => {
+		if (appProfileInfo?.backlog?.backlog_epic_value === "all") {
+			return true
+		} else if (typeof issue?.epic_id != "string") {
+			return issue?.epic_id?.[0]?._id == appProfileInfo?.backlog?.backlog_epic_value
+		} else {
+			return false
+		}
+	}
+
+
 	/*  ######################################################################################## */
 
 	const backlogIssues =
-		issueItems?.filter((issue) => issue?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id) ?? [];
+		issueItems?.filter((issue) =>
+			issue?.status === issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id
+			&& isUserIncludes(issue)
+			&& handleEpicFilter(issue)
+		) ?? [];
 
 	const usersOptions =
-		usersList?.map((user) => ({
-			value: user?._id,
-			label: user?.user_name,
-		})) ?? [];
+		usersList?.map((user) => {
+			return (authInfo?.user?._id === user?._id) ? ({ value: user?._id, label: "My Tasks" }) : ({ value: user?._id, label: user.user_name })
+		}) ?? [];
 
 	const epicsOptions = epicItems?.map((epc) => ({
 		value: epc?._id,
@@ -117,20 +147,23 @@ const BacklogColumn: React.FC = () => {
 
 	/*  ######################################################################################## */
 
-	const sortoptions = [
-		{ label: "New", action: () => { } },
-		{ label: "Oldest", action: () => { } },
-		{ label: "Recently Edited", action: () => { } },
-		{ label: "A-Z", action: () => { } },
-		{ label: "Z-A", action: () => { } },
+	const sortOptions = [
+		{ label: "New", action: () => dispatch(setBacklogData("-createdAt", "backlog_sort_value")) },
+		{ label: "Oldest", action: () => dispatch(setBacklogData("createdAt", "backlog_sort_value")) },
+		{ label: "Recently Edited", action: () => dispatch(setBacklogData("-updatedAt", "backlog_sort_value")) },
+		{ label: "A-Z", action: () => dispatch(setBacklogData("name", "backlog_sort_value")) },
+		{ label: "Z-A", action: () => dispatch(setBacklogData("-name", "backlog_sort_value")) },
 	];
 
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getIssues();
 		getEpics();
 	}, [appProfileInfo?.project_id]);
+
+	useEffect(() => {
+		getIssues();
+	}, [appProfileInfo?.project_id, appProfileInfo?.backlog?.backlog_sort_value]);
 
 	useEffect(() => {
 		getUsers();
@@ -154,10 +187,10 @@ const BacklogColumn: React.FC = () => {
 				</div>
 			</div>
 			<div className="px-6 w-full">
-				<div className="flex flex-col 2xl:flex-row border-b gap-2  justify-between py-3">
+				<div className="flex flex-col 2xl:flex-row border-b gap-2 justify-between py-3">
 					<div className="flex justify-between gap-3">
 						<div className="flex gap-3">
-							<HYDropDown options={sortoptions}>
+							<HYDropDown options={sortOptions}>
 								<Button
 									variant="ghost"
 									size="icon"
@@ -195,13 +228,19 @@ const BacklogColumn: React.FC = () => {
 							buttonClassName=" 2xl:w-auto min-w-28"
 							defaultValue="all"
 							label="Assigned to"
-							options={[{ label: "All", value: "all" }, ...usersOptions]}
+							options={[
+								{ label: "All", value: "all" },
+								...usersOptions,
+								{ label: "Unassigned", value: "unassigned" }
+							]}
+							onValueChange={(value) => dispatch(setBacklogData(value, "backlog_assignee_value"))}
 						/>
 						<HYCombobox
 							buttonClassName=" 2xl:w-auto"
 							defaultValue="all"
 							label="Epic"
 							options={[{ label: "All", value: "all" }, ...epicsOptions]}
+							onValueChange={(value) => dispatch(setBacklogData(value, "backlog_epic_value"))}
 						/>
 					</div>
 				</div>
@@ -270,117 +309,7 @@ const BacklogColumn: React.FC = () => {
 export default BacklogColumn;
 
 
-interface IssueTransferModalProps {
-	data: any,
-	handleClose: () => void
-	getIssues: () => void
-}
 
-
-const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClose, getIssues }) => {
-
-	const dispatch = useDispatch();
-	const epicReducerName = reducerNameFromUrl("epic", "GET");
-	const epicsListData = useSelector((state: any) => state?.[epicReducerName])?.data?.items as EpicTypes[];
-	const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items as SprintTypes[];
-
-	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
-
-
-	const [search, setSearch] = useState("");
-	const [targetId, setTargetId] = useState<any>({ epic_id: null, sprint_id: null });
-
-	const handleApplyTransfer = (type: "epic" | "sprint") => {
-		let postData: any = { issue_ids: data?.selectedIssues }
-
-		if (type === "epic") {
-			if (!targetId?.epic_id) toast.error("Please select a epic from the  list");
-			else { postData = { ...postData, epic_id: targetId?.epic_id } }
-		} else {
-			if (!targetId?.sprint_id) toast.error("Please select a sprint from the  list");
-			else {
-				postData = {
-					...postData,
-					sprint_id: targetId?.sprint_id,
-					status_id: issueStatusList?.find(issueStatus => issueStatus?.name === "Todo")?._id
-				}
-			}
-		}
-
-		(dispatch(patchAction({ issues: Urls.issues + `/moveIssues` }, postData, type)) as any).then(res => {
-			if (res.payload?.status == 200) {
-				toast.success("Issue moved successfully");
-				getIssues();
-				handleClose();
-			}
-		})
-
-	}
-
-	return (
-		<div className="flex flex-col">
-			<div className="text-xl mb-3">Move Issues to</div>
-			<Tabs defaultValue="epic" className="">
-				<TabsList className="rounded">
-					<TabsTrigger value="epic" className="flex gap-1 rounded">
-						<HiViewBoards className="w-4 h-4" />
-						Epic
-					</TabsTrigger>
-					<TabsTrigger value="sprint" className="flex gap-1 rounded">
-						<BiDirections className="w-4 h-4" />
-						Sprint
-					</TabsTrigger>
-				</TabsList>
-
-				<TabsContent value="epic" >
-					<div className="flex flex-col gap-3">
-						<div className="w-full">
-							<HYSearch className="w-full max-w-full" />
-						</div>
-						<div className="border p-3 rounded  flex flex-col gap-2 max-h-[300px] overflow-auto">
-							{epicsListData?.map(epic =>
-								<div
-									onClick={() => setTargetId({ epic_id: epic?._id })}
-									className={`${targetId?.epic_id === epic?._id && "dark:bg-[#2E3035] bg-gray-300"} py-1 px-3 border rounded cursor-pointer text-sm`}
-								>
-									{epic?.name}
-								</div>
-							)}
-						</div>
-						<div className="flex gap-3">
-							<Button variant="outline" className="w-1/2 text-primary" onClick={() => handleClose()}>Cancel</Button>
-							<Button className="w-1/2 text-white" onClick={() => handleApplyTransfer("epic")}>Move</Button>
-						</div>
-					</div>
-				</TabsContent>
-
-				<TabsContent value="sprint" >
-					<div className="flex flex-col gap-3">
-						<div className="w-full">
-							<HYSearch className="w-full max-w-full" />
-						</div>
-						<div className="border p-3 rounded flex flex-col gap-2 max-h-[300px] overflow-auto">
-							{sprintListData?.map(sprint =>
-								<div
-									onClick={() => setTargetId({ sprint_id: sprint?._id })}
-									className={`${targetId?.sprint_id === sprint?._id && "dark:bg-[#2E3035] bg-gray-300"} py-1 px-3 border rounded cursor-pointer text-sm`}
-								>
-									{sprint?.name}
-								</div>
-							)}
-						</div>
-						<div className="flex gap-3">
-							<Button variant="outline" className="w-1/2 text-primary" onClick={() => handleClose()}>Cancel</Button>
-							<Button className="w-1/2 text-white" onClick={() => handleApplyTransfer("sprint")}> Move</Button>
-						</div>
-					</div>
-				</TabsContent>
-			</Tabs>
-
-		</div >
-	)
-}
 
 
 

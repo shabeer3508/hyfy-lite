@@ -34,7 +34,7 @@ const HYDropDown = ({
 									onSelect={(event) => {
 										event.preventDefault();
 									}}
-									className="cursor-pointer"
+									className="cursor-pointer text-xs"
 								>
 									{opt?.label}
 								</DropdownMenuItem>
@@ -45,7 +45,7 @@ const HYDropDown = ({
 							<DropdownMenuItem
 								key={`_${index}_`}
 								onClick={opt?.action}
-								className="cursor-pointer "
+								className="cursor-pointer text-xs"
 							>
 								{opt?.label}
 							</DropdownMenuItem>

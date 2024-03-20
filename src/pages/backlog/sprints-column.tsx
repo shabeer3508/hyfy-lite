@@ -17,13 +17,8 @@ import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
 import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
-import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/components/ui/accordion";
+import { getAction, patchAction, reducerNameFromUrl, setBacklogData } from "@/redux/actions/AppActions";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const SprintsColumn = () => {
 	const dispatch = useDispatch();
@@ -44,12 +39,18 @@ const SprintsColumn = () => {
 	/*  ######################################################################################## */
 
 	const getSprints = () => {
-		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo.project_id}`;
+		let query = `?perPage=300
+			&expand=created_by
+			&sort=${appProfileInfo?.backlog?.sprint_sort_value}
+			&filter=project_id=${appProfileInfo.project_id}`;
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
 	const getIssues = () => {
-		let query = `?perPage=300&expand=epic_id&filter=project_id=${appProfileInfo?.project_id}`;
+		let query = `?perPage=300
+				&expand=epic_id
+				&sort=${appProfileInfo?.backlog?.backlog_sort_value}
+				&filter=project_id=${appProfileInfo?.project_id}`;
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
@@ -75,19 +76,30 @@ const SprintsColumn = () => {
 
 	/*  ######################################################################################## */
 
-	const sortoptions = [
-		{ label: "New", action: () => { } },
-		{ label: "Oldest", action: () => { } },
-		{ label: "Recently Edited", action: () => { } },
-		{ label: "A-Z", action: () => { } },
-		{ label: "Z-A", action: () => { } },
+	const backlogSprints = sprintItems?.filter(sprint => {
+		if (appProfileInfo?.backlog?.sprint_status_value === "all") return true;
+		else return sprint?.status === appProfileInfo?.backlog?.sprint_status_value
+	})
+
+	const sortOptions = [
+		{ label: "New", action: () => dispatch(setBacklogData("-createdAt", "sprint_sort_value")) },
+		{ label: "Oldest", action: () => dispatch(setBacklogData("createdAt", "sprint_sort_value")) },
+		{ label: "Recently Edited", action: () => dispatch(setBacklogData("-updatedAt", "sprint_sort_value")) },
+		{ label: "A-Z", action: () => dispatch(setBacklogData("name", "sprint_sort_value")) },
+		{ label: "Z-A", action: () => dispatch(setBacklogData("-name", "sprint_sort_value")) },
 	];
+
+	const statusOptions = [
+		{ label: "Backlog", value: "backlog" },
+		{ label: "In Progress", value: "in-progress" },
+		{ label: "Retro", value: "retro" },
+	]
 
 	/*  ######################################################################################## */
 
 	useEffect(() => {
 		getSprints();
-	}, []);
+	}, [appProfileInfo?.project_id, appProfileInfo?.backlog?.sprint_sort_value]);
 
 	/*  ######################################################################################## */
 
@@ -108,7 +120,7 @@ const SprintsColumn = () => {
 			<div className="px-6 w-full">
 				<div className="flex border-b  justify-between py-3">
 					<div className="flex gap-3">
-						<HYDropDown options={sortoptions}>
+						<HYDropDown options={sortOptions}>
 							<Button
 								variant="ghost"
 								size="icon"
@@ -122,22 +134,18 @@ const SprintsColumn = () => {
 						<HYCombobox
 							defaultValue="all"
 							label="Status "
-							options={[
-								{ label: "All", value: "all" },
-								{ label: "Backlog", value: "backlog" },
-								{ label: "In Progress", value: "in-progress" },
-								{ label: "Retro", value: "retro" },
-							]}
+							options={[{ label: "All", value: "all" }, ...statusOptions]}
+							onValueChange={(value) => dispatch(setBacklogData(value, "sprint_status_value"))}
 						/>
 					</div>
 				</div>
 			</div>
 			<div>
-				{sprintItems?.length > 0 && (
+				{backlogSprints?.length > 0 && (
 					<ScrollArea className="h-[calc(100vh-200px)] w-full ">
 
 						<div className="py-4 px-6 space-y-2">
-							{sprintItems.map((sprint, i) => {
+							{backlogSprints?.map((sprint, i) => {
 
 								const sprintIssues = issuesItems?.filter(
 									(issue) => issue?.sprint_id === sprint?._id
@@ -203,7 +211,13 @@ const SprintsColumn = () => {
 													</div>
 												</div>
 												<AccordionContent className="flex flex-col gap-2">
-													{sprintIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
+													{sprintIssues?.sort((a, b) => {
+														// for not to apply the backlog column sort
+														if (a.createdAt < b.createdAt) return -1;
+														if (a.createdAt > b.createdAt) return 1;
+														return 0;
+													}
+													)?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
 
 													<IssueCreationCardMini sprintId={sprint?._id} />
 												</AccordionContent>
@@ -215,7 +229,7 @@ const SprintsColumn = () => {
 						</div>
 					</ScrollArea>
 				)}
-				{sprintItems?.length === 0 && (
+				{backlogSprints?.length === 0 && (
 					<div className="flex justify-center h-[calc(100vh-200px)] items-center mt-[30px]">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
