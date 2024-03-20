@@ -16,6 +16,7 @@ import icons_dwnld from "@/assets/icons/header-icons/icons_dwnld.svg";
 import { HiOutlineDownload } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import { TbSettingsFilled } from "react-icons/tb";
 
 const BillingSettings = () => {
   const navigate = useNavigate();
@@ -23,17 +24,17 @@ const BillingSettings = () => {
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
       <div className="dark:text-foreground flex flex-col gap-6 ml-6 w-full ">
-        <div className="flex w-4/6 mt-2  items-center  ">
-          <Button variant="outline" className="w- p-0">
-            <MdKeyboardArrowLeft
-              onClick={() => navigate("/settings")}
-              className=" size-7  cursor-pointer  "
-            />
-
-            <h5 className="ml-4 text-[#737377] text-xl">Settings</h5>
+        <div className="flex w-4/6 mt-2  items-end  ">
+          <Button
+            onClick={() => navigate("/settings")}
+            variant="ghost"
+            className="h-7 hover:text-[#3E72F8] "
+          >
+            <TbSettingsFilled className="size-5" />
+            <h5 className="ml-4 text-[#737377] text-xl ">Settings</h5>
           </Button>
-          <MdKeyboardArrowRight className="text-[#737377] size-7 " />
-          <h5 className=" text-xl">Billing</h5>
+          <MdKeyboardArrowRight className="text-[#737377] size-5 " />
+          <h5 className=" text-xl ml-2">Billing</h5>
         </div>
 
         <div className="flex w-4/6  flex-col gap-6 mb-10 ">
@@ -78,7 +79,9 @@ const BillingSettings = () => {
               </div>
             </div>
             <div className="flex mx-[18px] mb-[18px] ">
-              <Button className="flex text-[#FFFFFF]  ">Upgrade</Button>
+              <Button className="flex rounded-lg text-[#FFFFFF] font-normal px-6 w-28 border border-[#FFFFFF66]  ">
+                Upgrade
+              </Button>
             </div>
           </Card>
 
