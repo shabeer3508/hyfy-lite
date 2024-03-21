@@ -15,10 +15,11 @@ interface IssueCardProps {
     issue: IssueTypes;
     index: number;
     showSelection?: boolean;
+    showEpicName?: boolean;
     handleSelection?: (issueId: string, isChecked: boolean) => void;
 }
 
-export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelection = false, handleSelection }) => {
+export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showEpicName = true, showSelection = false, handleSelection }) => {
 
     const usersReducerName = reducerNameFromUrl("users", "GET");
     const usersList = useSelector((state: any) => state?.[usersReducerName]);
@@ -72,7 +73,9 @@ export const IssueCard: React.FC<IssueCardProps> = ({ issue, index, showSelectio
                         )}
 
                         <div className="text-[#737377]">{issue?.name}</div>
-                        <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{typeof issue?.epic_id !== "string" && issue?.epic_id?.[0]?.name}</div>
+                        {showEpicName &&
+                            <div className="bg-[#4C4878] text-white text-[10px] px-1 rounded mx-1">{typeof issue?.epic_id !== "string" && issue?.epic_id?.[0]?.name}</div>
+                        }
                     </div>
                     <div className="flex gap-4 items-center text-[#737377]">
                         <div className="flex">

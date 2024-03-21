@@ -47,15 +47,12 @@ const EpicScreen = () => {
     /*  ######################################################################################## */
 
     const getIssues = () => {
-        let query = `?perPage=300
-            &filter=project_id=${appProfileInfo.project_id}`;
+        let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ issues: Urls.issues + query }));
     };
 
     const getEpics = () => {
-        let query = `?perPage=300
-            &sort=${appProfileInfo?.epic?.sort_value}
-            &filter=project_id=${appProfileInfo.project_id}`;
+        let query = `?perPage=300&sort=${appProfileInfo?.epic?.sort_value}&filter=project_id=${appProfileInfo.project_id}`;
         dispatch(getAction({ epic: Urls.epic + query }));
     };
 
@@ -76,12 +73,14 @@ const EpicScreen = () => {
 
     const epicFiltered = epicItems?.filter(epic => {
         if (appProfileInfo?.epic?.release_filter_value === "all") {
-            return epic
+            return true
         }
         else {
             return epic?.release_id === appProfileInfo?.epic?.release_filter_value
         }
     })
+
+    console.log("🚀 ~ epicFiltered ~ epicFiltered:", epicFiltered)
 
     const releaseOptions =
         releaseItems?.map((relse) => ({
@@ -213,7 +212,9 @@ const EpicScreen = () => {
                                 {epicFiltered.map((epic, i) => {
 
                                     const epicIssues = issuesItems?.filter(
-                                        (issue) => issue?.epic_id === epic?._id
+                                        (issue) => {
+                                            return typeof issue?.epic_id !== "string" ? issue?.epic_id?.[0]?._id === epic?._id : issue?.epic_id === epic?._id
+                                        }
                                     );
 
                                     const pieceWidth = 100 / epicIssues?.length;
@@ -291,7 +292,7 @@ const EpicScreen = () => {
                                                     </div>
                                                     <AccordionContent className="flex flex-col gap-2 px-4 mt-2">
                                                         <IssueCreationCardMini epicId={epic?._id} />
-                                                        {epicIssues?.map((itm, i2) => <IssueCard key={i2} issue={itm} index={i2} />)}
+                                                        {epicIssues?.map((itm, i2) => <IssueCard showEpicName={false} key={i2} issue={itm} index={i2} />)}
                                                     </AccordionContent>
                                                 </AccordionItem>
                                             </Accordion>

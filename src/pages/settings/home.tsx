@@ -1,19 +1,26 @@
-import { Card } from "@/components/ui/card";
+import { TbReceipt, TbSettingsFilled } from "react-icons/tb";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-
-import { TbReceipt } from "react-icons/tb";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { HiBell, HiOutlineDownload } from "react-icons/hi";
 import { HiUser, HiBuildingLibrary } from "react-icons/hi2";
+
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const Settings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="dark:text-foreground h-screen ml-6 gap-6">
-      <div className="flex justify-between items-center mt-2">
-        <h5 className=" text-xl">Settings</h5>
+      <div className="flex items-center min-h-10 gap-3 ">
+        <div
+          className="flex  hover:text-[#3E72F8] items-center gap-3 select-none"
+        >
+          <div className="mt-0.5">
+            <TbSettingsFilled className="size-5" />
+          </div>
+          <div className="text-[#737377] text-xl font-medium">Settings</div>
+        </div>
       </div>
 
       <div className="flex flex-col gap-4 my-6 xl:w-2/3 mr-6 xl:mr-0 ">
