@@ -100,7 +100,7 @@ const HistoryCard = () => {
         <div className="flex flex-col mx-6 mb-6 gap-6">
           <div className="flex text-base text-[#9499A5]">Attachments</div>
           <div className="flex  gap-6">
-            <Card className="flex w-auto h-[72px] dark:bg-[#1a1b1e] border border-[#FFFFFF1A]">
+            <Card className="flex w-auto h-[72px] dark:bg-[#1a1b1e] border dark:border-[#FFFFFF1A]">
               <div className="flex mx-4 my-[14px] items-center gap-[136px] ">
                 <div className="flex items-center gap-4">
                   <div className="flex">
@@ -116,7 +116,7 @@ const HistoryCard = () => {
                 </div>
               </div>
             </Card>
-            <Card className="flex w-auto h-[72px] dark:bg-[#1a1b1e] border border-[#FFFFFF1A]">
+            <Card className="flex w-auto h-[72px] dark:bg-[#1a1b1e] border dark:border-[#FFFFFF1A]">
               <div className="flex mx-4 my-[14px] items-center gap-[136px]">
                 <div className="flex items-center gap-4">
                   <div className="flex">

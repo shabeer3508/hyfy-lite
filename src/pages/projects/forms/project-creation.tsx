@@ -35,7 +35,12 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
 		status: z.enum(["open", "in-progress", "pending", "done"]),
-	});
+	}).refine(data => {
+		if (data?.start_date && data?.end_date) {
+			return data?.end_date > data?.start_date;
+		}
+		return true;
+	}, { message: "End date must be after the start date.", path: ["end_date"] });
 
 	type ProjectFormValues = z.infer<typeof projectFormSchema>
 
@@ -51,11 +56,6 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	});
 
 	/*  ######################################################################################## */
-
-	const getUsers = () => {
-		let query = `?perPage=300`;
-		dispatch(getAction({ users: Urls.users + query }));
-	};
 
 	const getProjects = () => {
 		let query = "?perPage=300&expand=owner";
@@ -83,8 +83,8 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getUsers();
-	}, []);
+		form.reset(defaultValues);
+	}, [openForm]);
 
 	/*  ######################################################################################## */
 
@@ -102,7 +102,7 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="title"
 							render={({ field }) => (
 								<FormItem className="">
-									<FormLabel>Project Title</FormLabel>
+									<FormLabel>Project Title <span className="text-destructive">*</span></FormLabel>
 									<Input
 										placeholder="Title"
 										className="w-full outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"

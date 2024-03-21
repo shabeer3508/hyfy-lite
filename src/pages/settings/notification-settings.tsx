@@ -1,30 +1,35 @@
-import { Card } from "@/components/ui/card";
-import { LuChevronRight } from "react-icons/lu";
-import { Switch } from "@/components/ui/switch";
 import { useNavigate } from "react-router-dom";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { TbSettingsFilled } from "react-icons/tb";
-import { Button } from "@/components/ui/button";
+import { MdKeyboardArrowRight } from "react-icons/md";
+
+import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 
 const NotificationSettings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
-      <div className="dark:text-foreground flex flex-col  gap-6  w-full  px-6  ">
-        <div className="flex w-4/6 mt-2 items-end ">
-          <Button
+      <div className="dark:text-foreground flex flex-col  gap-6  w-full  px-6">
+
+        <div className="flex items-center min-h-10 gap-3">
+          <div
             onClick={() => navigate("/settings")}
-            variant="ghost"
-            className=" h-7 hover:text-[#3E72F8]"
+            className="flex  hover:text-[#3E72F8] items-center gap-3 cursor-pointer"
           >
-            <TbSettingsFilled className="size-5" />
-            <h5 className="ml-4 text-[#737377] text-xl ">Settings</h5>
-          </Button>
-          <MdKeyboardArrowRight className="text-[#737377] size-5 " />
-          <h5 className=" text-xl ml-2">Notifications</h5>
+            <div className="mt-0.5">
+              <TbSettingsFilled className="size-5" />
+            </div>
+            <div className="text-[#737377] text-xl font-medium">Settings</div>
+          </div>
+
+          <div className="items-center flex mt-1">
+            <MdKeyboardArrowRight className="size-5 text-[#737377]" />
+          </div>
+          <div className="text-xl">Notifications</div>
         </div>
-        <Card className="flex w-3/6 flex-col gap-6 dark:bg-[#131417]  ">
+
+        <Card className="flex xl:w-1/2 w-full flex-col gap-6 dark:bg-[#131417]  ">
           <div className="flex flex-col m-4 gap-6">
             <div className="flex ">Email Notification</div>
             <div className="flex flex-col  gap-y-4 ">

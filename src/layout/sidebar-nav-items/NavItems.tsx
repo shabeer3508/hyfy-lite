@@ -103,7 +103,8 @@ export const NavItem = ({ onClick, ...prop }: any) => {
 	const currentPath = location?.pathname;
 	const path = prop?.item?.path;
 
-	const isActive = currentPath === path;
+	// const isActive = currentPath === path;
+	const isActive = currentPath.includes(path);
 
 	const name =
 		prop?.item?.name ||

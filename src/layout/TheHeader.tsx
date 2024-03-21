@@ -1,16 +1,17 @@
 import { useEffect } from "react";
-import Urls from "@/redux/actions/Urls";
 import { HiBell } from "react-icons/hi";
-import { Button } from "@/components/ui/button";
-import ModeToggle from "@/components/mode-toggle";
 import { useDispatch, useSelector } from "react-redux";
 import { HiMiniQuestionMarkCircle } from "react-icons/hi2";
+import { useLocation, useNavigate, } from "react-router-dom";
+
+import Urls from "@/redux/actions/Urls";
+import { Button } from "@/components/ui/button";
+import ModeToggle from "@/components/mode-toggle";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYSearch from "@/components/hy-components/HYSearch";
-import { useLocation, useNavigate, } from "react-router-dom";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { getAction, reducerNameFromUrl, setProject } from "@/redux/actions/AppActions";
+import { getAction, reducerNameFromUrl, setHelpScreen, setProject } from "@/redux/actions/AppActions";
 
 const TheHeader = () => {
 	const navigate = useNavigate();
@@ -20,8 +21,9 @@ const TheHeader = () => {
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const projectList = useSelector((state: any) => state?.[reducerName]);
 
-	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const appInfo = useSelector((state: any) => state.AppReducer);
 	const authInfo = useSelector((state: any) => state.UserReducer);
+	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	/*  ######################################################################################## */
 
@@ -68,7 +70,7 @@ const TheHeader = () => {
 							showSearch={false}
 							label={"Project :"}
 							unSelectable={false}
-							buttonClassName="border"
+							buttonClassName=""
 							options={projectOptions}
 							defaultValue={appProfileInfo?.project_id}
 							onValueChange={(value: string) => dispatch(setProject(value))}
@@ -81,8 +83,8 @@ const TheHeader = () => {
 					<Button type="button" size="icon" variant="ghost" onClick={() => navigate("/notification")}>
 						<HiBell className="w-6 h-6 text-[#707173]" />
 					</Button>
-					<Button type="button" size="icon" variant="ghost">
-						<HiMiniQuestionMarkCircle className="w-6 h-6 text-[#707173]" />
+					<Button type="button" size="icon" variant="ghost" onClick={() => dispatch(setHelpScreen(!appInfo?.appState?.showHelpScreen))}>
+						<HiMiniQuestionMarkCircle className={`w-6 h-6  ${appInfo?.appState?.showHelpScreen ? "text-primary drop-shadow-lg outline-dashed rounded-full" : "text-[#707173]"}`} />
 					</Button>
 					<Button
 						onClick={() => navigate("/profile")}

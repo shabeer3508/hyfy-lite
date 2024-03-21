@@ -43,10 +43,7 @@ const Board = () => {
 		dispatch(getAction({ sprints: Urls.sprints + query }));
 	};
 
-	const getUsers = () => {
-		let query = `?perPage=300`;
-		dispatch(getAction({ users: Urls.users + query }));
-	};
+
 
 	const getEpics = () => {
 		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
@@ -126,7 +123,6 @@ const Board = () => {
 	useEffect(() => {
 		if (appProfileInfo?.project_id) {
 			getSprints();
-			getUsers();
 			getEpics();
 		}
 	}, [appProfileInfo?.project_id]);

@@ -46,7 +46,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	const epicFormSchema = z.object({
 		name: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
+			message: "title must be at least 2 characters.",
 		}),
 		status: z.string(),
 		release_id: z.string().optional().nullable(),
@@ -142,6 +142,11 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		getEpics();
 	}, []);
 
+	useEffect(() => {
+		form.reset(defaultValues)
+	}, [openForm]);
+
+
 	/*  ######################################################################################## */
 
 	return (
@@ -158,7 +163,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="name"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Epic Title</FormLabel>
+									<FormLabel>Epic Title <span className="text-destructive">*</span></FormLabel>
 									<Input
 										placeholder="title"
 										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
@@ -173,7 +178,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="status"
 							render={({ field }) => (
 								<FormItem className="flex flex-col my-3">
-									<FormLabel>Status</FormLabel>
+									<FormLabel>Status <span className="text-destructive">*</span></FormLabel>
 									<HYCombobox
 										id="status"
 										form={form}
@@ -240,7 +245,7 @@ const EpicCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="priority"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Priority</FormLabel>
+									<FormLabel>Priority <span className="text-destructive">*</span></FormLabel>
 									<HYCombobox
 										id="priority"
 										form={form}

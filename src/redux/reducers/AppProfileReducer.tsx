@@ -38,7 +38,7 @@ export interface BacklogStates {
 
 export interface EpicStates {
     sort_value?: string,
-    filter_value: string
+    filter_value?: string[]
     release_filter_value?: string
 }
 
@@ -70,7 +70,8 @@ const initialState: AppProfileTypes = {
         sprint_status_value: "all",
     },
     epic: {
-        filter_value: "all"
+        sort_value: "-createdAt",
+        release_filter_value: "all",
     },
     sprints: {
         selected_sprint: ""

@@ -1,43 +1,45 @@
-import { LuChevronRight } from "react-icons/lu";
+import { useNavigate } from "react-router-dom";
+import { TbSettingsFilled } from "react-icons/tb";
+import { HiOutlineDownload } from "react-icons/hi";
+import { MdKeyboardArrowRight } from "react-icons/md";
+
 import { Card } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import icons_success from "@/assets/icons/header-icons/Icons_success.svg";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import icons_dwnld from "@/assets/icons/header-icons/icons_dwnld.svg";
-import { HiOutlineDownload } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
-import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { TbSettingsFilled } from "react-icons/tb";
+
 
 const BillingSettings = () => {
   const navigate = useNavigate();
 
   return (
     <div className="overflow-auto max-h-[calc(100vh-100px)]">
-      <div className="dark:text-foreground flex flex-col gap-6 ml-6 w-full ">
-        <div className="flex w-4/6 mt-2  items-end  ">
-          <Button
+      <div className="dark:text-foreground flex flex-col gap-6 pl-6 w-full ">
+        <div className="flex items-center min-h-10 gap-3">
+          <div
             onClick={() => navigate("/settings")}
-            variant="ghost"
-            className="h-7 hover:text-[#3E72F8] "
+            className="flex  hover:text-[#3E72F8] items-center gap-3 cursor-pointer"
           >
-            <TbSettingsFilled className="size-5" />
-            <h5 className="ml-4 text-[#737377] text-xl ">Settings</h5>
-          </Button>
-          <MdKeyboardArrowRight className="text-[#737377] size-5 " />
-          <h5 className=" text-xl ml-2">Billing</h5>
+            <div className="mt-0.5">
+              <TbSettingsFilled className="size-5" />
+            </div>
+            <div className="text-[#737377] text-xl font-medium">Settings</div>
+          </div>
+
+          <div className="items-center flex mt-1">
+            <MdKeyboardArrowRight className="size-5 text-[#737377] " />
+          </div>
+          <div className="text-xl">Billing</div>
         </div>
 
-        <div className="flex w-4/6  flex-col gap-6 mb-10 ">
+        <div className="flex w-full xl:w-2/3 pr-6 xl:pl-0  flex-col gap-6 mb-10 ">
           <Card className="flex w-full  gap-y-8 flex-col dark:bg-[#131417] ">
             <div className="flex mx-[18px] mt-[18px]  flex-col  gap-y-4 ">
               <div className="text-sm text-[#737377] font-medium">
@@ -53,19 +55,19 @@ const BillingSettings = () => {
                   </div>
                 </div>
                 <div className="flex w-3/4 justify-end items-end gap-4 flex-wrap  ">
-                  <Card className="flex items-center dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33]">
-                    <div className="flex  text-sm gap-4 mx-4 my-[7.5px] ">
+                  <Card className="flex items-center dark:bg-[#272729] my-2 h-8 border dark:border-[#FFFFFF33]">
+                    <div className="flex  text-sm gap-4 mx-4 my-2 ">
                       <span className="flex text-[#9499A5] ">Purchased on</span>
                       <span className="flex ">24 Jun 2023</span>
                     </div>
                   </Card>
-                  <Card className="flex text-sm items-center dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33] ">
+                  <Card className="flex text-sm items-center dark:bg-[#272729] my-[9px] h-8 border dark:border-[#FFFFFF33] ">
                     <div className="flex  text-sm gap-4 mx-4 my-[7.5px]">
                       <span className="text-[#9499A5]">Ending on</span>
                       <span>24 Jun 2025</span>
                     </div>
                   </Card>
-                  <Card className="flex  dark:bg-[#272729] my-[9px] h-8 border border-[#FFFFFF33]">
+                  <Card className="flex  dark:bg-[#272729] my-[9px] h-8 border dark:border-[#FFFFFF33]">
                     <div className="flex  text-sm items-center mx-4 my-[7.5px] ">
                       <img
                         className=" w-4 h-4 "
@@ -104,15 +106,15 @@ const BillingSettings = () => {
               </div>
             </Card>
 
-            <Card className="flex w-1/2 lg:h-[94px] md:min-h-[94px] dark:bg-[#131417]  ">
-              <div className="flex flex-col w-full   m-[18px]   ">
+            <Card className="flex w-1/2 h-[94px] dark:bg-[#131417]  ">
+              <div className="flex flex-col w-full p-4">
                 <div className="flex h-1/2 justify-between items-center  ">
                   <div className="flex font-medium text-sm text-[#737377]">
                     Payment Method
                   </div>
                   <Button
                     variant="ghost"
-                    className="flex  text-[#3E72F8] px-0 py-0 "
+                    className="flex  text-[#3E72F8] px-0 hover:bg-transparent "
                   >
                     Update
                   </Button>
@@ -126,7 +128,7 @@ const BillingSettings = () => {
           </div>
 
           <Card className=" w-full dark:bg-[#131417]">
-            <div className=" m-[18px] ">
+            <div className=" m-4 ">
               <div className="mx-2 text-[#737377] font-medium">Invoices</div>
               <Table className="">
                 <TableHeader className="">

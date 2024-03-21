@@ -57,10 +57,7 @@ const BacklogColumn: React.FC = () => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const getUsers = () => {
-		let query = `?perPage=300`;
-		dispatch(getAction({ users: Urls.users + query }));
-	};
+
 
 	const getEpics = () => {
 		let query = `?perPage=300
@@ -165,10 +162,6 @@ const BacklogColumn: React.FC = () => {
 		getIssues();
 	}, [appProfileInfo?.project_id, appProfileInfo?.backlog?.backlog_sort_value]);
 
-	useEffect(() => {
-		getUsers();
-	}, [])
-
 
 	/*  ######################################################################################## */
 
@@ -259,7 +252,7 @@ const BacklogColumn: React.FC = () => {
 				}}>
 
 				{backlogIssues?.length > 0 && (
-					<ScrollArea className="h-[calc(100vh-250px)] w-full bg-[#F7F8F9] dark:bg-[#111215]">
+					<ScrollArea className="h-[calc(100vh-300px)] 2xl:h-[calc(100vh-250px)] w-full bg-[#F7F8F9] dark:bg-[#111215]">
 						<div className="py-4 px-6 space-y-2">
 							{backlogIssues.map((issue, i) => (
 								<IssueCard index={i} issue={issue} key={issue?._id} showSelection={issueTransfer?.isSelectionOn} handleSelection={handleIssueSelection} />
@@ -269,7 +262,7 @@ const BacklogColumn: React.FC = () => {
 				)}
 
 				{backlogIssues?.length === 0 && (
-					<div className="flex justify-center h-[calc(100vh-250px)] items-center ">
+					<div className="flex justify-center h-[calc(100vh-350px)] 2xl:h-[calc(100vh-250px)] items-center ">
 						<div className="flex gap-5 flex-col justify-center items-center">
 							<div className="border rounded-full aspect-square h-10 w-10 flex justify-center items-center border-[#707173] text-[#707173]">
 								1

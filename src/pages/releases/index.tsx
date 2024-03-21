@@ -96,10 +96,10 @@ const Releases = () => {
                 <HiViewBoards className="w-4 h-4" />
                 Board
               </TabsTrigger>
-              <TabsTrigger value="timeline" className="flex gap-1">
+              {/* <TabsTrigger value="timeline" className="flex gap-1">
                 <BiDirections className="w-4 h-4" />
                 Timeline
-              </TabsTrigger>
+              </TabsTrigger> */}
             </TabsList>
           </div>
           <ReleaseCreationForm>

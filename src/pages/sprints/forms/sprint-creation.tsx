@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
@@ -40,19 +40,24 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	const sprintFormSchema = z.object({
 		name: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
+			message: "Title must be at least 2 characters.",
 		}),
 		status: z.string(),
-		duration: z.string().optional().nullable(),
+		duration: z.string(),
 		exclude_days: z.string().optional().nullable(),
 		exclude_public_holiday: z.boolean().optional().nullable(),
-		start_date: z.date().optional().nullable(),
-		end_date: z.date().optional().nullable(),
+		start_date: z.date(),
+		end_date: z.date(),
 		description: z.string().optional().nullable(),
 		project_id: z.string(),
 		created_by: z.string(),
 		issues: z.string().optional().nullable(),
-	});
+	}).refine(data => {
+		if (data?.start_date && data?.end_date) {
+			return data?.end_date > data?.start_date;
+		}
+		return true;
+	}, { message: "End date must be after the start date.", path: ["end_date"] });
 
 	type SprintFormValues = z.infer<typeof sprintFormSchema>
 
@@ -71,11 +76,12 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
+	const getSprints = () => {
+		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
+		dispatch(getAction({ sprints: Urls.sprints + query }));
+	};
+
 	const handleSprintCreation = async (values: SprintFormValues) => {
-		const getSprints = () => {
-			let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
-			dispatch(getAction({ sprints: Urls.sprints + query }));
-		};
 		const resp = (await dispatch(postAction({ sprints: Urls.sprints }, values))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {
@@ -95,6 +101,10 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
+	useEffect(() => {
+		form.reset(defaultValues)
+	}, [openForm]);
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -109,7 +119,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="name"
 							render={({ field }) => (
 								<FormItem className="col-span-2">
-									<FormLabel>Sprint Title</FormLabel>
+									<FormLabel>Sprint Title <span className="text-destructive">*</span></FormLabel>
 									<Input
 										placeholder="title"
 										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
@@ -124,7 +134,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="status"
 							render={({ field }) => (
 								<FormItem className="flex flex-col my-2">
-									<FormLabel>Status</FormLabel>
+									<FormLabel>Status <span className="text-destructive">*</span></FormLabel>
 									<HYCombobox
 										buttonClassName="w-full"
 										defaultValue="backlog"
@@ -142,7 +152,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="duration"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Duration</FormLabel>
+									<FormLabel>Duration <span className="text-destructive">*</span></FormLabel>
 									<HYSelect
 										field={field}
 										id="release"
@@ -193,7 +203,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="start_date"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Start Date</FormLabel>
+										<FormLabel>Start Date <span className="text-destructive">*</span></FormLabel>
 										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
@@ -204,7 +214,7 @@ const SprintCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="end_date"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>End Date</FormLabel>
+										<FormLabel>End Date <span className="text-destructive">*</span></FormLabel>
 										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
