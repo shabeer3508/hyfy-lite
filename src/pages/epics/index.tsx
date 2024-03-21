@@ -56,10 +56,6 @@ const EpicScreen = () => {
         dispatch(getAction({ epic: Urls.epic + query }));
     };
 
-    const getUsers = () => {
-        let query = `?perPage=300`;
-        dispatch(getAction({ users: Urls.users + query }));
-    };
 
     const updateEpicData = async (epicId: string, key: string | number, value: string | boolean) => {
         const resp = (await dispatch(patchAction({ epic: Urls.epic }, { [key]: value !== "" ? value : null }, epicId))) as any
@@ -119,10 +115,6 @@ const EpicScreen = () => {
             getEpics();
         }
     }, [appProfileInfo.project_id, appProfileInfo?.epic?.sort_value])
-
-    useEffect(() => {
-        getUsers();
-    }, [])
 
     /*  ######################################################################################## */
 

@@ -57,10 +57,7 @@ const BacklogColumn: React.FC = () => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const getUsers = () => {
-		let query = `?perPage=300`;
-		dispatch(getAction({ users: Urls.users + query }));
-	};
+
 
 	const getEpics = () => {
 		let query = `?perPage=300
@@ -164,10 +161,6 @@ const BacklogColumn: React.FC = () => {
 	useEffect(() => {
 		getIssues();
 	}, [appProfileInfo?.project_id, appProfileInfo?.backlog?.backlog_sort_value]);
-
-	useEffect(() => {
-		getUsers();
-	}, [])
 
 
 	/*  ######################################################################################## */

@@ -35,9 +35,9 @@ const ReleaseCard: React.FC<ReleaseCardProps> = ({ data }) => {
 			<Separator className=" w-full " />
 			<div className="flex justify-between text-xs p-2 px-4">
 				<div className="text-[#737377]">Tags :</div>
-				<div className="text-[#737377]">
+				<div className="dark:text-[#737377]">
 					Priority
-					<span className="dark:text-white capitalize ml-2">{data?.priority}</span>
+					<span className="dark:text-white text-[#737377] capitalize ml-2">{data?.priority}</span>
 				</div>
 			</div>
 		</Card>

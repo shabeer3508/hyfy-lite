@@ -54,7 +54,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	const issueFormSchema = z.object({
 		name: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
+			message: "Title must be at least 2 characters.",
 		}),
 		type: z.string(),
 		status: z.string().optional(),
@@ -188,7 +188,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="name"
 								render={({ field }) => (
 									<FormItem className="col-span-2">
-										<FormLabel className="text-xs text-[#9499A5]">Story Title</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Issue Title <span className="text-destructive">*</span></FormLabel>
 										<Input
 											placeholder="Title"
 											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:border-[#36363A] dark:bg-card"
@@ -203,7 +203,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="type"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel className="text-xs text-[#9499A5]">Type</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Type <span className="text-destructive">*</span></FormLabel>
 										<HYCombobox
 											defaultValue="story"
 											buttonClassName="w-full dark:bg-card dark:border-[#36363A]"
@@ -241,7 +241,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="points"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel className="text-xs text-[#9499A5]">Points</FormLabel>
+										<FormLabel className="text-xs text-[#9499A5]">Points <span className="text-destructive">*</span></FormLabel>
 										<HYCombobox
 											defaultValue="5"
 											label={<HiDatabase />}
@@ -264,7 +264,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									name="status"
 									render={({ field }) => (
 										<FormItem>
-											<FormLabel className="text-xs text-[#9499A5]">Status</FormLabel>
+											<FormLabel className="text-xs text-[#9499A5]">Status <span className="text-destructive">*</span></FormLabel>
 
 											<HYCombobox
 												defaultValue={form?.getValues()?.status}

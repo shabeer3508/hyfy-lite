@@ -148,6 +148,15 @@ export function deleteAction(apiUrl: string, id: string, params = "") {
 
 /////////////////////////  HYFY REDUCER ACTIONS //////////////////////
 
+// App Actions
+
+export function setHelpScreen(show: boolean) {
+    return {
+        type: Actions.SET_HELP_VIEW,
+        payload: show,
+    };
+}
+
 // USER ACTIONS
 
 export function setCurrentUser(data: any) {

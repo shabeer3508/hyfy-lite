@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
@@ -38,7 +38,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	const releaseFormSchema = z.object({
 		name: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
+			message: "title must be at least 2 characters.",
 		}),
 		status: z.string(),
 		to_date: z.date(),
@@ -99,6 +99,11 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
+	useEffect(() => {
+		form.reset(defaultValues);
+	}, [openForm])
+
+
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
@@ -113,7 +118,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="name"
 							render={({ field }) => (
 								<FormItem className="col-span-2">
-									<FormLabel>Release Title</FormLabel>
+									<FormLabel>Release Title <span className="text-destructive">*</span></FormLabel>
 									<Input
 										placeholder="title"
 										className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-border"
@@ -131,7 +136,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								render={({ field }) => (
 									<FormItem className="flex flex-col justify-center">
 										<FormLabel className="my-1">
-											Status
+											Status <span className="text-destructive">*</span>
 										</FormLabel>
 
 										<HYCombobox
@@ -150,7 +155,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								name="to_date"
 								render={({ field }) => (
 									<FormItem>
-										<FormLabel>Release Date</FormLabel>
+										<FormLabel>Release Date <span className="text-destructive">*</span></FormLabel>
 										<HYInputDate field={field} />
 										<FormMessage />
 									</FormItem>
@@ -162,7 +167,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							name="priority"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Priority</FormLabel>
+									<FormLabel>Priority <span className="text-destructive">*</span></FormLabel>
 									<HYCombobox
 										id="priority"
 										form={form}

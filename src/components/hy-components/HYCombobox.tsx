@@ -77,7 +77,7 @@ export function HYCombobox({
 			<PopoverTrigger asChild>
 				<Button
 					disabled={disable}
-					variant="outline"
+					variant={"outline"}
 					role="combobox"
 					aria-expanded={open}
 					onClick={(e) => e.stopPropagation()}

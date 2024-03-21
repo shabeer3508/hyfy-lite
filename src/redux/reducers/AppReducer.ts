@@ -1,58 +1,64 @@
 import Actions from "../actions/ActionTypes";
 
 export interface AppState {
-	mode: "dark" | "light" | "auto";
-	dir: "ltr" | "rtl";
-	language: any;
-	locale: any;
+    locale: any;
+    language: any;
+    dir: "ltr" | "rtl";
+    showHelpScreen: boolean;
 }
 
 export interface AppInitialState {
-	syncing: boolean;
-	appState: AppState;
+    syncing: boolean;
+    appState: AppState;
 }
 
 const initialState: AppInitialState = {
-	syncing: false,
-	appState: {
-		dir: "ltr",
-		mode: "light",
-		language: null,
-		locale: { code: "en", name: "English", rtl: false },
-	},
+    syncing: false,
+    appState: {
+        dir: "ltr",
+        language: null,
+        locale: { code: "en", name: "English", rtl: false },
+        showHelpScreen: false,
+    },
 };
 
 export default function AppReducer() {
-	let updatedState;
-	return (state = initialState, action: any) => {
-		switch (action.type) {
-			case Actions.SET_APPSTATE:
-				return { ...action.payload };
-			case Actions.SET_DIRECTION:
-				updatedState = {
-					...state,
-					appState: { ...state.appState, dir: action.payload },
-				};
-				return updatedState;
-			case Actions.SET_LOCALE:
-				updatedState = {
-					...state,
-					appState: {
-						...state.appState,
-						locale: action.payload,
-						dir: action.payload.rtl ? "rtl" : "ltr",
-					},
-				};
-				return updatedState;
-			case Actions.SET_DARK_MODE:
-				updatedState = {
-					...state,
-					appState: { ...state.appState, mode: action.payload },
-				};
-				return updatedState;
+    let updatedState;
+    return (state = initialState, action: any) => {
+        switch (action.type) {
+            case Actions.SET_APPSTATE:
+                return { ...action.payload };
 
-			default:
-				return state;
-		}
-	};
+            case Actions.SET_DIRECTION:
+                updatedState = {
+                    ...state,
+                    appState: { ...state.appState, dir: action.payload },
+                };
+                return updatedState;
+
+            case Actions.SET_HELP_VIEW:
+                updatedState = {
+                    ...state,
+                    appState: {
+                        ...state.appState,
+                        showHelpScreen: action.payload,
+                    },
+                };
+                return updatedState;
+
+            case Actions.SET_LOCALE:
+                updatedState = {
+                    ...state,
+                    appState: {
+                        ...state.appState,
+                        locale: action.payload,
+                        dir: action.payload.rtl ? "rtl" : "ltr",
+                    },
+                };
+                return updatedState;
+
+            default:
+                return state;
+        }
+    };
 }

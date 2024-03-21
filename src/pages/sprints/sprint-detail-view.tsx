@@ -166,7 +166,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                 <div className="flex  gap-3 align-middle">
                     <div>Stories</div>
                     <div className="flex gap-3 text-xs items-center">
-                        <div className="border flex items-center">{`(`}</div>
+                        <div className=" flex items-center">{`(`}</div>
                         <div className="flex gap-1 ">
                             <HiBookOpen className="w-4 h-4" />
                             <span>{findIssueCount("story")}</span>
@@ -195,7 +195,7 @@ const SprintDetailView = ({ data }: { data: SprintTypes }) => {
                 <div>Assigned to</div>
             </div>
 
-            <ScrollArea className="max-h-[40vh] h-auto w-full pr-5">
+            <ScrollArea className="max-h-[30vh] overflow-auto h-auto w-full pr-5">
                 <div className="space-y-2 text-xs">
                     {filteredIssues?.map((issue) => {
                         return <IssueMiniCard data={issue} key={issue?._id} />;
