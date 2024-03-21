@@ -1,7 +1,7 @@
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { Card } from "@/components/ui/card";
 import { HiRocketLaunch } from "react-icons/hi2";
-import { HiOutlineDownload } from "react-icons/hi";
+import { RxDownload } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { HiDocument } from "react-icons/hi";
 
@@ -112,7 +112,7 @@ const HistoryCard = () => {
                   </div>
                 </div>
                 <div className="flex  text-[#969696] ">
-                  <HiOutlineDownload className="w-6 h-6 " />
+                  <RxDownload className="w-6 h-6 " />
                 </div>
               </div>
             </Card>
@@ -124,11 +124,11 @@ const HistoryCard = () => {
                   </div>
                   <div className="flex flex-col">
                     <div className="flex">v1.1</div>
-                    <div className="flex text-[#737377]">apk</div>
+                    <div className="flex text-[#737377] text-sm">apk</div>
                   </div>
                 </div>
                 <div className="flex  text-[#969696]">
-                  <HiOutlineDownload className="w-6 h-6 " />
+                  <RxDownload className="w-6 h-6 " />
                 </div>
               </div>
             </Card>

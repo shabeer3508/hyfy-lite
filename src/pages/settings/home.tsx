@@ -1,10 +1,10 @@
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-
+import { RxDownload } from "react-icons/rx";
 import { TbReceipt } from "react-icons/tb";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { HiBell, HiOutlineDownload } from "react-icons/hi";
+import { HiBell } from "react-icons/hi";
 import { HiUser, HiBuildingLibrary } from "react-icons/hi2";
 
 const Settings = () => {
@@ -57,7 +57,7 @@ const Settings = () => {
                 type="reset"
                 variant="outline"
               >
-                <HiOutlineDownload className="h-6 w-6" />
+                <RxDownload className="h-6 w-6" />
                 Invoice
               </Button>
               <Button

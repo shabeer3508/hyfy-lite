@@ -107,6 +107,19 @@ const Releases = () => {
           </ReleaseCreationForm>
         </div>
         <TabsContent value="history">
+          <div className="flex gap-2">
+            <HYCombobox
+              label={"Order"}
+              options={orderFilterOption}
+              defaultValue={releasePageinfo?.order_filter_value}
+            />
+            <HYCombobox label={"Released"} options={[]} />
+            <HYCombobox
+              options={pointsFilterOptions}
+              defaultValue={releasePageinfo?.points_filter_value}
+            />
+            <HYSearch />
+          </div>
           <HistoryCard />
         </TabsContent>
         <TabsContent value="board">
