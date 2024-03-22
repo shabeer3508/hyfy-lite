@@ -32,6 +32,9 @@ const Urls = {
     release: "/release",
     sprints: "/sprints",
 
+    stages: "/stages",
+    stages_list: "/projects/stages",
+
     comments: "/comments",
     issue_status: "/issueStatus",
     sprint_members: "/sprints/members",

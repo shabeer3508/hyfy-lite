@@ -90,7 +90,7 @@ export function HYCombobox({
 					)}
 					<span className="w-1/2 truncate capitalize text-start">
 						{value
-							? options.find((opt) => opt.value === value)?.label
+							? options?.find((opt) => opt.value === value)?.label
 							: `Select ${name ?? ""}..`}
 					</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -105,7 +105,7 @@ export function HYCombobox({
 
 							{options?.length === 0 && <CommandItem className="text-center w-full">No options found</CommandItem>}
 
-							{options.map((opt) => (
+							{options?.map((opt) => (
 								<CommandItem
 									key={opt.value}
 									value={opt.value}

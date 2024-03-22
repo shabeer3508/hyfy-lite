@@ -47,8 +47,12 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueItems = issuesListData?.data?.items as IssueTypes[];
 
-	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	// const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	// const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+
+	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
+	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
+	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
 
 	/*  ######################################################################################## */
 
@@ -57,7 +61,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 			message: "Title must be at least 2 characters.",
 		}),
 		type: z.string(),
-		status: z.string().optional(),
+		status: z.string(),
 		epic_id: z.string().optional().nullable(),
 		points: z.string().optional().nullable(),
 		dependency: z.string().optional().nullable(),
@@ -74,9 +78,8 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const defaultValues: Partial<IssueFormValues> = {
 		name: "",
 		points: "5",
-		type: "story",
+		type: "task",
 		project_id: appProfileInfo.project_id,
-		status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id,
 	}
 
 	const form = useForm<IssueFormValues>({
@@ -161,7 +164,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		{ label: "Story", value: "story" },
 	];
 
-	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }))
+	const statusOptions = stagesItems?.map(status => ({ label: status?.name, value: status?._id }));
 
 	/*  ######################################################################################## */
 
@@ -178,7 +181,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="max-w-4xl h-[75vh] dark:bg-card">
 				<DialogHeader>
-					<DialogTitle>Add Issue</DialogTitle>
+					<DialogTitle>Add Task</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(handleEpicCreation)} className="overflow-auto pr-3">
@@ -187,7 +190,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 								control={form.control}
 								name="name"
 								render={({ field }) => (
-									<FormItem className="col-span-2">
+									<FormItem className="col-span-3">
 										<FormLabel className="text-xs text-[#9499A5]">Issue Title <span className="text-destructive">*</span></FormLabel>
 										<Input
 											placeholder="Title"
@@ -198,7 +201,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									</FormItem>
 								)}
 							/>
-							<FormField
+							{/* <FormField
 								control={form.control}
 								name="type"
 								render={({ field }) => (
@@ -214,11 +217,47 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 										<FormMessage />
 									</FormItem>
 								)}
-							/>
+							/> */}
 						</div>
+						<FormField
+							control={form.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-xs text-[#9499A5]">Description</FormLabel>
+									<FormControl>
+										<Input
+											placeholder=""
+											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card dark:border-[#36363A]"
+											{...field}
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
 						<div className="grid grid-cols-2 gap-4 py-4 ">
 							<FormField
+								control={form.control}
+								name="status"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel className="text-xs text-[#9499A5]">Status <span className="text-destructive">*</span></FormLabel>
+
+										<HYCombobox
+											defaultValue={form?.getValues()?.status}
+											buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
+											id="status"
+											form={form}
+											options={statusOptions}
+										/>
+
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+							{/* <FormField
 								control={form.control}
 								name="epic_id"
 								render={({ field }) => (
@@ -235,7 +274,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 										<FormMessage />
 									</FormItem>
 								)}
-							/>
+							/> */}
 							<FormField
 								control={form.control}
 								name="points"
@@ -259,28 +298,9 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 						<div className=" w-full flex gap-4">
 							<div className="w-1/2 ">
-								<FormField
-									control={form.control}
-									name="status"
-									render={({ field }) => (
-										<FormItem>
-											<FormLabel className="text-xs text-[#9499A5]">Status <span className="text-destructive">*</span></FormLabel>
 
-											<HYCombobox
-												defaultValue={form?.getValues()?.status}
-												buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
-												id="status"
-												form={form}
-												options={statusOptions}
-											/>
-
-											<FormMessage />
-										</FormItem>
-									)}
-								/>
-
-								<div className="grid grid-cols-2 gap-3 my-2">
-									<FormField
+								{/* <div className="grid grid-cols-2 gap-3 my-2"> */}
+								{/* <FormField
 										control={form.control}
 										name="dependency"
 										render={({ field }) => (
@@ -311,8 +331,8 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 												<FormMessage />
 											</FormItem>
 										)}
-									/>
-								</div>
+									/> */}
+								{/* </div> */}
 
 								<FormField
 									control={form.control}
@@ -378,24 +398,6 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							</div>
 						</div>
 
-
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => (
-								<FormItem>
-									<FormLabel className="text-xs text-[#9499A5]">Description</FormLabel>
-									<FormControl>
-										<Input
-											placeholder=""
-											className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-card dark:border-[#36363A]"
-											{...field}
-										/>
-									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
 
 						{/* <FormField
 							control={form.control}

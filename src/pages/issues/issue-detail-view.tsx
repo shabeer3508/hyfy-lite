@@ -30,8 +30,8 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicItems = useSelector((state: any) => state?.[epicReducerName])?.data?.items as EpicTypes[];
 
-	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	// const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	// const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
@@ -41,6 +41,10 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	const sprintReducerName = reducerNameFromUrl("sprints", "GET");
 	const sprintListData = useSelector((state: any) => state?.[sprintReducerName])?.data?.items as SprintTypes[];
+
+	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
+	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
+	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
 
 	/*  ######################################################################################## */
 
@@ -56,7 +60,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	const handleIssueEdit = (value, field: string) => {
 		let postData = { [field]: value !== "" ? value : null };
-		if (value === "" && field === "sprint_id") { postData = { ...postData, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id } }
+		// if (value === "" && field === "sprint_id") { postData = { ...postData, status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id } }
 		(dispatch(patchAction({ issues: Urls.issues }, postData, data?._id)) as any).then((res) => {
 			if (res.payload?.status === 200) {
 				getIssues();
@@ -85,7 +89,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	/*  ######################################################################################## */
 
-	const statusOptions = issueStatusList?.map(status => ({ label: status?.name, value: status?._id }));
+	const statusOptions = stagesItems?.map(status => ({ label: status?.name, value: status?._id }));
 
 	const epicOptions =
 		epicItems?.map((epic) => ({
@@ -154,7 +158,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 				</div>
 			</div>
 			<div className="grid grid-cols-7 pt-5">
-				<div className="flex justify-between pr-3">
+				{/* <div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Epic</div>
 						<div className=" flex flex-1 items-center mr-4 ">
@@ -168,8 +172,8 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
-				</div>
-				<div className="flex justify-between pr-3">
+				</div> */}
+				{/* <div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Sprint</div>
 						<div className=" flex flex-1 items-center mr-4">
@@ -183,7 +187,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
-				</div>
+				</div> */}
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">
@@ -201,7 +205,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
-				<div className="flex justify-between pr-3">
+				{/* <div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Hours</div>
 						<div className=" flex flex-1 items-center">
@@ -216,7 +220,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
-				</div>
+				</div> */}
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Dependency</div>

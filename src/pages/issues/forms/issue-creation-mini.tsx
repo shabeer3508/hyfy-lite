@@ -15,7 +15,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId?: string }) => {
+const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: string, epicId?: string, statusId: string }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -24,10 +24,10 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 
 	const defaultPostData = {
 		name: "",
-		type: "story",
+		type: "task",
 		points: "5",
 		project_id: appProfileInfo?.project_id,
-		status: issueStatusList?.find(issueStatus => issueStatus?.name === "Backlog")?._id,
+		status: statusId,
 	}
 
 	const [postData, setPostData] = useState(defaultPostData);
@@ -75,12 +75,12 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 		<div className="flex items-center bg-background pr-3 w-full rounded border" >
 			<Input
 				value={postData?.name}
-				placeholder="Add Issue"
+				placeholder="Add task"
 				onKeyDown={handleIssueCreation}
 				onChange={({ target }) => setPostData((prev) => ({ ...prev, name: target.value }))}
 				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 text-sm"
 			/>
-			<Select
+			{/* <Select
 				defaultValue="story"
 				value={postData.type}
 				onValueChange={(value) => setPostData((prev) => ({ ...prev, type: value }))}
@@ -99,7 +99,7 @@ const IssueCreationCardMini = ({ sprintId, epicId }: { sprintId?: string, epicId
 						<img src="/bug_icon.svg" alt="bug" />
 					</SelectItem>
 				</SelectContent>
-			</Select>
+			</Select> */}
 		</div>
 	);
 };

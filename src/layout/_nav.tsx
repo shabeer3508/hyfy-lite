@@ -8,26 +8,26 @@ const _nav = [
 		icon_name: "nav_board",
 		icon: <HiViewBoards className="w-5 h-5" />,
 	},
-	{
-		path: "/backlog",
-		icon_name: "nav_backlog",
-		icon: <HiClipboardList className="w-5 h-5" />,
-	},
-	{
-		path: "/epics",
-		icon_name: "nav_backlog",
-		icon: <HiBookOpen className="w-5 h-5" />,
-	},
-	{
-		path: "/sprints",
-		icon_name: "nav_sprints",
-		icon: <HiArrowPathRoundedSquare className="w-5 h-5" />,
-	},
-	{
-		path: "/releases",
-		icon_name: "nav_releases",
-		icon: <HiOutlineHashtag className="w-5 h-5" />,
-	},
+	// {
+	// 	path: "/backlog",
+	// 	icon_name: "nav_backlog",
+	// 	icon: <HiClipboardList className="w-5 h-5" />,
+	// },
+	// {
+	// 	path: "/epics",
+	// 	icon_name: "nav_backlog",
+	// 	icon: <HiBookOpen className="w-5 h-5" />,
+	// },
+	// {
+	// 	path: "/releases",
+	// 	icon_name: "nav_releases",
+	// 	icon: <HiOutlineHashtag className="w-5 h-5" />,
+	// },
+	// {
+	// 	path: "/sprints",
+	// 	icon_name: "nav_sprints",
+	// 	icon: <HiArrowPathRoundedSquare className="w-5 h-5" />,
+	// },
 	{
 		path: "/projects",
 		icon_name: "nav_projects",

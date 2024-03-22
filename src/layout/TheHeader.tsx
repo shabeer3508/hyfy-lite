@@ -44,7 +44,8 @@ const TheHeader = () => {
 			label: prjct?.title,
 		})) ?? [];
 
-	const showProjectSelection = !["/projects", "/teams"].includes(pathname) && projectOptions?.length > 0
+	// const showProjectSelection = !["/projects", "/teams"].includes(pathname) && projectOptions?.length > 0
+	const showProjectSelection = true
 
 	/*  ######################################################################################## */
 

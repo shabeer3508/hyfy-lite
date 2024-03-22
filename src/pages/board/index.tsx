@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { HiDatabase } from "react-icons/hi";
+import { HiDatabase, HiOutlineDotsHorizontal, HiOutlineDotsVertical, HiPlus } from "react-icons/hi";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -13,12 +13,16 @@ import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
+import IssueCreationForm from "../issues/forms/issue-creation";
+import IssueCreationCardMini from "../issues/forms/issue-creation-mini";
+import { Button } from "@/components/ui/button";
+import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
 
 const Board = () => {
 	const dispatch = useDispatch();
 
-	const sprintListData = useSelector((state: any) => state?.GetSprints);
-	const sprintItems = sprintListData?.data?.items as SprintTypes[];
+	// const sprintListData = useSelector((state: any) => state?.GetSprints);
+	// const sprintItems = sprintListData?.data?.items as SprintTypes[];
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueListItems = issuesListData?.data?.items as IssueTypes[];
@@ -27,47 +31,58 @@ const Board = () => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items as UsersTypes[];
 
-	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	// const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
+	// const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
 
-	const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
+	// const formatter = new Intl.DateTimeFormat("en-US", { dateStyle: "medium" });
 
 	const authInfo = useSelector((state: any) => state.UserReducer);
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const boardInfo = appProfileInfo?.board;
 
+
+	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
+	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
+	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
+
+	// const userItems = usersList?.data?.items as UsersTypes[];
+
 	/*  ######################################################################################## */
 
-	const getSprints = () => {
-		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
-		dispatch(getAction({ sprints: Urls.sprints + query }));
-	};
+	// const getSprints = () => {
+	// 	let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
+	// 	dispatch(getAction({ sprints: Urls.sprints + query }));
+	// };
+
+	const getStages = () => {
+		dispatch(getAction({ stagesList: Urls.stages_list + `/${appProfileInfo?.project_id}` }));
+	}
 
 
 
-	const getEpics = () => {
-		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
-		dispatch(getAction({ epic: Urls.epic + query }));
-	};
+	// const getEpics = () => {
+	// 	let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+	// 	dispatch(getAction({ epic: Urls.epic + query }));
+	// };
 
 	const getIssues = () => {
 		let query = `?perPage=300
-				&filter=project_id=${appProfileInfo?.project_id}%26%26sprint_id=${boardInfo?.selected_sprint}
+				&filter=project_id=${appProfileInfo?.project_id}
 				${boardInfo?.type_filter_value !== "all" ? `%26%26type=${boardInfo?.type_filter_value}` : ""}
 				${boardInfo?.points_filter_value !== "all" ? `&sort=${boardInfo.points_filter_value}` : ""}`;
 
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
-	const findTotalPoints = (data: any[]) => {
-		return data?.reduce((accumulator, currentValue) => {
-			return accumulator + +currentValue?.points;
-		}, 0);
-	};
+	// const findTotalPoints = (data: any[]) => {
+	// 	return data?.reduce((accumulator, currentValue) => {
+	// 		return accumulator + +currentValue?.points;
+	// 	}, 0);
+	// };
 
-	const getIssuesByTypes = (issueStatus: "Todo" | "Ongoing" | "Pending" | "Done") => {
+	const getIssuesByStageId = (stageId: string) => {
 		return issueListItems?.filter((issue) =>
-			issue?.status === issueStatusList?.find(status => status?.name === issueStatus)?._id && isUserIncludes(issue));
+			issue?.status === stagesItems?.find(stage => stage?._id === stageId)?._id && isUserIncludes(issue));
 	};
 
 
@@ -82,23 +97,32 @@ const Board = () => {
 	}
 
 
-	const updateItemStatus = async (id: string, status_name: string) => {
-		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: issueStatusList?.find(issueStatus => issueStatus?.name === status_name)?._id }, id))) as any;
+	const updateItemStatus = async (id: string, stageId: string) => {
+		const resp = (await dispatch(patchAction({ issues: Urls.issues }, { status: stageId }, id))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) { getIssues() }
 	};
 
+	const updateStageInfo = async (id: string, key: string, value: string) => {
+		const resp = (await dispatch(patchAction({ stages: Urls.stages }, { [key]: value }, id))) as any;
+		const success = resp.payload?.status == 200;
+		if (success) {
+			getStages()
+		}
+
+	}
+
 	/*  ######################################################################################## */
 
-	const sprintOptions =
-		sprintItems?.map((sprnt) => ({
-			value: sprnt?._id,
-			label: sprnt?.name,
-		})) ?? [];
+	// const sprintOptions =
+	// 	sprintItems?.map((sprnt) => ({
+	// 		value: sprnt?._id,
+	// 		label: sprnt?.name,
+	// 	})) ?? [];
 
-	const selectedSprintInfo = sprintItems?.find(
-		(sprnt) => sprnt?._id === boardInfo?.selected_sprint
-	);
+	// const selectedSprintInfo = sprintItems?.find(
+	// 	(sprnt) => sprnt?._id === boardInfo?.selected_sprint
+	// );
 
 	const taskFilterOptions = userItems?.map(usr => {
 		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.user_name })
@@ -120,26 +144,30 @@ const Board = () => {
 
 	/*  ######################################################################################## */
 
-	useEffect(() => {
-		if (appProfileInfo?.project_id) {
-			getSprints();
-			getEpics();
-		}
-	}, [appProfileInfo?.project_id]);
+	// useEffect(() => {
+	// 	if (appProfileInfo?.project_id) {
+	// 		// getSprints();
+	// 		getEpics();
+	// 	}
+	// }, [appProfileInfo?.project_id]);
 
 	useEffect(() => {
-		if (boardInfo?.selected_sprint && appProfileInfo?.project_id) {
+		if (appProfileInfo?.project_id) {
+			getStages()
 			getIssues();
 		}
 	}, [boardInfo]);
 
-	useEffect(() => {
-		if (!boardInfo?.selected_sprint && sprintOptions?.length > 0) {
-			dispatch(setBoardData(sprintOptions?.[0]?.value, "selected_sprint"))
-		}
-	}, [sprintListData])
+	// useEffect(() => {
+	// 	if (!boardInfo?.selected_sprint && sprintOptions?.length > 0) {
+	// 		dispatch(setBoardData(sprintOptions?.[0]?.value, "selected_sprint"))
+	// 	}
+	// }, [sprintListData])
 
 
+	const dummyStages = Array.from({ length: 4 }).map((data, i) => ({ _id: `ID00${i + 1}`, name: `Stage-${i + 1}`, order: i + 1 }))
+
+	console.log("🚀 ~ Board ~ dummyStages:", dummyStages)
 	/*  ######################################################################################## */
 
 
@@ -152,7 +180,7 @@ const Board = () => {
 			<div className="text-xs">
 				<div className="flex justify-between px-6 gap-2 items-center">
 					<div className="text-base">
-						<HYCombobox
+						{/* <HYCombobox
 							name="sprint"
 							label={"Sprint :"}
 							showSearch={false}
@@ -160,7 +188,7 @@ const Board = () => {
 							buttonClassName="border"
 							defaultValue={boardInfo?.selected_sprint}
 							onValueChange={(value) => dispatch(setBoardData(value, "selected_sprint"))}
-						/>
+						/> */}
 					</div>
 					<div className="flex gap-2">
 						<HYCombobox
@@ -174,7 +202,7 @@ const Board = () => {
 							defaultValue={boardInfo?.task_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
 						/>
-						<HYCombobox
+						{/* <HYCombobox
 							label={"Type"}
 							unSelectable={false}
 							options={typeFilterOptions}
@@ -187,126 +215,74 @@ const Board = () => {
 							options={pointsFilterData}
 							defaultValue={boardInfo?.points_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "points_filter_value"))}
-						/>
-						<HYSearch />
+						/> */}
+						{/* <HYSearch /> */}
+						<IssueCreationForm>
+							<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm whitespace-nowrap">
+								Add Task
+								<HiPlus className="h-5 w-5 " />
+							</div>
+						</IssueCreationForm>
 					</div>
 				</div>
 				<div className="px-6 flex my-5">
 					<div>
-						{selectedSprintInfo?.start_date
+						{/* {selectedSprintInfo?.start_date
 							&& `${formatter.format(new Date(selectedSprintInfo?.start_date))}`}
 
 						{selectedSprintInfo?.end_date
-							&& ` - ${formatter.format(new Date(selectedSprintInfo?.end_date))}`}
+							&& ` - ${formatter.format(new Date(selectedSprintInfo?.end_date))}`} */}
 					</div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
-				<div className="">
-					<ResizablePanelGroup
-						direction="horizontal"
-						className={`rounded-lg`}
-					>
-						<ResizablePanel defaultSize={25}>
-							<div
-								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
-								onDragOver={(e) => e.preventDefault()}
-								onDrop={(e) => {
-									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "Todo");
-								}}
-							>
-								<div className="flex justify-between items-center px-5 py-2">
-									<div>Todo</div>
-									<div className="flex gap-2 items-center">
-										<HiDatabase />{" "}
-										{findTotalPoints(getIssuesByTypes("Todo"))}
-									</div>
+				<div className="flex overflow-auto w-[calc(100vw-30px)] md:w-[calc(100vw-240px)]">
+					{stagesItems?.map((stage, i) => {
+						return <div
+							key={i}
+							className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] mb-3"
+							onDragOver={(e) => e.preventDefault()}
+							onDrop={(e) => {
+								e.preventDefault();
+								updateItemStatus(e?.dataTransfer?.getData("id"), stage?._id);
+							}}
+						>
+							<div className="flex justify-between items-center px-3 py-2">
+								<div className="p-1 px-2">
+									<HYEditableDiv
+										placeholder="Column name"
+										className="bg-[#F7F8F9] pr-2"
+										defaultText={stage?.name}
+										handleChange={(value) => updateStageInfo(stage?._id, "name", value)} />
 								</div>
-								<ScrollArea className="h-[calc(100vh-220px)] ">
-									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Todo")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
-										{issuesListData?.loading && <BoardCardSkeleton />}
-									</div>
-								</ScrollArea>
-							</div>
-						</ResizablePanel>
-						{/* <ResizableHandle /> */}
-						<ResizablePanel defaultSize={25}>
-							<div
-								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
-								onDragOver={(e) => e.preventDefault()}
-								onDrop={(e) => {
-									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "Ongoing");
-								}}
-							>
-								<div className="flex justify-between items-center px-5 py-2">
-									<div>Ongoing</div>
-									<div className="flex gap-2 items-center">
-										<HiDatabase />{" "}
-										{findTotalPoints(getIssuesByTypes("Ongoing"))}
-									</div>
+								<div className="flex items-center">
+									<Button className="" size="icon" variant="ghost">
+										<HiOutlineDotsHorizontal />
+									</Button>
 								</div>
-								<ScrollArea className="h-[calc(100vh-220px)]">
-									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Ongoing")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
-										{issuesListData?.loading && <BoardCardSkeleton />}
-									</div>
-								</ScrollArea>
 							</div>
-						</ResizablePanel>
-						<ResizablePanel defaultSize={25}>
-							<div
-								className=" text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
-								onDragOver={(e) => e.preventDefault()}
-								onDrop={(e) => {
-									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "Pending");
-								}}
-							>
-								<div className="flex justify-between items-center px-5 py-2">
-									<div>Pending</div>
-									<div className="flex gap-2 items-center">
-										<HiDatabase />
-										{findTotalPoints(getIssuesByTypes("Pending"))}
+							<ScrollArea className="h-[calc(100vh-240px)] ">
+								<div className="flex flex-col px-5 py-2 gap-3">
+									<div className=" w-full  bg-[#F7F8F9] dark:bg-[#111215] ">
+										<div className="flex items-center">
+											<IssueCreationCardMini statusId={stage?._id} />
+										</div>
 									</div>
+									{getIssuesByStageId(stage?._id)?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+									{issuesListData?.loading && <BoardCardSkeleton />}
 								</div>
-								<ScrollArea className="h-[calc(100vh-220px)]">
-									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Pending")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
-										{issuesListData?.loading && <BoardCardSkeleton />}
-									</div>
-								</ScrollArea>
-							</div>
-						</ResizablePanel>
-						<ResizablePanel defaultSize={25}>
-							<div
-								className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1"
-								onDragOver={(e) => e.preventDefault()}
-								onDrop={(e) => {
-									e.preventDefault();
-									updateItemStatus(e?.dataTransfer?.getData("id"), "Done");
-								}}
-							>
-								<div className="flex justify-between items-center px-5 py-2">
-									<div>Done</div>
-									<div className="flex gap-2 items-center">
-										<HiDatabase />
-										{findTotalPoints(getIssuesByTypes("Done"))}
-									</div>
-								</div>
-								<ScrollArea className="h-[calc(100vh-220px)]">
-									<div className="flex flex-col px-5 py-2 gap-3">
-										{getIssuesByTypes("Done")?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
-										{issuesListData?.loading && <BoardCardSkeleton />}
-									</div>
-								</ScrollArea>
-							</div>
-						</ResizablePanel>
-					</ResizablePanelGroup>
+							</ScrollArea>
+						</div>
+					})}
+
+					<div className="text-center dark:bg-[#131417] rounded mx-1">
+						<Button variant="outline" className="border border-primary" title="Add Column">
+							<HiPlus className="text-primary" />
+						</Button>
+					</div>
+
 
 				</div>
-			</div>
+			</div >
 		</>
 	);
 };

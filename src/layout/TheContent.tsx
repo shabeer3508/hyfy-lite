@@ -19,11 +19,11 @@ const TheContent = () => {
 	const dispatch = useDispatch()
 	const appInfo = useSelector((state: any) => state.AppReducer);
 
-	const getIssueStatus = () => dispatch(getAction({ issueStatus: Urls.issue_status }));
+	// const getIssueStatus = () => dispatch(getAction({ issueStatus: Urls.issue_status }));
 	const getUsers = () => dispatch(getAction({ users: Urls.users + `?perPage=300` }));
 
 	useEffect(() => {
-		getIssueStatus();
+		// getIssueStatus();
 		getUsers();
 	}, [])
 
