@@ -26,9 +26,7 @@ import { HiOutlineClock } from "react-icons/hi";
 const Releases = () => {
   const dispatch = useDispatch();
 
-  const appProfileInfo = useSelector(
-    (state: any) => state.AppProfile
-  ) as AppProfileTypes;
+  const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
   const releasePageinfo = appProfileInfo.releases;
 
   const releaseReducerName = reducerNameFromUrl("release", "GET");

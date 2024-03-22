@@ -90,7 +90,7 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
 
 
     return (
-        <div className="">
+        <div className="overflow-auto max-h-[70vh] pr-2">
             <div className="flex gap-2 text-xl capitalize mx-1 ">
                 <HYEditableDiv className="text-xl dark:bg-card" defaultText={data?.title} handleChange={(value) => handleProjectEdit(value, "title")} />
             </div>
@@ -151,38 +151,38 @@ const ProjectDetailView = ({ data }: { data: ProjectType }) => {
                 <Separator className="my-3 dark:bg-[#FFFFFF1A]" />
             </div>
 
-            <ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
-                <div className="space-y-2 mx-1">
-                    <div className="text-xs text-[#9499A5]">Description</div>
-                    <div className="min-h-2 py-3">
-                        <HYEditableDiv
-                            defaultText={data?.description}
-                            className="text-base dark:bg-card"
-                            handleChange={(value) => handleProjectEdit(value, "description")}
-                        />
-                    </div>
+            {/* <ScrollArea className="max-h-[calc(100vh-500px)] overflow-auto pr-5 "> */}
+            <div className="space-y-2 mx-1">
+                <div className="text-xs text-[#9499A5]">Description</div>
+                <div className="min-h-2 py-3">
+                    <HYEditableDiv
+                        defaultText={data?.description}
+                        className="text-base dark:bg-card"
+                        handleChange={(value) => handleProjectEdit(value, "description")}
+                    />
+                </div>
 
-                    <div className="text-xs text-[#9499A5]">Status</div>
-                    <div className="">
-                        <HYCombobox
-                            options={statusOptions}
-                            defaultValue={data?.status}
-                            buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
-                            onValueChange={(value) => handleProjectEdit(value, "status")}
-                        />
-                    </div>
+                <div className="text-xs text-[#9499A5]">Status</div>
+                <div className="">
+                    <HYCombobox
+                        options={statusOptions}
+                        defaultValue={data?.status}
+                        buttonClassName="dark:bg-card dark:border-[#FFFFFF1A]"
+                        onValueChange={(value) => handleProjectEdit(value, "status")}
+                    />
                 </div>
-                <Separator className="my-3 dark:bg-[#FFFFFF1A]" />
-                <div className="space-y-3 ">
-                    <div className="space-y-2 mx-1">
-                        <div>Comments</div>
-                        <CommentCreation projectId={data?._id} />
-                    </div>
-                    <div className="space-y-3 mx-1">
-                        {commentsItems?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
-                    </div>
+            </div>
+            <Separator className="my-3 dark:bg-[#FFFFFF1A]" />
+            <div className="space-y-3 ">
+                <div className="space-y-2 mx-1">
+                    <div>Comments</div>
+                    <CommentCreation projectId={data?._id} />
                 </div>
-            </ScrollArea>
+                <div className="space-y-3 mx-1">
+                    {commentsItems?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
+                </div>
+            </div>
+            {/* </ScrollArea> */}
         </div>
     );
 };

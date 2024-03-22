@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
+import CreatableSelect from 'react-select/creatable';
+import Select, { Props as SelectProps } from 'react-select';
+
 
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
@@ -27,9 +30,13 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { useTheme } from "@/components/theme-provider";
+import HYReactSelect from "@/components/hy-components/HYReactSelect";
 
 const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
+	const { theme } = useTheme();
+
 	const [openForm, setOpenForm] = useState(false);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
@@ -107,7 +114,7 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	return (
 		<Dialog open={openForm} onOpenChange={setOpenForm}>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent className="max-w-2xl">
+			<DialogContent className="max-w-4xl">
 				<DialogHeader>
 					<DialogTitle>Add Release</DialogTitle>
 				</DialogHeader>
@@ -129,7 +136,22 @@ const ReleaseCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							)}
 						/>
 
-						<div className="grid grid-cols-2 gap-4 py-4 ">
+						<div className="grid grid-cols-3 gap-4 py-4 text-sm ">
+
+							<FormItem className="flex flex-col justify-center">
+								<FormLabel className="my-1">
+									Tag
+								</FormLabel>
+								<HYReactSelect
+									isMulti
+									isClearable
+									placeholder="Enter Tags"
+									showDropDownIndicator={false}
+								// options={[{ label: "Super Tag", value: "st" }]}
+								/>
+								<FormMessage />
+							</FormItem>
+
 							<FormField
 								control={form.control}
 								name="status"

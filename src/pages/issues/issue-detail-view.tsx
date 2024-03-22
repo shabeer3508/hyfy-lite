@@ -136,7 +136,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 
 	return (
-		<div className="">
+		<div className="overflow-auto max-h-[70vh] pr-2">
 			<div className="flex gap-2 text-xl items-center ">
 				{data?.type === "story" && (
 					<HiBookOpen className="w-6 h-6" />
@@ -264,80 +264,80 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 				</div>
 			</div>
 			<Separator className="mt-5 dark:bg-[#FFFFFF1A]" />
-			<ScrollArea className="max-h-[500px] overflow-auto pr-5 ">
-				<div className="flex justify-between mt-5 items-center">
-					<div className="flex flex-col gap-2 w-full">
-						<div className="flex justify-between w-full text-xs ">
-							<div className="text-[#9499A5]">Assigned To</div>
-							<div
-								className="text-primary cursor-pointer"
-								onClick={() => setShowUserSelection(prevData => !prevData)}
-							>
-								{showUserSelection ? "Done" : "Add"}
-							</div>
+			{/* <ScrollArea className="max-h-[500px] overflow-auto pr-5 "> */}
+			<div className="flex justify-between mt-5 items-center">
+				<div className="flex flex-col gap-2 w-full">
+					<div className="flex justify-between w-full text-xs ">
+						<div className="text-[#9499A5]">Assigned To</div>
+						<div
+							className="text-primary cursor-pointer"
+							onClick={() => setShowUserSelection(prevData => !prevData)}
+						>
+							{showUserSelection ? "Done" : "Add"}
 						</div>
-						<div className="">
-							{data?.assign_to?.length > 0 &&
-								<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
-									{data?.assign_to?.map(userId => {
-										const userInfo = usersList?.find(user => user._id === userId);
-										return (
-											<div key={`${userId}`} className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] px-3 py-1 rounded w-full group">
-												<div className="flex gap-3">
-													<HYAvatar name={userInfo?.user_name} />
-													<div className="text-xs">
-														<div className="truncate w-[50px] md:w-[100px] lg:w-[150px]">{userInfo?.user_name}</div>
-														<div className="dark:text-[#FFFFFF66] text-gray-500">{userInfo?.role}</div>
-													</div>
-												</div>
-
+					</div>
+					<div className="">
+						{data?.assign_to?.length > 0 &&
+							<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
+								{data?.assign_to?.map(userId => {
+									const userInfo = usersList?.find(user => user._id === userId);
+									return (
+										<div key={`${userId}`} className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] px-3 py-1 rounded w-full group">
+											<div className="flex gap-3">
+												<HYAvatar name={userInfo?.user_name} />
 												<div className="text-xs">
-													<Button
-														size="icon"
-														variant="ghost"
-														className="opacity-0 group-hover:opacity-100"
-														onClick={() => handleAssignIssueUser(userId, "remove")}
-													>
-														<HiOutlineX />
-													</Button>
+													<div className="truncate w-[50px] md:w-[100px] lg:w-[150px]">{userInfo?.user_name}</div>
+													<div className="dark:text-[#FFFFFF66] text-gray-500">{userInfo?.role}</div>
 												</div>
 											</div>
-										)
-									})}
-								</div>
-							}
 
-							{data?.assign_to?.length === 0 && <div className="text-xs">Unassigned</div>}
+											<div className="text-xs">
+												<Button
+													size="icon"
+													variant="ghost"
+													className="opacity-0 group-hover:opacity-100"
+													onClick={() => handleAssignIssueUser(userId, "remove")}
+												>
+													<HiOutlineX />
+												</Button>
+											</div>
+										</div>
+									)
+								})}
+							</div>
+						}
+
+						{data?.assign_to?.length === 0 && <div className="text-xs">Unassigned</div>}
 
 
-							{showUserSelection &&
-								<div className="mt-2 w-full">
-									<HYCombobox
-										options={usersOptions}
-										buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
-										optionsClassName="w-[200px]"
-										onValueChange={(value: string) => handleAssignIssueUser(value, "assign")}
-									/>
-								</div>
-							}
-						</div>
+						{showUserSelection &&
+							<div className="mt-2 w-full">
+								<HYCombobox
+									options={usersOptions}
+									buttonClassName="mr-4 w-full mr-1 dark:bg-card dark:border-[#FFFFFF1A]"
+									optionsClassName="w-[200px]"
+									onValueChange={(value: string) => handleAssignIssueUser(value, "assign")}
+								/>
+							</div>
+						}
 					</div>
 				</div>
-				<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
-				<div className="text-xs space-y-4">
-					<div className="space-y-1">
-						<div className="text-[#9499A5]">Description</div>
-						<div>
-							<HYEditableDiv
-								type="textarea"
-								className="text-xs"
-								placeholder="Add description"
-								defaultText={data?.description}
-								handleChange={(value) => handleIssueEdit(value, "description")}
-							/>
-						</div>
+			</div>
+			<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
+			<div className="text-xs space-y-4">
+				<div className="space-y-1">
+					<div className="text-[#9499A5]">Description</div>
+					<div>
+						<HYEditableDiv
+							type="textarea"
+							className="text-xs"
+							placeholder="Add description"
+							defaultText={data?.description}
+							handleChange={(value) => handleIssueEdit(value, "description")}
+						/>
 					</div>
-					{/* <div className="space-y-2">
+				</div>
+				{/* <div className="space-y-2">
 						<div className="text-[#9499A5]">Sub Tasks</div>
 						<div className="space-y-2">
 							<div className="flex items-center gap-2">
@@ -348,18 +348,18 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							</div>
 						</div>
 					</div> */}
+			</div>
+			<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
+			<div className="space-y-3">
+				<div className="space-y-2">
+					<div>Comments</div>
+					<CommentCreation issueId={data?._id} />
 				</div>
-				<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
-				<div className="space-y-3">
-					<div className="space-y-2">
-						<div>Comments</div>
-						<CommentCreation issueId={data?._id} />
-					</div>
-					<div className="space-y-3 py-2">
-						{commentsItems?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
-					</div>
+				<div className="space-y-3 py-2">
+					{commentsItems?.map((comment, i) => <CommentCard key={`${comment?._id}_${i}`} data={comment} />)}
 				</div>
-			</ScrollArea>
+			</div>
+			{/* </ScrollArea> */}
 		</div>
 	);
 };

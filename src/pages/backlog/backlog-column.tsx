@@ -238,7 +238,7 @@ const BacklogColumn: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<div className=" w-full px-6">
+			<div className=" w-full px-6 bg-[#F7F8F9] dark:bg-[#111215] ">
 				<div className="flex items-center border-b h-14">
 					<IssueCreationCardMini />
 				</div>
