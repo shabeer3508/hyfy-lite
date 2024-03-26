@@ -34,9 +34,9 @@ const Login = () => {
 				if (success) {
 					Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 2, secure: true })
 					dispatch(setCurrentUser(res_data?.data?.user));
-
-					if (res_data?.data?.user?.role === "employee") navigate("/board");
-					else navigate("/backlog");
+					navigate("/board");
+					// if (res_data?.data?.user?.role === "employee") navigate("/board");
+					// else navigate("/backlog");
 
 				}
 			});

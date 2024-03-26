@@ -136,7 +136,7 @@ export function putAction(apiUrl: string, data: any, id?: string) {
 
 export function deleteAction(apiUrl: string, id: string, params = "") {
     const method = "DELETE";
-    let url = apiUrl + `${id}/`;
+    let url = apiUrl + `/${id}`;
     url = params ? `${url}?${params}` : url;
 
     const type = actionTypeFromUrl(apiUrl, method);
