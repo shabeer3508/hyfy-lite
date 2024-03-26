@@ -15,7 +15,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 
-const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: string, epicId?: string, statusId: string }) => {
+const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: string, epicId?: string, statusId?: string }) => {
 	const dispatch = useDispatch();
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;

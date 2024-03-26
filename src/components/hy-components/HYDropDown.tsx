@@ -5,11 +5,19 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import HYDialog from "./HYDialog";
+import HYAlertDialog from "./HYAlertDialog";
 
 interface DropdownMenuOption {
 	label: string;
-	action?: (e) => void;
+	action?: (e?: any) => void;
 
+	// Alert Dialog
+	isAlertDialog?: boolean;
+	description?: string;
+	closeText?: string;
+	title?: string;
+
+	// Custom Dialog
 	isTriggerDialog?: boolean;
 	dialogContent?: any;
 	dialogClassName?: string;
@@ -27,7 +35,22 @@ const HYDropDown = ({
 			<DropdownMenuTrigger asChild>{children}</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="dark:bg-[#111215]">
 				{options?.map((opt, index) => {
-					if (opt?.isTriggerDialog) {
+
+					if (opt?.isAlertDialog) {
+						return (
+							<HYAlertDialog submitAction={() => opt?.action()} >
+								<DropdownMenuItem
+									onSelect={(event) => {
+										event.preventDefault();
+									}}
+									className="cursor-pointer text-xs"
+								>
+									{opt?.label}
+								</DropdownMenuItem>
+							</HYAlertDialog>
+						)
+					}
+					else if (opt?.isTriggerDialog) {
 						return (
 							<HYDialog key={`_${index}_`} content={opt?.dialogContent} className={opt?.dialogClassName}>
 								<DropdownMenuItem

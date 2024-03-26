@@ -49,6 +49,7 @@ export interface ProjectType {
     owner: string | UsersTypes[];
     created_by: string;
     members: string[];
+    template: string;
     epic: string[];
     issues: string[];
     description?: string;
