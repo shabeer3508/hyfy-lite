@@ -368,7 +368,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 							)}
 						/>
 
-						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-card dark:border-[#36363A]">
+						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t bg-card dark:bg-card dark:border-[#36363A]">
 							<Button
 								type="reset"
 								variant="outline"

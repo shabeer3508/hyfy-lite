@@ -120,17 +120,13 @@ const Board = () => {
 				<div className="flex overflow-auto w-[calc(100vw-30px)] md:w-[calc(100vw-240px)]">
 					{stagesItems?.map((stage, i) => {
 
-						const issueOptions = [
-							{ label: "Set column limit", action: () => { } },
-							{ label: "Delete", action: () => { } },
-						];
-
 						return (
 							<StageCard
-								key={i}
 								stage={stage}
 								getIssues={getIssues}
-								getStages={getStages} />
+								getStages={getStages}
+								key={`${stage?._id}_${i}`}
+							/>
 						)
 					})}
 
