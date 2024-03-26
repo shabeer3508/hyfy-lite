@@ -250,10 +250,10 @@ const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStages }) =>
 			}}
 		>
 			<div className="flex justify-between items-center px-3 py-2">
-				<div className="p-1 px-2">
+				<div className="p-1 px-2 font-medium text-sm">
 					<HYEditableDiv
 						placeholder="Column name"
-						className="bg-[#F7F8F9] pr-2"
+						className="bg-[#F7F8F9] pr-2 font-normal"
 						defaultText={stage?.name}
 						handleChange={(value) => updateStageInfo(stage?._id, "name", value)} />
 				</div>

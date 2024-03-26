@@ -106,7 +106,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 
 	const handleEpicCreation = async (values: IssueFormValues) => {
-		const postData = { ...values, assign_to: selectedUsers?.map((user) => user?._id) || [] }
+		const postData = { ...values, assign_to: selectedUsers?.map((user) => user?._id) || [], progress: progress[0] }
 		const resp = (await dispatch(postAction({ issues: Urls.issues }, postData))) as any;
 		const success = resp.payload?.status == 200;
 		if (success) {

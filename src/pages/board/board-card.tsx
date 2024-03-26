@@ -42,26 +42,32 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 					content={<IssueDetailView data={data} />}
 				>
 					<div className="h-auto justify-between flex flex-col gap-2 ">
-						<div className="text-left flex gap-2 items-center min-h-6">
-							{data?.type === "story" && (
-								<HiBookOpen className="w-4 h-4" />
-							)}
+						<div className="text-left flex gap-2 items-center min-h-6 justify-between">
+							<div className="flex gap-2">
+								{data?.type === "story" && (
+									<HiBookOpen className="w-4 h-4" />
+								)}
 
-							{data?.type === "task" && (
-								<img src="/task_icon.svg" alt="Project" />
-							)}
+								{data?.type === "task" && (
+									<img src="/task_icon.svg" alt="Project" />
+								)}
 
-							{data?.type === "bug" && (
-								<img src="/bug_icon.svg" alt="Project" />
-							)}
-							{data?.name}
+								{data?.type === "bug" && (
+									<img src="/bug_icon.svg" alt="Project" />
+								)}
+								{data?.name}
+							</div>
+							<div className="flex justify-end">
+								<CircularProgress progress={data?.progress} />
+							</div>
 						</div>
 
 						{data?.description &&
-							<div className="text-left truncate max-w-[200px] dark:text-[#9499A5]">
+							<div className="text-left truncate h-5 max-w-[200px] dark:text-[#9499A5]">
 								{data?.description}
 							</div>
 						}
+
 
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
@@ -85,7 +91,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 									</div>
 								}
 							</div>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-2 pr-2">
 								<HiDatabase /> {data?.points}
 							</div>
 						</div>
@@ -111,3 +117,41 @@ export const BoardCardSkeleton = () => {
 		</div>
 	</div>
 }
+
+
+
+const CircularProgress = ({ progress }) => {
+
+	const circumference = 10 * 2 * Math.PI;
+	const offset = circumference - (progress / 100) * circumference;
+
+	return (
+		<div className="relative inline-block" title={`Progress : ${progress}%`}>
+			<svg className="size-10">
+				<circle
+					className="stroke-current text-gray-300"
+					stroke="#ddd"
+					strokeWidth="3"
+					fill="transparent"
+					r="8"
+					cx="20"
+					cy="20"
+				/>
+				<circle
+					className="stroke-current text-primary"
+					stroke="#3b82f6"
+					strokeWidth="3"
+					fill="transparent"
+					r="8"
+					cx="20"
+					cy="20"
+					strokeDasharray={circumference}
+					strokeDashoffset={offset}
+					strokeLinecap="round"
+					transform="rotate(-90 20 20)"
+				/>
+			</svg>
+		</div>
+	);
+}
+
