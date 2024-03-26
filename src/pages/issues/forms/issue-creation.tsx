@@ -32,11 +32,16 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { cn } from "@/lib/utils";
+import { Slider } from "@/components/ui/slider";
+import { SliderProps } from "@radix-ui/react-slider";
+
 
 const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
-	const [selectedUsers, setUsersInfo] = useState([]);
+	const [selectedUsers, setUsersInfo] = useState<any>([]);
+	const [progress, setProgress] = useState<SliderProps["defaultValue"]>([0]);
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET")
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);
@@ -71,6 +76,8 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 		description: z.string().optional().nullable(),
 		sub_tasks: z.string().optional().nullable(),
 		project_id: z.string(),
+		// assign_to: z.array(z.string()).optional(),
+		// progress: z.number().optional(),
 	});
 
 	type IssueFormValues = z.infer<typeof issueFormSchema>
@@ -171,6 +178,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	useEffect(() => {
 		form?.reset(defaultValues)
 		setUsersInfo([])
+		setProgress([0])
 	}, [openForm])
 
 	/*  ######################################################################################## */
@@ -201,23 +209,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									</FormItem>
 								)}
 							/>
-							{/* <FormField
-								control={form.control}
-								name="type"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel className="text-xs text-[#9499A5]">Type <span className="text-destructive">*</span></FormLabel>
-										<HYCombobox
-											defaultValue="story"
-											buttonClassName="w-full dark:bg-card dark:border-[#36363A]"
-											id="type"
-											form={form}
-											options={typeOptions}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/> */}
+
 						</div>
 						<FormField
 							control={form.control}
@@ -257,24 +249,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									</FormItem>
 								)}
 							/>
-							{/* <FormField
-								control={form.control}
-								name="epic_id"
-								render={({ field }) => (
-									<FormItem className="flex flex-col">
-										<FormLabel className="my-1 text-xs text-[#9499A5]">
-											Epic
-										</FormLabel>
-										<HYCombobox
-											buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
-											id="epic_id"
-											form={form}
-											options={epicOptions}
-										/>
-										<FormMessage />
-									</FormItem>
-								)}
-							/> */}
+
 							<FormField
 								control={form.control}
 								name="points"
@@ -298,41 +273,6 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 						<div className=" w-full flex gap-4">
 							<div className="w-1/2 ">
-
-								{/* <div className="grid grid-cols-2 gap-3 my-2"> */}
-								{/* <FormField
-										control={form.control}
-										name="dependency"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className="text-xs text-[#9499A5]">Dependency</FormLabel>
-												<HYCombobox
-													buttonClassName="w-full  dark:bg-card dark:border-[#36363A]"
-													id="dependency"
-													form={form}
-													options={issueOptions}
-												/>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
-									<FormField
-										control={form.control}
-										name="dependency_type"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel className="text-xs text-[#9499A5]">Depedency Type</FormLabel>
-												<HYSelect
-													field={field}
-													id="dependency_type"
-													className="w-full  dark:bg-card dark:border-[#36363A]"
-													options={["blocking"]}
-												/>
-												<FormMessage />
-											</FormItem>
-										)}
-									/> */}
-								{/* </div> */}
 
 								<FormField
 									control={form.control}
@@ -368,7 +308,17 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 										</FormItem>
 									)}
 								/>
-
+								<div className="flex flex-col gap-4 py-3">
+									<FormLabel className="text-xs text-[#9499A5] flex justify-between"><span>Progress</span> <span>{progress}%</span></FormLabel>
+									<Slider
+										defaultValue={[0]}
+										onValueChange={setProgress}
+										value={progress}
+										max={100}
+										step={1}
+										className={cn("w-[100%]",)}
+									/>
+								</div>
 							</div>
 							<div className="w-1/2 text-xs flex flex-col">
 								<div className="flex flex-col justify-between pt-1">
@@ -399,7 +349,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 						</div>
 
 
-						{/* <FormField
+						<FormField
 							control={form.control}
 							name="sub_tasks"
 							render={({ field }) => (
@@ -416,7 +366,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/> */}
+						/>
 
 						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t dark:bg-card dark:border-[#36363A]">
 							<Button

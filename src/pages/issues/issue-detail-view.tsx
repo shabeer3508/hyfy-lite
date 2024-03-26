@@ -17,6 +17,7 @@ import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { CommentsTypes, EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const dispatch = useDispatch();
@@ -341,17 +342,17 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						/>
 					</div>
 				</div>
-				{/* <div className="space-y-2">
-						<div className="text-[#9499A5]">Sub Tasks</div>
-						<div className="space-y-2">
-							<div className="flex items-center gap-2">
-								<Checkbox /> Kill Bugs 1
-							</div>
-							<div className="flex items-center gap-2">
-								<Checkbox /> Kill Bugs 2
-							</div>
+				<div className="space-y-2">
+					<div className="text-[#9499A5]">Sub Tasks</div>
+					<div className="space-y-2">
+						<div className="flex items-center gap-2">
+							<Checkbox /> Sub task 1
 						</div>
-					</div> */}
+						<div className="flex items-center gap-2">
+							<Checkbox /> Sub task 2
+						</div>
+					</div>
+				</div>
 			</div>
 			<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
 			<div className="space-y-3">

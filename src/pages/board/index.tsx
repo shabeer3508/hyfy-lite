@@ -180,6 +180,9 @@ const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStages }) =>
 	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
 	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[];
 
+	const reducerName = reducerNameFromUrl("project", "GET");
+	const projectList = useSelector((state: any) => state?.[reducerName])?.data?.items as ProjectType[];
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const boardInfo = appProfileInfo?.board;
 
@@ -215,10 +218,12 @@ const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStages }) =>
 	};
 
 	const handleStageDelete = () => {
+		const template_id = projectList?.find(project => project._id === appProfileInfo?.project_id).template;
+
 		if (getIssuesByStageId(stage?._id)?.length > 0) {
 			toast.error("Deletion of column containing tasks is not possible at the moment. Please remove tasks from the column before deleting it.");
 		} else {
-			(dispatch(deleteAction(Urls.stages, `${stage?._id}`)) as any).then(res => {
+			(dispatch(deleteAction(Urls.stages, `${stage?._id}/${template_id}`)) as any).then(res => {
 				if (res.payload?.status === 200) {
 					getStages();
 				}
@@ -229,8 +234,8 @@ const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStages }) =>
 	/*  ######################################################################################## */
 
 	const issueOptions = [
-		{ label: "Set column limit", action: () => { }, isTriggerDialog: true, dialogContent: <div>Set Column Limit</div> },
-		{ label: "Delete", action: () => handleStageDelete(), isAlertDialog: true },
+		// { label: "Set column limit", action: () => { }, isTriggerDialog: true, dialogContent: <div>Set Column Limit</div> },
+		{ label: "Delete", action: () => handleStageDelete() },
 	];
 
 	/*  ######################################################################################## */
