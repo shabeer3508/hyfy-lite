@@ -122,7 +122,7 @@ export const BoardCardSkeleton = () => {
 
 const CircularProgress = ({ progress }) => {
 
-	const circumference = 10 * 2 * Math.PI;
+	const circumference = 8 * 2 * Math.PI;
 	const offset = circumference - (progress / 100) * circumference;
 
 	return (
