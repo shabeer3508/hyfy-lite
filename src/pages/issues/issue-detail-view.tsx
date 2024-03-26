@@ -18,10 +18,15 @@ import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { CommentsTypes, EpicTypes, IssueStatusTypes, IssueTypes, SprintTypes, UsersTypes } from "@/interfaces";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { cn } from "@/lib/utils";
+import { SliderProps } from "@radix-ui/react-slider";
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const dispatch = useDispatch();
 	const [showUserSelection, setShowUserSelection] = useState(false);
+	const [progress, setProgress] = useState<SliderProps["defaultValue"]>([data?.progress]);
+
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
@@ -124,6 +129,14 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 		{ label: "15", value: "15" },
 	];
 
+	const priorityOptions = [
+		{ label: "Low", value: "low" },
+		{ label: "Medium", value: "medium" },
+		{ label: "High", value: "high" },
+		{ label: "Critical", value: "critical" },
+	];
+
+
 	const estimatedHours = [
 		{ label: "1", value: "1" },
 		{ label: "2", value: "2" },
@@ -206,7 +219,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
 				</div>
-				{/* <div className="flex justify-between pr-3">
+				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
 						<div className="text-xs text-[#9499A5]">Hours</div>
 						<div className=" flex flex-1 items-center">
@@ -221,17 +234,17 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 					</div>
 					<Separator orientation="vertical" className="dark:bg-[#FFFFFF1A]" />
-				</div> */}
+				</div>
 				<div className="flex justify-between pr-3">
 					<div className="flex flex-col w-full gap-3">
-						<div className="text-xs text-[#9499A5]">Dependency</div>
+						<div className="text-xs text-[#9499A5]">Priority</div>
 						<div className=" flex flex-1 items-center">
 							<HYCombobox
 								unSelectable={true}
-								options={issueOptions}
+								options={priorityOptions}
 								buttonClassName="w-full mr-4 dark:bg-card dark:border-[#FFFFFF1A]"
-								defaultValue={data?.dependency}
-								onValueChange={(value) => handleIssueEdit(value, "dependency")}
+								defaultValue={data?.priority}
+								onValueChange={(value) => handleIssueEdit(value, "priority")}
 							/>
 						</div>
 					</div>
@@ -340,6 +353,22 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							defaultText={data?.description}
 							handleChange={(value) => handleIssueEdit(value, "description")}
 						/>
+					</div>
+				</div>
+				<div className="flex flex-col gap-3">
+					<div className="text-[#9499A5]">Progress : {progress}%</div>
+					<div className="flex gap-2">
+						<Slider
+							defaultValue={[data?.progress]}
+							onValueChange={setProgress}
+							value={progress}
+							max={100}
+							step={1}
+							className={cn("w-[100%]",)}
+						/>
+						<div>
+							<Button className="border border-primary text-primary" variant="outline" onClick={() => handleIssueEdit(progress[0], "progress")}>Apply</Button>
+						</div>
 					</div>
 				</div>
 				<div className="space-y-2">
