@@ -221,7 +221,8 @@ const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStages }) =>
 		const template_id = projectList?.find(project => project._id === appProfileInfo?.project_id).template;
 
 		if (getIssuesByStageId(stage?._id)?.length > 0) {
-			toast.error("Deletion of column containing tasks is not possible at the moment. Please remove tasks from the column before deleting it.");
+			toast.error("Unable to delete column",
+				{ description: "Deletion of column containing tasks is not possible at the moment. Please remove tasks from the column before deleting it.", duration: 3000 });
 		} else {
 			(dispatch(deleteAction(Urls.stages, `${stage?._id}/${template_id}`)) as any).then(res => {
 				if (res.payload?.status === 200) {
