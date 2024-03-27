@@ -38,7 +38,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 		>
 			<CardContent className="p-3 gap-2 flex flex-col ">
 				<HYDialog
-					className="max-w-6xl dark:bg-card"
+					className="max-w-7xl dark:bg-card"
 					content={<IssueDetailView data={data} />}
 				>
 					<div className="h-auto justify-between flex flex-col gap-2 ">

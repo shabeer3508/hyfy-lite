@@ -1,4 +1,4 @@
-export const domain = import.meta.env.VITE_DOMAIN;
+export const domain = import.meta.env.VITE_API;
 
 /// https://pb-api.hyfy.app/api/collections/project/records
 
