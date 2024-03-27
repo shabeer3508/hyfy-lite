@@ -166,6 +166,18 @@ export interface CommentsTypes {
     updatedAt?: Date;
 }
 
+export interface SubTaskTypes {
+    _id: string;
+    title: string;
+    isCompleted: boolean;
+    org_id: string;
+    issue_id: string;
+    assign_to?: string;
+    is_deleted: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 export interface NotificationType {
     _id: string;
     org_id?: string;

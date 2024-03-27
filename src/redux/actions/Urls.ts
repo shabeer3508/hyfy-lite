@@ -34,6 +34,7 @@ const Urls = {
 
     stages: "/stages",
     stages_list: "/projects/stages",
+    sub_tasks: "/subTask",
 
     comments: "/comments",
     issue_status: "/issueStatus",

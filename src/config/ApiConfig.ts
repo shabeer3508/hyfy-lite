@@ -26,6 +26,7 @@ const ApiConfig = {
 
     stagesList: Urls.stages_list,
     stages: Urls.stages,
+    subTasks: Urls.sub_tasks,
 
     comments: Urls.comments,
     sprintMembers: Urls.sprint_members,

@@ -1,50 +1,44 @@
 import dayjs from "dayjs";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { TbSubtask } from "react-icons/tb";
 import { useEffect, useState } from "react";
-import { HiBookOpen, HiUser, HiXMark } from "react-icons/hi2";
+import { FcTemplate } from "react-icons/fc";
+import { TiAttachmentOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
-import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineDotsHorizontal, HiOutlineDotsVertical, HiOutlineX } from "react-icons/hi";
+import { HiUser, HiXMark, HiOutlineUserPlus } from "react-icons/hi2";
+import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineDotsHorizontal } from "react-icons/hi";
 
 import Urls from "@/redux/actions/Urls";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Progress } from "@/components/ui/progress";
+import { DialogClose } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
-import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import CommentCreation from "@/components/hy-components/forms/comment-creation";
-import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { CommentsTypes, EpicTypes, IssueStatusTypes, IssueTypes, ProjectType, SprintTypes, UsersTypes } from "@/interfaces";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Slider } from "@/components/ui/slider";
-import { cn } from "@/lib/utils";
-import { SliderProps } from "@radix-ui/react-slider";
-import { DialogClose } from "@/components/ui/dialog";
-import { FcDisplay, FcTemplate } from "react-icons/fc";
-import HYDropDown from "@/components/hy-components/HYDropDown";
-import { TiAttachmentOutline } from "react-icons/ti";
-import { TbSubtask } from "react-icons/tb";
-import { toast } from "sonner";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Progress } from "@/components/ui/progress";
-import { HiOutlineUserPlus } from "react-icons/hi2";
-import { Input } from "@/components/ui/input";
+import CommentCreation from "@/components/hy-components/forms/comment-creation";
+import { deleteAction, getAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
+import { CommentsTypes, IssueStatusTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
 
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const dispatch = useDispatch();
-	const [showUserSelection, setShowUserSelection] = useState(false);
 	const [showSubTaskCreation, setShowSubTaskCreation] = useState(false);
-
-	// const [progress, setProgress] = useState<SliderProps["defaultValue"]>([data?.progress]);
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
 	const commentsReducerName = reducerNameFromUrl("comments", "GET");
 	const commentsItems = useSelector((state: any) => state?.[commentsReducerName])?.data?.items as CommentsTypes[];
+
+	const subTasksReducerName = reducerNameFromUrl("subTasks", "GET");
+	const subTasks = useSelector((state: any) => state?.[subTasksReducerName])?.data?.items as SubTaskTypes[];
 
 	const reducerName = reducerNameFromUrl("project", "GET");
 	const projectList = useSelector((state: any) => state?.[reducerName])?.data?.items as ProjectType[];
@@ -61,6 +55,11 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const getComments = () => {
 		let query = `?expand=created_by&sort=-createdAt&filter=issue_id=${data?._id}`;
 		dispatch(getAction({ comments: Urls.comments + query }));
+	}
+
+	const getSubTasks = () => {
+		let query = `?expand=assign_to&issue_id=${data?._id}`;
+		dispatch(getAction({ subTasks: Urls.sub_tasks + query }));
 	}
 
 	const getIssues = () => {
@@ -84,16 +83,6 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 				toast.success("Task deleted successfully")
 			}
 		})
-	}
-
-	const handleAssignIssueUser = (userId: string, type: "assign" | "remove") => {
-		const opration = type === "assign" ? "/assign" : "/remove";
-		(dispatch(patchAction({ issues: Urls.issues + opration }, { user_id: userId }, data?._id)) as any).then((res) => {
-			if (res.payload?.status === 200) {
-				getIssues();
-			}
-		})
-		setShowUserSelection(false);
 	}
 
 	const handleAssignSingleUser = (userId: string) => {
@@ -140,20 +129,17 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 		{ label: "4", value: "4" },
 	];
 
-	const issueOptions = [
+	const taskOptions = [
 		{ label: "Delete", action: () => handleIssueDelete(), isAlertDialog: true },
 	];
 
-	const dummySubTasks = Array.from({ length: 2 }).map((data, i) => ({ _id: `ID00${i + 1}`, title: `Task-${i + 1}`, isCompleted: i % 2 === 0, issue_id: "", is_deleted: false }));
-
-
-	const subTaskProgress = (dummySubTasks?.filter(task => task?.isCompleted)?.length / dummySubTasks?.length) * 100;
-
+	const subTaskProgress = (subTasks?.filter(task => task?.isCompleted)?.length / subTasks?.length) * 100;
 
 	/*  ######################################################################################## */
 
 	useEffect(() => {
-		getComments()
+		getComments();
+		getSubTasks();
 	}, [data?._id])
 
 	/*  ######################################################################################## */
@@ -169,7 +155,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						{currentProjectName}
 					</div>
 					<div className="flex">
-						<HYDropDown options={issueOptions}>
+						<HYDropDown options={taskOptions}>
 							<Button size="sm" variant="ghost">
 								<HiOutlineDotsHorizontal className="text-base stroke-2" />
 							</Button>
@@ -212,41 +198,16 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 
 
-
-						{/* <div className=" flex-col gap-3 pr-5 text-xs hidden">
-							<div className="flex gap-1">
-								<Slider
-									defaultValue={[data?.progress]}
-									onValueChange={setProgress}
-									value={progress}
-									max={100}
-									step={1}
-									className={cn("w-[100%]",)}
-								/>
-								<div className="">
-									<Button
-										className={`border border-primary text-primary ${data?.progress === progress[0] && "opacity-0"}`}
-										variant="outline"
-										onClick={() => handleIssueEdit(progress[0], "progress")}
-									>
-										Apply
-									</Button>
-
-								</div>
-							</div>
-						</div> */}
-
-
 						<div className="space-y-2 text-xs pr-5">
 							<div className="text-[#9499A5] text-sm">Sub tasks</div>
 							<div className="flex items-center gap-2">
-								<Progress className="h-2" value={subTaskProgress} />{!isNaN(subTaskProgress) && `${subTaskProgress}%`}
+								<Progress className="h-2" value={subTaskProgress} />{!isNaN(subTaskProgress) && `${subTaskProgress?.toFixed(0)}%`}
 							</div>
 							<div className="space-y-2">
 
-								{dummySubTasks?.map((subtask, i) => {
+								{subTasks?.map((subtask, i) => {
 									return (
-										<SubTaskCard key={subtask?._id} subtask={subtask} />
+										<SubTaskCard key={subtask?._id} subtask={subtask} getSubTasks={getSubTasks} />
 									)
 								})}
 
@@ -254,16 +215,19 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 
 						<div className="pr-5 pl-6">
-							<SubTaskCreationCard show={showSubTaskCreation} close={() => setShowSubTaskCreation(false)} />
+							<SubTaskCreationCard
+								data={data}
+								show={showSubTaskCreation}
+								close={() => setShowSubTaskCreation(false)}
+								getSubTasks={getSubTasks}
+							/>
 						</div>
 
 						<div className="flex w-full gap-1 mt-3 pr-5">
 							<Button
-								onClick={() => {
-									setShowSubTaskCreation(true)
-								}}
 								variant="outline"
-								className="bg-[#F1F5F9] dark:bg-[#383b42] dark:hover:bg-[#494c53] hover:bg-[#d7d8da]  border-0 flex gap-1"
+								onClick={() => { setShowSubTaskCreation(true) }}
+								className={`bg-[#F1F5F9] dark:bg-[#383b42] dark:hover:bg-[#494c53] hover:bg-[#d7d8da]  border-0 flex gap-1 ${showSubTaskCreation && "hidden"}`}
 							>
 								<TbSubtask />Add a sub task
 							</Button>
@@ -375,28 +339,51 @@ export default IssueDetailView;
 
 interface SubTaskCreationCardProps {
 	show: boolean;
+	data: IssueTypes;
 	close: () => void;
+	getSubTasks: () => void;
 }
 
-const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close }) => {
+const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, getSubTasks, data }) => {
+
+	const { register, reset, handleSubmit } = useForm();
+	const dispatch = useDispatch();
+
+	const handleSubTaskCreation = (values) => {
+		const postData = {
+			title: values?.title,
+			isCompleted: false,
+			issue_id: data?._id
+		};
+
+		(dispatch(postAction({ subTasks: Urls.sub_tasks }, postData)) as any).then((res) => {
+			if (res?.payload?.status == 200) {
+				getSubTasks();
+				reset();
+				close();
+			}
+		})
+
+	}
+
 
 	if (!show) {
 		return <></>
 	}
 
 	return (
-		<form>
+		<form onSubmit={handleSubmit(handleSubTaskCreation)}>
 			<div className="py-2 flex flex-col gap-2">
 				<div>
-					<Input placeholder="Add a subtask" className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-primary dark:bg-card" />
+					<Input {...register("title")} placeholder="Add a subtask" className="outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-primary dark:bg-card" />
 				</div>
 				<div className="flex justify-between">
 					<div className="flex gap-1">
 						<Button size="sm">Add</Button>
-						<Button size="sm" variant="ghost" onClick={() => close()}>Cancel</Button>
+						<Button type="button" size="sm" variant="ghost" onClick={() => close()}>Cancel</Button>
 					</div>
 					<div>
-						<Button size="sm" variant="ghost" className="flex gap-1">
+						<Button type="button" size="sm" variant="ghost" className="flex gap-1">
 							<HiOutlineUserPlus />
 							Assign
 						</Button>
@@ -408,29 +395,49 @@ const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close }
 }
 
 
-const SubTaskCard = ({ subtask }: any) => {
+const SubTaskCard = ({ subtask, getSubTasks }: { subtask: SubTaskTypes, getSubTasks: () => void }) => {
+
+	const dispatch = useDispatch();
 
 	const handleSubTaskDelete = () => {
-		// TODO:
+		(dispatch(deleteAction(Urls.sub_tasks, subtask?._id)) as any).then((res) => {
+			if (res.payload.status === 200) {
+				getSubTasks();
+			}
+		});
+	}
+
+	const handleTaskUpdate = (key: string, value: string | boolean) => {
+		(dispatch(patchAction({ subTasks: Urls.sub_tasks }, { [key]: value }, subtask?._id)) as any).then((res) => {
+			if (res.payload.status === 200) {
+				getSubTasks();
+			}
+		});
 	}
 
 	const handleSubTaskAssignee = () => {
 		// TODO:
 	}
 
+	const subTaskOptions = [
+		{ label: "Delete", action: () => handleSubTaskDelete() },
+	];
+
 	return <div key={subtask?._id} className="flex items-center gap-2">
-		<Checkbox className="rounded" checked={subtask?.isCompleted} />
-		<div className="bg-[#F1F5F9] w-full min-h-7 py-1 px-3 rounded flex justify-between items-center group">
+		<Checkbox className="rounded" checked={subtask?.isCompleted} onCheckedChange={() => handleTaskUpdate("isCompleted", !subtask?.isCompleted)} />
+		<div className="bg-[#F1F5F9] dark:bg-[#26282E] w-full min-h-7 py-1 px-3 rounded flex justify-between items-center group">
 			<div className="w-full pr-3">
 				<HYEditableDiv className="bg-[#F1F5F9] text-xs w-full" defaultText={subtask?.title} handleChange={() => { }} />
 			</div>
 			<div className="opacity-0 group-hover:opacity-100 flex gap-3 py-1">
 				<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
-					<HiUser />
+					<HiUser className="text-black" />
 				</div>
-				<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
-					<HiOutlineDotsHorizontal className="cursor-pointer" />
-				</div>
+				<HYDropDown options={subTaskOptions}>
+					<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
+						<HiOutlineDotsHorizontal className="text-black" />
+					</div>
+				</HYDropDown>
 			</div>
 		</div>
 	</div>
