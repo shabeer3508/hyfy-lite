@@ -70,7 +70,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data, getIssues }) => {
 				>
 					<div className="h-auto justify-between flex flex-col gap-2 ">
 						<div className="text-left flex gap-2 items-center min-h-6 justify-between">
-							<div className="flex gap-2">
+							<div className="flex gap-2 ">
 								{data?.type === "story" && (
 									<HiBookOpen className="w-4 h-4" />
 								)}
@@ -82,7 +82,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ data, getIssues }) => {
 								{data?.type === "bug" && (
 									<img src="/bug_icon.svg" alt="Project" />
 								)}
-								{data?.name}
+								<div className="line-clamp-2">{data?.name}</div>
 							</div>
 							<div className="flex justify-end">
 								<CircularProgress progress={data?.progress} />

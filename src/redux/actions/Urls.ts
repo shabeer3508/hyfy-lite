@@ -34,12 +34,14 @@ const Urls = {
 
     stages: "/stages",
     stages_list: "/projects/stages",
+    stages_order: "/stages/change/order",
     sub_tasks: "/subTask",
 
     comments: "/comments",
     issue_status: "/issueStatus",
     sprint_members: "/sprints/members",
     issue_attachment: "/issues/uploads",
+    board_templates: "/templates",
 };
 
 export default Urls;

@@ -7,6 +7,7 @@ const BillingSettings = lazy(() => import("@/pages/settings/billing-settings"));
 const UserRolesSettings = lazy(() => import("@/pages/settings/user-roles-settings"));
 const OrganizationSettings = lazy(() => import("@/pages/settings/organization-settings"));
 const NotificationSettings = lazy(() => import("@/pages/settings/notification-settings"));
+const BoardTemplates = lazy(() => import("@/pages/settings/board-templates"));
 
 export const settingsRoutes = [
     {
@@ -28,5 +29,9 @@ export const settingsRoutes = [
     {
         path: "/roles",
         component: <UserRolesSettings />,
+    },
+    {
+        path: "/board-templates",
+        component: <BoardTemplates />,
     },
 ]

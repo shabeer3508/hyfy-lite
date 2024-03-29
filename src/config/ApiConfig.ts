@@ -26,12 +26,15 @@ const ApiConfig = {
 
     stagesList: Urls.stages_list,
     stages: Urls.stages,
+    stageOrder: Urls.stages_order,
     subTasks: Urls.sub_tasks,
 
     comments: Urls.comments,
     sprintMembers: Urls.sprint_members,
+
     issueStatus: Urls.issue_status,
     issueAttachment: Urls.issue_attachment,
+    boardTemplates: Urls.board_templates,
 };
 
 export default ApiConfig;

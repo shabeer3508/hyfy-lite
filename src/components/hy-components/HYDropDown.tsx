@@ -38,7 +38,7 @@ const HYDropDown = ({
 
 					if (opt?.isAlertDialog) {
 						return (
-							<HYAlertDialog submitAction={() => opt?.action()} >
+							<HYAlertDialog key={`_${index}_`} submitAction={() => opt?.action()} >
 								<DropdownMenuItem
 									onSelect={(event) => {
 										event.preventDefault();

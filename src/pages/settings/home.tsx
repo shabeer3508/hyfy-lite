@@ -1,8 +1,9 @@
-import { TbReceipt, TbSettingsFilled } from "react-icons/tb";
+import { HiBell } from "react-icons/hi";
+import { BiColumns } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { MdKeyboardArrowRight } from "react-icons/md";
-import { HiBell } from "react-icons/hi";
 import { HiUser, HiBuildingLibrary } from "react-icons/hi2";
+import { TbReceipt, TbSettingsFilled } from "react-icons/tb";
 
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -109,6 +110,23 @@ const Settings = () => {
             <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
           </div>
         </Card>
+
+        <Card
+          onClick={() => navigate("/settings/board-templates")}
+          className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
+        >
+          <div className="grid grid-cols-3 w-full">
+            <div className="flex gap-4 items-center">
+              <BiColumns className="h-6 w-6 text-[#737377] group-hover:text-primary" />
+              <div className="h-6 text-[#737377] ">Board Templates</div>
+            </div>
+            <div></div>
+          </div>
+          <div>
+            <MdKeyboardArrowRight className="h-5 w-5 cursor-pointer" />
+          </div>
+        </Card>
+
       </div>
     </div>
   );

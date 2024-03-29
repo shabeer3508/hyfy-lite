@@ -32,6 +32,7 @@ const NotificationSettings = () => {
         <Card className="flex xl:w-1/2 w-full flex-col gap-6 dark:bg-[#131417]  ">
           <div className="flex flex-col m-4 gap-6">
             <div className="flex ">Email Notification</div>
+            {/* 
             <div className="flex flex-col  gap-y-4 ">
               <div className="flex text-[#737377] text-sm">Story</div>
               <div className="flex flex-col gap-y-2 text-sm">
@@ -57,7 +58,7 @@ const NotificationSettings = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-col  gap-y-4">
               <div className="flex text-[#737377] text-sm">Task</div>
@@ -86,7 +87,7 @@ const NotificationSettings = () => {
               </div>
             </div>
 
-            <div className="flex flex-col  gap-y-4">
+            {/* <div className="flex flex-col  gap-y-4">
               <div className="flex text-[#737377] text-sm">Bug</div>
               <div className="flex flex-col gap-y-2 text-sm">
                 <div className="flex justify-between ">
@@ -118,9 +119,9 @@ const NotificationSettings = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex flex-col  gap-y-4">
+            {/* <div className="flex flex-col  gap-y-4">
               <div className="flex text-[#737377] text-sm">Sprint</div>
               <div className="flex flex-col gap-y-2 text-sm">
                 <div className="flex justify-between ">
@@ -145,9 +146,9 @@ const NotificationSettings = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
 
-            <div className="flex flex-col  gap-y-4">
+            {/* <div className="flex flex-col  gap-y-4">
               <div className="flex text-[#737377] text-sm">Release</div>
               <div className="flex flex-col gap-y-2 text-sm">
                 <div className="flex justify-between ">
@@ -172,7 +173,8 @@ const NotificationSettings = () => {
                   </span>
                 </div>
               </div>
-            </div>
+            </div> */}
+
           </div>
         </Card>
       </div>

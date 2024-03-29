@@ -70,6 +70,10 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 		dispatch(getAction({ issues: Urls.issues + query }));
 	};
 
+	const getAttachments = () => {
+		console.log("🚀 ~ getAttachments ~ data:", data?.file_name);
+	}
+
 	const handleIssueEdit = (value, field: string) => {
 		let postData = { [field]: value !== "" ? value : null };
 		(dispatch(patchAction({ issues: Urls.issues }, postData, data?._id)) as any).then((res) => {
@@ -99,21 +103,24 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 		setShowUserSelection(false);
 	}
 
-	const handleAddAttachment = (e) => {
+
+
+
+	const handleAddAttachment = async (e) => {
 		const file = e.target.files[0];
 
 		const formData = new FormData();
 		if (file) {
 			formData.append('file', file);
+			formData.append('issue_id', data?._id);
 		}
 
-		// console.log("🚀 ~ handleAddAttachment ~ e:", file);
 
-		// (dispatch(postAction({ issueAttachment: Urls.issue_attachment, formData })) as any).then((res) => {
-		// 	if (res.payload?.status === 200) {
-
-		// 	}
-		// });
+		(dispatch(postAction({ issueAttachment: Urls.issue_attachment }, formData)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				toast.success("Attachment added successfully");
+			}
+		});
 
 	}
 
@@ -164,6 +171,10 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	useEffect(() => {
 		getComments();
 		getSubTasks();
+
+		if (data?.file_name) {
+			getAttachments();
+		}
 	}, [data?._id])
 
 	/*  ######################################################################################## */
@@ -181,14 +192,14 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 					<div className="flex">
 						<HYDropDown options={taskOptions}>
 							<Button size="sm" variant="ghost">
-								<HiOutlineDotsHorizontal className="text-base stroke-2" />
+								<div>
+									<HiOutlineDotsHorizontal className="text-base stroke-2" />
+								</div>
 							</Button>
 						</HYDropDown>
 
-						<DialogClose>
-							<Button size="sm" variant="ghost">
-								<HiXMark className="text-base stroke-2" />
-							</Button>
+						<DialogClose className="p-1 hover:bg-[#F1F5F9]">
+							<HiXMark className="text-base stroke-2" />
 						</DialogClose>
 					</div>
 				</div>

@@ -96,22 +96,14 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
 
     const handleStageOrderChange = (e) => {
         e.preventDefault();
-
         const updatedStageOrder = dndArrayElementsSwap(stagesItems, +e?.dataTransfer?.getData("drag_stage_order") - 1, +stage?.order - 1) as IssueStatusTypes[];
+        const postData = updatedStageOrder?.map((stage, i) => ({ _id: stage._id, order: (i + 1)?.toString() }));
 
-
-        const postDataFullList = updatedStageOrder?.map((stage, i) => ({ id: stage._id, order: (i + 1)?.toString() }));
-
-        const postData = {
-            drag_stage: e?.dataTransfer?.getData("drag_stage_id"),
-            drag_order: e?.dataTransfer?.getData("drag_stage_order"),
-            drop_stage: stage?._id,
-            drop_order: stage?.order,
-        }
-
-        console.log("🚀 ~ e:", postData, stagesItems, updatedStageOrder, postDataFullList);
-
-        // TODO: API integration
+        (dispatch(patchAction({ stageOrder: Urls.stages_order }, { stageOrders: postData }, null)) as any).then((res) => {
+            if (res.payload?.status === 200) {
+                getStages();
+            }
+        })
     }
 
     /*  ######################################################################################## */
@@ -123,7 +115,7 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
     /*  ######################################################################################## */
 
     return (
-        <div className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] mb-3">
+        <div className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] w-[300px] mb-3">
             <div className="flex justify-between items-center px-3 py-2"
                 draggable
                 onDrop={handleStageOrderChange}

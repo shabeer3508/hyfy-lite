@@ -46,7 +46,7 @@ const ComboboxPopover: React.FC<ComboboxPopoverProps> = ({ children, placeholder
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
                             <CommandGroup>
-                                {options.map((option) => (
+                                {options?.map((option) => (
                                     <CommandItem
                                         key={option.value}
                                         className="cursor-pointer"

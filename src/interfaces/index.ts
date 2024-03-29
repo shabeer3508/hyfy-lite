@@ -101,6 +101,7 @@ export interface IssueTypes {
     is_subtask?: boolean;
     is_deleted?: boolean;
     progress?: number;
+    file_name?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
