@@ -1,24 +1,51 @@
-import { useSelector } from "react-redux";
 import { HiBookOpen } from "react-icons/hi2";
+import { useDispatch, useSelector } from "react-redux";
 import { HiDatabase, HiOutlineUser } from "react-icons/hi";
 
+import Urls from "@/redux/actions/Urls";
+import { Skeleton } from "@/components/ui/skeleton";
 import { IssueTypes, UsersTypes } from "@/interfaces";
 import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import HYDialog from "@/components/hy-components/HYDialog";
 import IssueDetailView from "../issues/issue-detail-view";
-import { reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { Skeleton } from "@/components/ui/skeleton";
+import ComboboxPopover from "@/components/hy-components/HYComboboxPopover";
+import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 interface BoardCardProps {
-	data: IssueTypes
+	data: IssueTypes;
+	getIssues: () => void;
 }
 
-const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
+const BoardCard: React.FC<BoardCardProps> = ({ data, getIssues }) => {
+
+	const dispatch = useDispatch()
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items as UsersTypes[]
+
+
+	const usersOptions = userItems?.map((user) => ({ value: user?._id, label: user?.user_name }));
+
+	const handleAssignSingleUser = (userId: string) => {
+		data?.assign_to.length > 0 && dispatch(patchAction({ issues: Urls.issues + "/remove" }, { user_id: data?.assign_to[0] }, data?._id));
+		(dispatch(patchAction({ issues: Urls.issues + "/assign" }, { user_id: userId }, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getIssues();
+			}
+		});
+	}
+
+	const handleAssignIssueUser = (userId: string, type: "assign" | "remove") => {
+		const opration = type === "assign" ? "/assign" : "/remove";
+		(dispatch(patchAction({ issues: Urls.issues + opration }, { user_id: userId }, data?._id)) as any).then((res) => {
+			if (res.payload?.status === 200) {
+				getIssues();
+			}
+		})
+	}
+
 
 	const logoColors = [
 		"bg-[#71A4FF]",
@@ -70,26 +97,29 @@ const BoardCard: React.FC<BoardCardProps> = ({ data }) => {
 
 
 						<div className="flex items-center justify-between">
-							<div className="flex items-center">
-								{data?.assign_to?.map((usr, i) => {
-									const currentUser = userItems?.find((u) => u?._id === usr)
-									return <HYAvatar
-										key={usr}
-										className="cursor-default first:ml-0 -ml-2 border text-white"
-										name={currentUser?.user_name}
-										color={`${logoColors[i]}`}
-									/>
-								}
-								)}
 
-								{data?.assign_to?.length === 0 &&
-									<div
-										onClick={(e) => e?.stopPropagation()}
-										title="Unassigned"
-										className="cursor-default aspect-square border rounded-full flex justify-center items-center size-8 bg-gray-500" >
-										<HiOutlineUser className="text-white" />
+							<div className="flex items-center" onClick={(e) => e?.stopPropagation()}>
+								<ComboboxPopover placeholder="Search user" options={usersOptions} onChange={(data) => handleAssignIssueUser(data?.value, "assign")}>
+									<div className="flex">
+										{data?.assign_to?.map((usr, i) => {
+											const currentUser = userItems?.find((u) => u?._id === usr)
+											return <HYAvatar
+												key={usr}
+												className="cursor-default first:ml-0 -ml-2 border text-white"
+												name={currentUser?.user_name}
+												color={`${logoColors[i]}`}
+											/>
+										})}
+
+										{data?.assign_to?.length === 0 &&
+											<div
+												title="Unassigned"
+												className="cursor-default aspect-square border rounded-full flex justify-center items-center size-8 bg-gray-500" >
+												<HiOutlineUser className="text-white" />
+											</div>
+										}
 									</div>
-								}
+								</ComboboxPopover>
 							</div>
 							<div className="flex items-center gap-2 pr-2">
 								<HiDatabase /> {data?.points}
@@ -146,7 +176,7 @@ const CircularProgress = ({ progress }) => {
 					cx="20"
 					cy="20"
 					strokeDasharray={circumference}
-					strokeDashoffset={offset}
+					strokeDashoffset={isNaN(offset) ? 0 : offset}
 					strokeLinecap="round"
 					transform="rotate(-90 20 20)"
 				/>
@@ -154,4 +184,5 @@ const CircularProgress = ({ progress }) => {
 		</div>
 	);
 }
+
 

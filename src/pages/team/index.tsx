@@ -206,7 +206,8 @@ const ManageUserCard = ({ userInfo, updateUserList }: { userInfo: UsersTypes, up
 
 	const rolesOptions = [
 		{ label: 'Manager', value: "manager" },
-		{ label: 'Owner', value: "owner" },
+		// { label: 'Owner', value: "owner" },
+		{ label: 'Admin', value: "admin" },
 		{ label: "Employee", value: "employee" }
 	]
 
@@ -228,20 +229,25 @@ const ManageUserCard = ({ userInfo, updateUserList }: { userInfo: UsersTypes, up
 					</div>
 					<div>
 						<div className="text-sm">{userInfo?.user_name}</div>
-						<div className="text-[#FFFFFF66]">{userInfo?.email}</div>
+						<div className="dark:text-[#FFFFFF66]">{userInfo?.email}</div>
 					</div>
 				</div>
 			</Card>
 
 			<div className="mb-3">
 				<div className="my-2 text-xs">Designation</div>
-				<HYCombobox
-					unSelectable={false}
-					options={rolesOptions}
-					defaultValue={userInfo?.role}
-					buttonClassName="border w-full"
-					onValueChange={(value) => setManagerInfo((prevData) => ({ ...prevData, role: value }))}
-				/>
+				{userInfo?.role === "owner" ?
+					<div className="text-xs text-red-500">
+						Owner : Role cannot be changed
+					</div> :
+					<HYCombobox
+						unSelectable={false}
+						options={rolesOptions}
+						defaultValue={userInfo?.role}
+						buttonClassName="border w-full"
+						onValueChange={(value) => setManagerInfo((prevData) => ({ ...prevData, role: value }))}
+					/>
+				}
 			</div>
 		</div>
 		<div className="flex justify-between gap-3">

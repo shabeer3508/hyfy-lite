@@ -129,7 +129,7 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
                             <IssueCreationCardMini statusId={stage?._id} />
                         </div>
                     </div>
-                    {getIssuesByStageId(stage?._id)?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} />)}
+                    {getIssuesByStageId(stage?._id)?.map((tdInfo) => <BoardCard data={tdInfo} key={tdInfo?._id} getIssues={getIssues} />)}
                     {issuesListData?.loading && <BoardCardSkeleton />}
                 </div>
             </ScrollArea>

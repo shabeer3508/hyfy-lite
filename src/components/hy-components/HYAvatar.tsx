@@ -8,7 +8,7 @@ interface HYAvatarProps {
 	color?: string;
 }
 
-function getInitials(name) {
+export function getInitials(name) {
 	const initials =
 		name
 			?.split(" ")

@@ -183,8 +183,6 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 
 	/*  ######################################################################################## */
 
-	let fdfd = data.owner[0]
-
 	return (
 		<Card className="dark:bg-[#151619] bg-[#F7F8F9]">
 			<HYDialog
@@ -193,29 +191,12 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 			>
 				<div className="flex justify-between items-center h-16 px-3 cursor-pointer">
 					<div className="flex gap-3 items-center ">
-						<HiFolder className={`w-8 h-8 ${logoColors[index % 7]}`} />
+						<HiFolder className={`w-8 h-8 ${logoColors[index % 6]}`} />
 						<div className="capitalize">{data?.title}</div>
 					</div>
 					<div className="flex gap-4 items-center">
-						<HYCombobox
-							defaultValue={data?.status}
-							options={statusOptions}
-							onValueChange={(value) => handleProjectStatusChange(value)}
-						/>
 
-						<div className="flex items-center gap-4 w-[200px] truncate text-base">
-							<HYAvatar
-								url="https://github.com/shadcn.png"
-								name={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name} />
-							<div
-								className="truncate"
-								title={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
-							>
-								{typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
-							</div>
-						</div>
-
-						{projectIssues?.length > 0 &&
+						{/* {projectIssues?.length > 0 &&
 							<div className="flex gap-1 w-[50px] sm:w-[100px] md:w-[200px] xl:w-[400px] h-2 overflow-hidden mr-3">
 								{projectIssues?.map((issue => (
 									<HYTooltip key={issue?._id} message={findStatusNameById(issue?.status)} className='capitalize'>
@@ -231,7 +212,28 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 									</HYTooltip>
 								)))}
 							</div>
-						}
+						} */}
+
+						<HYCombobox
+							defaultValue={data?.status}
+							options={statusOptions}
+							onValueChange={(value) => handleProjectStatusChange(value)}
+						/>
+
+						<div className="flex items-center gap-4 w-[200px] truncate text-base">
+							<HYAvatar
+								url="https://github.com/shadcn.png"
+								name={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
+							/>
+							<div
+								className="truncate"
+								title={typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
+							>
+								{typeof data?.owner !== "string" && data?.owner?.[0]?.user_name}
+							</div>
+						</div>
+
+
 
 						<HYDropDown options={[
 							{

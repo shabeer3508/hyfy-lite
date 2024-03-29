@@ -172,7 +172,7 @@ export interface SubTaskTypes {
     isCompleted: boolean;
     org_id: string;
     issue_id: string;
-    assign_to?: string;
+    assign_to?: string | UsersTypes[];
     is_deleted: boolean;
     createdAt?: Date;
     updatedAt?: Date;

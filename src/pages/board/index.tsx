@@ -66,7 +66,7 @@ const Board = () => {
 
 	/*  ######################################################################################## */
 
-	const dummyStages = Array.from({ length: 4 }).map((data, i) => ({ _id: `ID00${i + 1}`, name: `Stage-${i + 1}`, order: i + 1 }))
+	// const dummyStages = Array.from({ length: 4 }).map((data, i) => ({ _id: `ID00${i + 1}`, name: `Stage-${i + 1}`, order: i + 1 }));
 
 	if (!appProfileInfo?.project_id) {
 		return <NoProjectScreen />

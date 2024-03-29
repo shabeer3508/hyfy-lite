@@ -272,6 +272,33 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 
 						<div className=" w-full flex gap-4">
+							<div className="w-1/2 text-xs flex flex-col">
+								<div className="flex flex-col justify-between pt-1">
+									<div className="text-[#9499A5]">Assign to</div>
+									<HYUserSelect showSearch buttonClassName="w-full my-3 dark:bg-card dark:border-[#36363A]" onValueChange={handleUserSelection} />
+								</div>
+								<div className="border dark:border-[#36363A] h-[210px] my-2 rounded p-1 flex flex-col gap-1 overflow-auto">
+
+									{selectedUsers?.map(user => {
+										return (
+											<div key={user?._id} className="border dark:border-[#36363A] p-1 rounded flex justify-between items-center">
+												<div className="flex gap-2 items-center">
+													<div><HYAvatar name={user?.user_name || user?.name} /></div>
+													<div>
+														<div className="capitalize">{user?.user_name || user?.name}</div>
+														<div className="text-[10px] text-[#9499A5]">{user?.role}</div>
+													</div>
+												</div>
+												<Button type="button" variant="ghost" size="icon" onClick={() => handleUserDelete(user?._id)}>
+													<HiMiniXMark />
+												</Button>
+											</div>
+										)
+									})}
+
+								</div>
+							</div>
+
 							<div className="w-1/2 ">
 
 								<FormField
@@ -308,7 +335,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 										</FormItem>
 									)}
 								/>
-								<div className="flex flex-col gap-4 py-3">
+								{/* <div className="flex flex-col gap-4 py-3">
 									<FormLabel className="text-xs text-[#9499A5] flex justify-between"><span>Progress</span> <span>{progress}%</span></FormLabel>
 									<Slider
 										defaultValue={[0]}
@@ -318,38 +345,13 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 										step={1}
 										className={cn("w-[100%]",)}
 									/>
-								</div>
+								</div> */}
 							</div>
-							<div className="w-1/2 text-xs flex flex-col">
-								<div className="flex flex-col justify-between pt-1">
-									<div className="text-[#9499A5]">Assign to</div>
-									<HYUserSelect showSearch buttonClassName="w-full my-3 dark:bg-card dark:border-[#36363A]" onValueChange={handleUserSelection} />
-								</div>
-								<div className="border dark:border-[#36363A] h-[210px] my-2 rounded p-1 flex flex-col gap-1 overflow-auto">
 
-									{selectedUsers?.map(user => {
-										return (
-											<div key={user?._id} className="border dark:border-[#36363A] p-1 rounded flex justify-between items-center">
-												<div className="flex gap-2 items-center">
-													<div><HYAvatar name={user?.user_name || user?.name} /></div>
-													<div>
-														<div className="capitalize">{user?.user_name || user?.name}</div>
-														<div className="text-[10px] text-[#9499A5]">{user?.role}</div>
-													</div>
-												</div>
-												<Button type="button" variant="ghost" size="icon" onClick={() => handleUserDelete(user?._id)}>
-													<HiMiniXMark />
-												</Button>
-											</div>
-										)
-									})}
-
-								</div>
-							</div>
 						</div>
 
 
-						<FormField
+						{/* <FormField
 							control={form.control}
 							name="sub_tasks"
 							render={({ field }) => (
@@ -366,7 +368,7 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									<FormMessage />
 								</FormItem>
 							)}
-						/>
+						/> */}
 
 						<DialogFooter className="mt-5 pt-3 sticky bottom-0 border-t bg-card dark:bg-card dark:border-[#36363A]">
 							<Button

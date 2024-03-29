@@ -7,7 +7,7 @@ import { FcTemplate } from "react-icons/fc";
 import { TiAttachmentOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { HiUser, HiXMark, HiOutlineUserPlus } from "react-icons/hi2";
-import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineDotsHorizontal } from "react-icons/hi";
+import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineDotsHorizontal, HiOutlineX } from "react-icons/hi";
 
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import { Progress } from "@/components/ui/progress";
 import { DialogClose } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import HYAvatar from "@/components/hy-components/HYAvatar";
+import HYAvatar, { getInitials } from "@/components/hy-components/HYAvatar";
 import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
@@ -26,11 +26,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { CommentsTypes, IssueStatusTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
+import ComboboxPopover from "@/components/hy-components/HYComboboxPopover";
+import { Label } from "@/components/ui/label";
 
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	const dispatch = useDispatch();
 	const [showSubTaskCreation, setShowSubTaskCreation] = useState(false);
+	const [showUserSelection, setShowUserSelection] = useState(false);
+
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 
@@ -85,14 +89,17 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 		})
 	}
 
-	const handleAssignSingleUser = (userId: string) => {
-		data?.assign_to.length > 0 && dispatch(patchAction({ issues: Urls.issues + "/remove" }, { user_id: data?.assign_to[0] }, data?._id));
-		(dispatch(patchAction({ issues: Urls.issues + "/assign" }, { user_id: userId }, data?._id)) as any).then((res) => {
+
+	const handleAssignIssueUser = (userId: string, type: "assign" | "remove") => {
+		const opration = type === "assign" ? "/assign" : "/remove";
+		(dispatch(patchAction({ issues: Urls.issues + opration }, { user_id: userId }, data?._id)) as any).then((res) => {
 			if (res.payload?.status === 200) {
 				getIssues();
 			}
-		});
+		})
+		setShowUserSelection(false);
 	}
+
 
 
 	/*  ######################################################################################## */
@@ -183,6 +190,71 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 						</div>
 
 
+						<div className="flex justify-between mt-5 items-center pr-5">
+							<div className="flex flex-col gap-2 w-full">
+								<div className="flex justify-between w-full text-xs ">
+									<div className="text-[#9499A5]">Assigned To</div>
+									<div
+										className="text-primary cursor-pointer"
+										onClick={() => setShowUserSelection(prevData => !prevData)}
+									>
+										{showUserSelection ? "Done" : "Add"}
+									</div>
+								</div>
+								<div className="">
+									{data?.assign_to?.length > 0 &&
+										<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 ">
+
+											{data?.assign_to?.map(userId => {
+												const userInfo = usersList?.find(user => user._id === userId);
+												return (
+													<div key={`${userId}`} className="flex gap-4 items-center justify-between border dark:border-[#FFFFFF1A] pl-3 pr-1 py-1 rounded w-full group">
+														<div className="flex gap-3">
+															<HYAvatar name={userInfo?.user_name} />
+															<div className="text-xs">
+																<div className="truncate capitalize">{userInfo?.user_name}</div>
+																<div className="dark:text-[#FFFFFF66] text-gray-500">{userInfo?.role}</div>
+															</div>
+														</div>
+
+														<div className="text-xs">
+															<Button
+																size="icon"
+																variant="ghost"
+																className="opacity-0 group-hover:opacity-100"
+																onClick={() => handleAssignIssueUser(userId, "remove")}
+															>
+																<HiOutlineX />
+															</Button>
+														</div>
+													</div>
+												)
+											})}
+
+										</div>
+									}
+
+									{data?.assign_to?.length === 0 && <div className="text-xs">Unassigned</div>}
+
+
+									{showUserSelection &&
+										<div className="mt-2 ">
+											<HYCombobox
+												unSelectable
+												name="assignee"
+												options={usersOptions}
+												buttonClassName="border "
+												placeholder="Assignee"
+												label={<HiOutlineUserPlus className="size-4" />}
+												onValueChange={(value: string) => handleAssignIssueUser(value, "assign")}
+											/>
+										</div>
+									}
+								</div>
+							</div>
+						</div>
+
+
 
 						<div className="space-y-1 pr-5 py-3 text-xs">
 							<div className="text-[#9499A5] text-sm ">Description</div>
@@ -207,7 +279,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 								{subTasks?.map((subtask, i) => {
 									return (
-										<SubTaskCard key={subtask?._id} subtask={subtask} getSubTasks={getSubTasks} />
+										<SubTaskCard key={subtask?._id} idx={i} subtask={subtask} getSubTasks={getSubTasks} />
 									)
 								})}
 
@@ -231,9 +303,15 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 							>
 								<TbSubtask />Add a sub task
 							</Button>
-							<Button variant="outline" className="bg-[#F1F5F9] dark:bg-[#383b42] dark:hover:bg-[#494c53] hover:bg-[#d7d8da]  border-0 flex gap-1">
-								<TiAttachmentOutline className="" /> Attach
-							</Button>
+
+							<Label htmlFor="attachment" className="flex gap-1 cursor-pointer ">
+								<div className="bg-[#F1F5F9] dark:bg-[#383b42] dark:hover:bg-[#494c53] hover:bg-[#d7d8da] border-0 rounded flex gap-1 py-1 px-3 items-center justify-center">
+									<TiAttachmentOutline className="" /> Attach
+								</div>
+							</Label>
+
+							<Input type="file" id="attachment" className="hidden" />
+
 						</div>
 
 					</div>
@@ -249,19 +327,6 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 										options={statusOptions}
 										buttonClassName="w-full dark:bg-card bg-[#F1F5F9] dark:border-[#FFFFFF1A] border-0"
 										onValueChange={(value) => handleIssueEdit(value, "status")}
-									/>
-								</div>
-								<div className="text-xs text-[#9499A5]">Assignee</div>
-								<div className="flex flex-1 items-center">
-
-									<HYCombobox
-										defaultValue={data?.assign_to[0]}
-										options={usersOptions}
-										buttonClassName="w-full dark:bg-card bg-[#F1F5F9] dark:border-[#FFFFFF1A] border-0"
-										optionsClassName="w-[200px]"
-										onValueChange={(value: string) => {
-											handleAssignSingleUser(value);
-										}}
 									/>
 								</div>
 								<div className="text-xs text-[#9499A5]">Priority</div>
@@ -346,12 +411,17 @@ interface SubTaskCreationCardProps {
 
 const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, getSubTasks, data }) => {
 
-	const { register, reset, handleSubmit } = useForm();
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersListData = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
+
+	const { register, reset, setValue, handleSubmit } = useForm();
 	const dispatch = useDispatch();
+
+
 
 	const handleSubTaskCreation = (values) => {
 		const postData = {
-			title: values?.title,
+			...values,
 			isCompleted: false,
 			issue_id: data?._id
 		};
@@ -365,6 +435,12 @@ const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, 
 		})
 
 	}
+
+	const usersOptions =
+		usersListData?.map((user) => ({
+			value: user?._id,
+			label: user?.user_name,
+		})) ?? [];
 
 
 	if (!show) {
@@ -383,10 +459,15 @@ const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, 
 						<Button type="button" size="sm" variant="ghost" onClick={() => close()}>Cancel</Button>
 					</div>
 					<div>
-						<Button type="button" size="sm" variant="ghost" className="flex gap-1">
-							<HiOutlineUserPlus />
-							Assign
-						</Button>
+						<HYCombobox
+							unSelectable
+							name="assignee"
+							options={usersOptions}
+							buttonClassName="border-0"
+							placeholder="Assignee"
+							label={<HiOutlineUserPlus className="size-4" />}
+							onValueChange={(value: string) => setValue("assign_to", value === "" ? null : value)}
+						/>
 					</div>
 				</div>
 			</div>
@@ -395,23 +476,24 @@ const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, 
 }
 
 
-const SubTaskCard = ({ subtask, getSubTasks }: { subtask: SubTaskTypes, getSubTasks: () => void }) => {
+const SubTaskCard = ({ subtask, getSubTasks, idx }: { subtask: SubTaskTypes, getSubTasks: () => void, idx?: number }) => {
 
 	const dispatch = useDispatch();
 
+	const usersReducerName = reducerNameFromUrl("users", "GET");
+	const usersListData = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
+
+	/*  ######################################################################################## */
+
 	const handleSubTaskDelete = () => {
 		(dispatch(deleteAction(Urls.sub_tasks, subtask?._id)) as any).then((res) => {
-			if (res.payload.status === 200) {
-				getSubTasks();
-			}
+			if (res.payload.status === 200) { getSubTasks() }
 		});
 	}
 
 	const handleTaskUpdate = (key: string, value: string | boolean) => {
 		(dispatch(patchAction({ subTasks: Urls.sub_tasks }, { [key]: value }, subtask?._id)) as any).then((res) => {
-			if (res.payload.status === 200) {
-				getSubTasks();
-			}
+			if (res.payload.status === 200) { getSubTasks() }
 		});
 	}
 
@@ -419,28 +501,62 @@ const SubTaskCard = ({ subtask, getSubTasks }: { subtask: SubTaskTypes, getSubTa
 		// TODO:
 	}
 
+	/*  ######################################################################################## */
+
+	const usersOptions = usersListData?.map((user) => ({ value: user?._id, label: user?.user_name }));
 	const subTaskOptions = [
 		{ label: "Delete", action: () => handleSubTaskDelete() },
 	];
+	const logoColors = [
+		"bg-[#71A4FF]",
+		"bg-[#FF6481]",
+		"bg-[#4C4878]",
+		"bg-[#A4599A]",
+		"bg-[#E2A766]",
+		"bg-[#389C98]",
+	];
 
-	return <div key={subtask?._id} className="flex items-center gap-2">
-		<Checkbox className="rounded" checked={subtask?.isCompleted} onCheckedChange={() => handleTaskUpdate("isCompleted", !subtask?.isCompleted)} />
-		<div className="bg-[#F1F5F9] dark:bg-[#26282E] w-full min-h-7 py-1 px-3 rounded flex justify-between items-center group">
-			<div className="w-full pr-3">
-				<HYEditableDiv className="bg-[#F1F5F9] text-xs w-full" defaultText={subtask?.title} handleChange={() => { }} />
-			</div>
-			<div className="opacity-0 group-hover:opacity-100 flex gap-3 py-1">
-				<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
-					<HiUser className="text-black" />
+	/*  ######################################################################################## */
+
+
+	return (
+		<div className="flex items-center gap-2">
+			<Checkbox className="rounded" checked={subtask?.isCompleted} onCheckedChange={() => handleTaskUpdate("isCompleted", !subtask?.isCompleted)} />
+			<div className="bg-[#F1F5F9] dark:bg-[#26282E] w-full min-h-7 py-1 px-3 rounded flex justify-between items-center group">
+				<div className="w-full pr-3">
+					<HYEditableDiv className="bg-[#F1F5F9] text-xs w-full" defaultText={subtask?.title} handleChange={(value) => handleTaskUpdate("title", value)} />
 				</div>
-				<HYDropDown options={subTaskOptions}>
-					<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
-						<HiOutlineDotsHorizontal className="text-black" />
-					</div>
-				</HYDropDown>
+				<div className="opacity-0 group-hover:opacity-100 flex gap-3 py-1">
+
+					{typeof subtask?.assign_to !== "string" &&
+						<ComboboxPopover placeholder="Search user" options={usersOptions} onChange={(data) => handleTaskUpdate("assign_to", data?.value)}>
+							{subtask?.assign_to?.length === 0 ?
+								<div
+									className={`size-5 rounded-full ${logoColors[idx % 6]} hover:opacity-80 text-white flex items-center justify-center cursor-pointer`}
+									title="Unassigned"
+								>
+									<HiUser className="" />
+								</div>
+								:
+								<div
+									className={`size-5 capitalize rounded-full ${logoColors[idx % 6]} hover:opacity-80 text-white flex items-center justify-center cursor-pointer`}
+									title={subtask?.assign_to?.[0].user_name}
+								>
+									{getInitials(subtask?.assign_to?.[0].user_name)}
+								</div>
+							}
+						</ComboboxPopover>
+					}
+
+					<HYDropDown options={subTaskOptions}>
+						<div className="size-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center cursor-pointer">
+							<HiOutlineDotsHorizontal className="text-black" />
+						</div>
+					</HYDropDown>
+				</div>
 			</div>
 		</div>
-	</div>
+	)
 }
 
 export const CommentCard = ({ data }: { data: any }) => {

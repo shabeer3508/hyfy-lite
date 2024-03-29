@@ -35,6 +35,7 @@ export function HYCombobox({
 	showSearch = false,
 	unSelectable = false,
 	disable = false,
+	placeholder
 }: {
 	id?: string;
 	label?: any;
@@ -49,6 +50,7 @@ export function HYCombobox({
 	form?: UseFormReturn<any>;
 	updateList?: () => void; // TODO: use this for updating the paginated list
 	unSelectable?: boolean;
+	placeholder?: string;
 }) {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState("");
@@ -91,7 +93,7 @@ export function HYCombobox({
 					<span className="w-1/2 truncate capitalize text-start">
 						{value
 							? options?.find((opt) => opt.value === value)?.label
-							: `Select ${name ?? ""}..`}
+							: placeholder ? placeholder : `Select ${name ?? ""}..`}
 					</span>
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
