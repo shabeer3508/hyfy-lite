@@ -158,7 +158,7 @@ export interface CommentsTypes {
     _id: string;
     org_id: string;
     message: string;
-    created_by: string;
+    created_by: string | UsersTypes[];
     project_id?: string;
     issue_id?: string;
     is_deleted?: boolean;

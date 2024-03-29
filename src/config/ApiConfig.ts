@@ -31,6 +31,7 @@ const ApiConfig = {
     comments: Urls.comments,
     sprintMembers: Urls.sprint_members,
     issueStatus: Urls.issue_status,
+    issueAttachment: Urls.issue_attachment,
 };
 
 export default ApiConfig;

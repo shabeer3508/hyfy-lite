@@ -39,6 +39,7 @@ const Urls = {
     comments: "/comments",
     issue_status: "/issueStatus",
     sprint_members: "/sprints/members",
+    issue_attachment: "/issues/uploads",
 };
 
 export default Urls;

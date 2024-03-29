@@ -5,13 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { CommentsTypes, ProjectType, UsersTypes } from "@/interfaces";
-import { CommentCard } from "../issues/issue-detail-view";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
 import HYAlertDialog from "@/components/hy-components/HYAlertDialog";
+import { CommentsTypes, ProjectType, UsersTypes } from "@/interfaces";
+import CommentCard from "@/components/hy-components/cards/comment-card";
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 

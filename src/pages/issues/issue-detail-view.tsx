@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { TbSubtask } from "react-icons/tb";
@@ -7,27 +6,27 @@ import { FcTemplate } from "react-icons/fc";
 import { TiAttachmentOutline } from "react-icons/ti";
 import { useDispatch, useSelector } from "react-redux";
 import { HiUser, HiXMark, HiOutlineUserPlus } from "react-icons/hi2";
-import { HiDatabase, HiDotsVertical, HiOutlineClock, HiOutlineDotsHorizontal, HiOutlineX } from "react-icons/hi";
+import { HiDatabase, HiOutlineClock, HiOutlineDotsHorizontal, HiOutlineX } from "react-icons/hi";
 
 import Urls from "@/redux/actions/Urls";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { DialogClose } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { Card, CardContent } from "@/components/ui/card";
-import HYAvatar, { getInitials } from "@/components/hy-components/HYAvatar";
 import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import CommentCard from "@/components/hy-components/cards/comment-card";
+import ComboboxPopover from "@/components/hy-components/HYComboboxPopover";
+import HYAvatar, { getInitials } from "@/components/hy-components/HYAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { CommentsTypes, IssueStatusTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
-import ComboboxPopover from "@/components/hy-components/HYComboboxPopover";
-import { Label } from "@/components/ui/label";
 
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
@@ -98,6 +97,24 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 			}
 		})
 		setShowUserSelection(false);
+	}
+
+	const handleAddAttachment = (e) => {
+		const file = e.target.files[0];
+
+		const formData = new FormData();
+		if (file) {
+			formData.append('file', file);
+		}
+
+		// console.log("🚀 ~ handleAddAttachment ~ e:", file);
+
+		// (dispatch(postAction({ issueAttachment: Urls.issue_attachment, formData })) as any).then((res) => {
+		// 	if (res.payload?.status === 200) {
+
+		// 	}
+		// });
+
 	}
 
 
@@ -310,7 +327,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 								</div>
 							</Label>
 
-							<Input type="file" id="attachment" className="hidden" />
+							<Input type="file" id="attachment" className="hidden" onChange={handleAddAttachment} />
 
 						</div>
 
@@ -559,30 +576,3 @@ const SubTaskCard = ({ subtask, getSubTasks, idx }: { subtask: SubTaskTypes, get
 	)
 }
 
-export const CommentCard = ({ data }: { data: any }) => {
-	return (
-		<Card className="dark:bg-card dark:border-[#FFFFFF1A]">
-			<CardContent className="p-3 text-xs">
-				<div className="flex justify-between items-center mb-3">
-					<div className="flex gap-2">
-						<HYAvatar
-							url="https://github.com/shadcn.png"
-							name={data?.created_by?.[0]?.user_name}
-						/>
-						<div className="flex flex-col capitalize">
-							<a className="text-xs">{data?.created_by?.[0]?.user_name}</a>
-							<a className="text-xs text-[#9499A5]">
-								{data?.created_by?.[0]?.role}
-							</a>
-						</div>
-					</div>
-					<div>
-						<HiDotsVertical />
-					</div>
-				</div>
-				<div className="my-1">{data?.message}</div>
-				<div className="text-[#9499A5]">On  {dayjs(data?.createdAt).format("DD/MM/YYYY")}</div>
-			</CardContent>
-		</Card>
-	);
-};

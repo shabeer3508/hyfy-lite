@@ -97,6 +97,7 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
 
     return (
         <div
+            // draggable
             className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] mb-3"
             onDragOver={(e) => e.preventDefault()}
             onDrop={(e) => {
