@@ -87,6 +87,33 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
         }
     }
 
+
+    const dndArrayElementsSwap = (array: any, from: number, to: number) => {
+        const newArray = [...array];
+        newArray.splice(to, 0, newArray.splice(from, 1)[0]);
+        return newArray;
+    };
+
+    const handleStageOrderChange = (e) => {
+        e.preventDefault();
+
+        const updatedStageOrder = dndArrayElementsSwap(stagesItems, +e?.dataTransfer?.getData("drag_stage_order") - 1, +stage?.order - 1) as IssueStatusTypes[];
+
+
+        const postDataFullList = updatedStageOrder?.map((stage, i) => ({ id: stage._id, order: (i + 1)?.toString() }));
+
+        const postData = {
+            drag_stage: e?.dataTransfer?.getData("drag_stage_id"),
+            drag_order: e?.dataTransfer?.getData("drag_stage_order"),
+            drop_stage: stage?._id,
+            drop_order: stage?.order,
+        }
+
+        console.log("🚀 ~ e:", postData, stagesItems, updatedStageOrder, postDataFullList);
+
+        // TODO: API integration
+    }
+
     /*  ######################################################################################## */
 
     const issueOptions = [
@@ -96,16 +123,16 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
     /*  ######################################################################################## */
 
     return (
-        <div
-            // draggable
-            className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] mb-3"
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => {
-                e.preventDefault();
-                updateItemStatus(e?.dataTransfer?.getData("id"), stage?._id);
-            }}
-        >
-            <div className="flex justify-between items-center px-3 py-2">
+        <div className="text-center dark:bg-[#131417] bg-[#F7F8F9] rounded mx-1 min-w-[300px] mb-3">
+            <div className="flex justify-between items-center px-3 py-2"
+                draggable
+                onDrop={handleStageOrderChange}
+                onDragOver={(e) => e.preventDefault()}
+                onDragStart={(e) => {
+                    e.dataTransfer.setData("drag_stage_id", stage?._id);
+                    e.dataTransfer.setData("drag_stage_order", stage?.order);
+                }}
+            >
                 <div className="p-1 px-2 font-medium text-sm">
                     <HYEditableDiv
                         placeholder="Column name"
@@ -123,7 +150,12 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
                 </div>
 
             </div>
-            <ScrollArea className="h-[calc(100vh-240px)] ">
+            <ScrollArea className="h-[calc(100vh-240px)]"
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                    e.preventDefault();
+                    updateItemStatus(e?.dataTransfer?.getData("id"), stage?._id);
+                }}>
                 <div className="flex flex-col px-5 py-2 gap-3">
                     <div className=" w-full  bg-[#F7F8F9] dark:bg-[#111215] ">
                         <div className="flex items-center">

@@ -12,6 +12,7 @@ import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { getAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
+import { cn } from "@/lib/utils";
 
 
 const Board = () => {
@@ -71,6 +72,8 @@ const Board = () => {
 	if (!appProfileInfo?.project_id) {
 		return <NoProjectScreen />
 	}
+
+	const boardWidth = ``;
 
 	return (
 		<>
