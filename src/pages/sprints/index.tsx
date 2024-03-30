@@ -15,7 +15,7 @@ import HYDialog from "@/components/hy-components/HYDialog";
 import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import IssueCreationCardMini from "../issues/forms/issue-creation-mini";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
+import { StagesTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
@@ -32,7 +32,7 @@ const Sprints = () => {
 	const sprintListItems = sprintListData?.data?.items as SprintTypes[]
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 
 	/*  ######################################################################################## */

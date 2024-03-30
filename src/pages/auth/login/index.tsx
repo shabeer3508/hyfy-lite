@@ -1,14 +1,15 @@
 import Cookies from "js-cookie"
 import { toast } from "sonner";
 import { useState } from "react";
-import Urls from "@/redux/actions/Urls";
 import { useForm } from "react-hook-form";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { HiLockClosed, HiMail, HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
+
+import Urls from "@/redux/actions/Urls";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { postAction, reducerNameFromUrl, setCurrentUser } from "@/redux/actions/AppActions";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
@@ -35,9 +36,6 @@ const Login = () => {
 					Cookies.set('hyfy_auth_token', res_data?.data?.token, { expires: 2, secure: true })
 					dispatch(setCurrentUser(res_data?.data?.user));
 					navigate("/board");
-					// if (res_data?.data?.user?.role === "employee") navigate("/board");
-					// else navigate("/backlog");
-
 				}
 			});
 		} catch (e) {

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Urls from "@/redux/actions/Urls";
 import { Input } from "@/components/ui/input";
-import { IssueStatusTypes } from "@/interfaces";
+import { StagesTypes } from "@/interfaces";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
@@ -22,7 +22,7 @@ const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: stri
 
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 	const defaultPostData = {
 		name: "",

@@ -163,25 +163,31 @@ const Team = () => {
 
 export default Team;
 
-const RemoveUserCard = ({ userInfo }: { userInfo: UsersTypes, updateUserList: any }) => {
+const RemoveUserCard = ({ userInfo, updateUserList }: { userInfo: UsersTypes, updateUserList: any }) => {
 	const dispatch = useDispatch();
 
 	const handleRemoveMember = () => {
-		dispatch(patchAction({ organization: Urls.organization + "/remove" }, {}, userInfo?._id));
-
-		// TODO: handle what happen after remove member.
-
+		(dispatch(patchAction({ organization: Urls.organization + "/remove" }, {}, userInfo?._id)) as any).then(() => {
+			updateUserList();
+		});
 	}
-
 
 	return <div className="flex flex-col gap-5">
 		<div className="text-center flex flex-col gap-3">
 			<div className="text-xl">Remove this member ?</div>
 			<div className="text-[#9499A5]">They won’t be able to access the organizaion</div>
 		</div>
+		<div>
+			{userInfo?.role === "owner" &&
+				<div className="text-xs text-red-500">
+					Owners cannot be removed from the organization
+				</div>
+			}
+		</div>
 		<div className="flex justify-between gap-3">
 			<DialogClose asChild>
 				<Button
+					disabled={userInfo?.role === "owner"}
 					type="button"
 					variant="destructive"
 					className="w-full border hover:border-destructive"

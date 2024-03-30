@@ -26,7 +26,7 @@ import HYAvatar, { getInitials } from "@/components/hy-components/HYAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { CommentsTypes, IssueStatusTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
+import { CommentsTypes, StagesTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
 
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
@@ -51,7 +51,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
 	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
-	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
+	const stagesItems = stagesData?.data?.data?.stages as StagesTypes[]
 
 	/*  ######################################################################################## */
 

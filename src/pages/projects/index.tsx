@@ -184,7 +184,7 @@ const ProjectCard = ({ data, index }: { data: ProjectType, index: number }) => {
 	/*  ######################################################################################## */
 
 	return (
-		<Card className="dark:bg-[#151619] bg-[#F7F8F9]">
+		<Card className="dark:bg-[#151619] hover:border-primary">
 			<HYDialog
 				className="max-w-6xl dark:bg-card"
 				content={<ProjectDetailView data={data} />}

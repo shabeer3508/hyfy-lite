@@ -106,12 +106,23 @@ export interface IssueTypes {
     updatedAt?: Date;
 }
 
-export interface IssueStatusTypes {
+export interface StagesTypes {
     _id?: string;
     name?: string;
     order?: string;
     org_id?: string;
     color?: string;
+}
+
+export interface BoardTemplateType {
+    _id: string;
+    title: string;
+    org_id: string;
+    stages: string[] | StagesTypes[];
+    is_custom: boolean;
+    is_deleted: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface SprintTypes {

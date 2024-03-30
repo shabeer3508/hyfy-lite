@@ -15,7 +15,7 @@ import HYDropDown from "@/components/hy-components/HYDropDown";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import SprintCreationForm from "@/pages/sprints/forms/sprint-creation";
-import { IssueStatusTypes, IssueTypes, SprintTypes } from "@/interfaces";
+import { StagesTypes, IssueTypes, SprintTypes } from "@/interfaces";
 import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import { getAction, patchAction, reducerNameFromUrl, setBacklogData } from "@/redux/actions/AppActions";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -34,7 +34,7 @@ const SprintsColumn = () => {
 	const issuesItems = issuesListData?.data?.items as IssueTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 	/*  ######################################################################################## */
 

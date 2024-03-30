@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HiDatabase, HiOutlineClock, HiOutlineUser } from "react-icons/hi";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
-import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { StagesTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 interface IssueMiniCardProps {
@@ -20,7 +20,7 @@ const IssueMiniCard: React.FC<IssueMiniCardProps> = ({ data }) => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 
 

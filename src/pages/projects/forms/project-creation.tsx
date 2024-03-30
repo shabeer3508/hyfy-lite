@@ -5,10 +5,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch, useSelector } from "react-redux";
 
 import Urls from "@/redux/actions/Urls";
-import { UsersTypes } from "@/interfaces";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
+import { BoardTemplateType } from "@/interfaces";
 import HYInputDate from "../../../components/hy-components/HYInputDate";
 import { HYCombobox } from "../../../components/hy-components/HYCombobox";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
@@ -19,21 +18,19 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const dispatch = useDispatch();
 	const [openForm, setOpenForm] = useState(false);
 
-	const usersReducerName = reducerNameFromUrl("users", "GET");
-	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes;
-
-	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
+	const reducerName = reducerNameFromUrl("boardTemplates", "GET");
+	const templateList = useSelector((state: any) => state?.[reducerName])?.data?.items as BoardTemplateType[];
 
 	/*  ######################################################################################## */
 
 	const projectFormSchema = z.object({
-		title: z.string().min(2, {
-			message: "Username must be at least 2 characters.",
+		title: z.string().min(3, {
+			message: "Title must be at least 3 characters.",
 		}),
-		// owner: z.string(),
 		end_date: z.date().optional().nullable(),
 		start_date: z.date().optional().nullable(),
 		description: z.string().optional().nullable(),
+		template: z.string(),
 		status: z.enum(["open", "in-progress", "pending", "done"]),
 	}).refine(data => {
 		if (data?.start_date && data?.end_date) {
@@ -74,11 +71,11 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 
 	/*  ######################################################################################## */
 
-	// const usersOptions =
-	// 	usersList?.map((user) => ({
-	// 		value: user?._id,
-	// 		label: user?.user_name,
-	// 	})) ?? [];
+	const usersOptions =
+		templateList?.map((tmp) => ({
+			value: tmp?._id,
+			label: tmp?.title,
+		})) ?? [];
 
 	/*  ######################################################################################## */
 
@@ -152,25 +149,28 @@ const ProjectCreationForm = ({ children }: { children: React.ReactNode; }) => {
 									</FormItem>
 								)}
 							/>
+
+							<FormField
+								control={form.control}
+								name="template"
+								render={({ field }) => (
+									<FormItem className="flex flex-col w-full">
+										<FormLabel>Template <span className="text-destructive">*</span></FormLabel>
+										<HYCombobox
+											id="template"
+											name="Template"
+											form={form}
+											options={usersOptions}
+											optionsClassName="w-auto md:w-[300px] "
+											buttonClassName="w-full"
+										/>
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
 						</div>
 
-						{/* <FormField
-							control={form.control}
-							name="owner"
-							render={({ field }) => (
-								<FormItem className="flex flex-col w-full">
-									<FormLabel>Owner</FormLabel>
-									<HYCombobox
-										id="owner"
-										name="Owner"
-										form={form}
-										options={usersOptions}
-										buttonClassName="w-full"
-									/>
-									<FormMessage />
-								</FormItem>
-							)}
-						/> */}
+
 
 						<DialogFooter className="mt-5">
 							<Button type="reset" variant="outline" onClick={() => setOpenForm(false)}>

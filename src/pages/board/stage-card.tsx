@@ -13,13 +13,13 @@ import HYDropDown from "@/components/hy-components/HYDropDown";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import HYEditableDiv from "@/components/hy-components/HYEditableDiv";
 import IssueCreationCardMini from "../issues/forms/issue-creation-mini";
-import { IssueStatusTypes, IssueTypes, ProjectType, } from "@/interfaces";
+import { StagesTypes, IssueTypes, ProjectType, } from "@/interfaces";
 import { deleteAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 
 
 
 interface StageCardProps {
-    stage: IssueStatusTypes
+    stage: StagesTypes
     getIssues?: () => void;
     getStages?: () => void;
 }
@@ -33,7 +33,7 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
 
     const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
     const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
-    const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[];
+    const stagesItems = stagesData?.data?.data?.stages as StagesTypes[];
 
     const reducerName = reducerNameFromUrl("project", "GET");
     const projectList = useSelector((state: any) => state?.[reducerName])?.data?.items as ProjectType[];
@@ -96,7 +96,7 @@ export const StageCard: React.FC<StageCardProps> = ({ stage, getIssues, getStage
 
     const handleStageOrderChange = (e) => {
         e.preventDefault();
-        const updatedStageOrder = dndArrayElementsSwap(stagesItems, +e?.dataTransfer?.getData("drag_stage_order") - 1, +stage?.order - 1) as IssueStatusTypes[];
+        const updatedStageOrder = dndArrayElementsSwap(stagesItems, +e?.dataTransfer?.getData("drag_stage_order") - 1, +stage?.order - 1) as StagesTypes[];
         const postData = updatedStageOrder?.map((stage, i) => ({ _id: stage._id, order: (i + 1)?.toString() }));
 
         (dispatch(patchAction({ stageOrder: Urls.stages_order }, { stageOrders: postData }, null)) as any).then((res) => {
@@ -170,7 +170,7 @@ export const StageCreation = ({ setStageCreation, getStages }: any) => {
 
     const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
     const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
-    const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[];
+    const stagesItems = stagesData?.data?.data?.stages as StagesTypes[];
 
     const reducerName = reducerNameFromUrl("project", "GET");
     const projectList = useSelector((state: any) => state?.[reducerName])?.data?.items as ProjectType[];

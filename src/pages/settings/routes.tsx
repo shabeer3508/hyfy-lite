@@ -31,7 +31,7 @@ export const settingsRoutes = [
         component: <UserRolesSettings />,
     },
     {
-        path: "/board-templates",
+        path: "/templates",
         component: <BoardTemplates />,
     },
 ]

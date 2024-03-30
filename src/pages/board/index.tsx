@@ -11,7 +11,7 @@ import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import IssueCreationForm from "../issues/forms/issue-creation";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { StagesTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { getAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
 
 
@@ -36,7 +36,7 @@ const Board = () => {
 
 	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
 	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
-	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
+	const stagesItems = stagesData?.data?.data?.stages as StagesTypes[]
 
 	/*  ######################################################################################## */
 

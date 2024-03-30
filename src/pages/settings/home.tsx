@@ -112,7 +112,7 @@ const Settings = () => {
         </Card>
 
         <Card
-          onClick={() => navigate("/settings/board-templates")}
+          onClick={() => navigate("/settings/templates")}
           className="flex items-center justify-between min-h-20 dark:bg-[#131417] p-4 gap-3 group hover:border-primary cursor-pointer"
         >
           <div className="grid grid-cols-3 w-full">

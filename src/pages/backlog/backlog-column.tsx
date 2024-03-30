@@ -18,7 +18,7 @@ import IssueCreationForm from "@/pages/issues/forms/issue-creation";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import IssueCreationCardMini from "@/pages/issues/forms/issue-creation-mini";
 import HYDropdownMenuCheckbox from "@/components/hy-components/HYCheckboxDropDown";
-import { EpicTypes, IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { EpicTypes, StagesTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { getAction, patchAction, reducerNameFromUrl, setBacklogData } from "@/redux/actions/AppActions";
 
 const BacklogColumn: React.FC = () => {
@@ -39,7 +39,7 @@ const BacklogColumn: React.FC = () => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName])?.data?.items as UsersTypes[];
 
 	const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 	const epicReducerName = reducerNameFromUrl("epic", "GET");
 	const epicsListData = useSelector((state: any) => state?.[epicReducerName]);

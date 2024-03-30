@@ -13,7 +13,7 @@ import HYSelect from "@/components/hy-components/HYSelect";
 import HYAvatar from "@/components/hy-components/HYAvatar";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { EpicTypes, IssueStatusTypes, IssueTypes } from "@/interfaces";
+import { EpicTypes, StagesTypes, IssueTypes } from "@/interfaces";
 import { HYUserSelect } from "@/components/hy-components/HYUserSelect";
 import { getAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import {
@@ -53,11 +53,11 @@ const IssueCreationForm = ({ children }: { children: React.ReactNode; }) => {
 	const issueItems = issuesListData?.data?.items as IssueTypes[];
 
 	// const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-	// const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+	// const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 	const stagesReducerName = reducerNameFromUrl("stagesList", "GET");
 	const stagesData = useSelector((state: any) => state?.[stagesReducerName]);
-	const stagesItems = stagesData?.data?.data?.stages as IssueStatusTypes[]
+	const stagesItems = stagesData?.data?.data?.stages as StagesTypes[]
 
 	/*  ######################################################################################## */
 

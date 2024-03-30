@@ -4,6 +4,7 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from "../ui/dialog";
 import { HiMiniXMark } from "react-icons/hi2";
 
@@ -27,8 +28,8 @@ const HYModal: React.FC<HYModalProps> = ({
     handleClose
 }) => {
     return (
-        <Dialog open={open} >
-            <DialogContent className={`max-w-2xl max-h-[80vh] ${className}`}>
+        <Dialog open={open} onOpenChange={(open) => handleClose()}>
+            <DialogContent className={`max-w-2xl max-h-[80vh]  ${className}`}>
                 {title && (
                     <DialogHeader>
                         <DialogTitle>{title}</DialogTitle>

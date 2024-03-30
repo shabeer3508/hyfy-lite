@@ -20,7 +20,7 @@ import { AppProfileTypes } from '@/redux/reducers/AppProfileReducer';
 import IssueCreationCardMini from '../issues/forms/issue-creation-mini';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import HYDropdownMenuCheckbox from '@/components/hy-components/HYCheckboxDropDown';
-import { EpicTypes, IssueStatusTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
+import { EpicTypes, StagesTypes, IssueTypes, ReleaseTypes } from '@/interfaces';
 import { getAction, patchAction, reducerNameFromUrl, setEpicData } from '@/redux/actions/AppActions';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
@@ -42,7 +42,7 @@ const EpicScreen = () => {
     const issuesItems = issuesListData?.data?.items as IssueTypes[];
 
     const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
     /*  ######################################################################################## */
 

@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import HYSearch from "@/components/hy-components/HYSearch";
-import { EpicTypes, IssueStatusTypes, SprintTypes, } from "@/interfaces";
+import { EpicTypes, StagesTypes, SprintTypes, } from "@/interfaces";
 import { patchAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
@@ -28,7 +28,7 @@ const IssueTransferModal: React.FC<IssueTransferModalProps> = ({ data, handleClo
     const sprintListData = useSelector((state: any) => state?.GetSprints)?.data?.items as SprintTypes[];
 
     const issueStatusReducerName = reducerNameFromUrl("issueStatus", "GET");
-    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as IssueStatusTypes[];
+    const issueStatusList = useSelector((state: any) => state?.[issueStatusReducerName])?.data?.items as StagesTypes[];
 
 
     const [search, setSearch] = useState("");
