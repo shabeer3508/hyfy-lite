@@ -42,7 +42,7 @@ const TheContent = () => {
 					</Routes>
 				</Suspense>
 			</div>
-			<HelpSidebar show={appInfo?.appState?.showHelpScreen} />
+			{/* <HelpSidebar show={appInfo?.appState?.showHelpScreen} /> */}
 		</main>
 	);
 };

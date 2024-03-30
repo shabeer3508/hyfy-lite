@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineInbox } from "react-icons/hi2";
 import { useDispatch, useSelector } from "react-redux";
 
+import { cn } from "@/lib/utils";
 import Urls from "@/redux/actions/Urls";
 import { Button } from "@/components/ui/button";
 import { StageCard, StageCreation } from "./stage-card";
@@ -12,7 +13,6 @@ import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
 import { IssueStatusTypes, IssueTypes, UsersTypes } from "@/interfaces";
 import { getAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
-import { cn } from "@/lib/utils";
 
 
 const Board = () => {
@@ -27,7 +27,10 @@ const Board = () => {
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
 	const userItems = usersList?.data?.items as UsersTypes[];
 
+	const appInfo = useSelector((state: any) => state.AppReducer);
+	const sidebar = useSelector((state: any) => state.SidebarReducer);
 	const authInfo = useSelector((state: any) => state.UserReducer);
+
 	const appProfileInfo = useSelector((state: any) => state.AppProfile) as AppProfileTypes;
 	const boardInfo = appProfileInfo?.board;
 
@@ -73,7 +76,10 @@ const Board = () => {
 		return <NoProjectScreen />
 	}
 
-	const boardWidth = ``;
+	const boardWidth = sidebar?.minimize ?
+		`w-[calc(100vw-30px)] md:w-[calc(100vw-100px)]` :
+		`w-[calc(100vw-30px)] md:w-[calc(100vw-240px)]`;
+
 
 	return (
 		<>
@@ -106,7 +112,7 @@ const Board = () => {
 					<div></div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
-				<div className="flex overflow-auto w-[calc(100vw-30px)] md:w-[calc(100vw-240px)]">
+				<div className={cn("flex overflow-auto", boardWidth)}>
 					{stagesItems?.map((stage, i) => {
 
 						return (

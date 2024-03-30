@@ -14,6 +14,8 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { HiOutlinePencil } from "react-icons/hi";
+
 
 const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: string, epicId?: string, statusId?: string }) => {
 	const dispatch = useDispatch();
@@ -80,6 +82,7 @@ const IssueCreationCardMini = ({ sprintId, epicId, statusId }: { sprintId?: stri
 				onChange={({ target }) => setPostData((prev) => ({ ...prev, name: target.value }))}
 				className=" outine-0 ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 border-0 text-sm"
 			/>
+			<HiOutlinePencil className="size-3 text-gray-400" />
 			{/* <Select
 				defaultValue="story"
 				value={postData.type}
