@@ -84,6 +84,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	};
 
 	const getAttachments = () => {
+		// TODO :  getAttachments function
 		console.log("🚀 ~ getAttachments ~ data:", data?.file_name);
 	}
 

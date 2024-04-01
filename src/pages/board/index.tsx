@@ -11,7 +11,7 @@ import NoProjectScreen from "../empty-screens/NoProjectScreen";
 import IssueCreationForm from "../issues/forms/issue-creation";
 import { HYCombobox } from "@/components/hy-components/HYCombobox";
 import { AppProfileTypes } from "@/redux/reducers/AppProfileReducer";
-import { StagesTypes, IssueTypes, UsersTypes } from "@/interfaces";
+import { StagesTypes, IssueTypes, UsersTypes, SprintTypes } from "@/interfaces";
 import { getAction, reducerNameFromUrl, setBoardData } from "@/redux/actions/AppActions";
 
 
@@ -22,6 +22,9 @@ const Board = () => {
 
 	const issuesListData = useSelector((state: any) => state?.GetIssues);
 	const issueListItems = issuesListData?.data?.items as IssueTypes[];
+
+	const sprintListData = useSelector((state: any) => state?.GetSprints);
+	const sprintItems = sprintListData?.data?.items as SprintTypes[];
 
 	const usersReducerName = reducerNameFromUrl("users", "GET");
 	const usersList = useSelector((state: any) => state?.[usersReducerName]);
@@ -44,6 +47,16 @@ const Board = () => {
 		dispatch(getAction({ stagesList: Urls.stages_list + `/${appProfileInfo?.project_id}` }));
 	}
 
+	const getSprints = () => {
+		let query = `?perPage=300&expand=created_by&filter=project_id=${appProfileInfo?.project_id}`;
+		dispatch(getAction({ sprints: Urls.sprints + query }));
+	};
+
+	const getEpics = () => {
+		let query = `?perPage=300&filter=project_id=${appProfileInfo.project_id}`;
+		dispatch(getAction({ epic: Urls.epic + query }));
+	};
+
 	const getIssues = () => {
 		let query = `?perPage=300
 				&filter=project_id=${appProfileInfo?.project_id}
@@ -55,6 +68,25 @@ const Board = () => {
 
 	/*  ######################################################################################## */
 
+	const typeFilterOptions = [
+		{ label: "All", value: "all" },
+		{ label: "Story", value: "story" },
+		{ label: "Task", value: "task" },
+		{ label: "Bug", value: "bug" },
+	]
+
+	const pointsFilterData = [
+		{ label: "All", value: "all" },
+		{ label: "Highest", value: "-points" },
+		{ label: "Lowest", value: "points" },
+	]
+
+	const sprintOptions =
+		sprintItems?.map((sprnt) => ({
+			value: sprnt?._id,
+			label: sprnt?.name,
+		})) ?? [];
+
 	const taskFilterOptions = userItems?.map(usr => {
 		return (authInfo?.user?._id === usr?._id) ? ({ value: usr?._id, label: "My Tasks" }) : ({ value: usr?._id, label: usr.user_name })
 	}) || []
@@ -63,14 +95,28 @@ const Board = () => {
 
 	useEffect(() => {
 		if (appProfileInfo?.project_id) {
-			getStages()
+			getStages();
 			getIssues();
+			getSprints();
+			getEpics();
 		}
 	}, [boardInfo, appProfileInfo?.project_id]);
 
+
+	// useEffect(() => {
+	// 	if (boardInfo?.selected_sprint && appProfileInfo?.project_id) {
+	// 		getIssues();
+	// 	}
+	// }, [boardInfo]);
+
+	// useEffect(() => {
+	// 	if (!boardInfo?.selected_sprint && sprintOptions?.length > 0) {
+	// 		dispatch(setBoardData(sprintOptions?.[0]?.value, "selected_sprint"))
+	// 	}
+	// }, [sprintListData])
+
 	/*  ######################################################################################## */
 
-	// const dummyStages = Array.from({ length: 4 }).map((data, i) => ({ _id: `ID00${i + 1}`, name: `Stage-${i + 1}`, order: i + 1 }));
 
 	if (!appProfileInfo?.project_id) {
 		return <NoProjectScreen />
@@ -86,7 +132,15 @@ const Board = () => {
 			<div className="text-xs">
 				<div className="flex justify-between px-6 gap-2 items-center">
 					<div className="text-base">
-
+						<HYCombobox
+							name="sprint"
+							label={"Sprint :"}
+							showSearch={false}
+							options={sprintOptions}
+							buttonClassName="border"
+							defaultValue={boardInfo?.selected_sprint}
+							onValueChange={(value) => dispatch(setBoardData(value, "selected_sprint"))}
+						/>
 					</div>
 					<div className="flex gap-2">
 						<HYCombobox
@@ -100,6 +154,20 @@ const Board = () => {
 							defaultValue={boardInfo?.task_filter_value}
 							onValueChange={(value) => dispatch(setBoardData(value, "task_filter_value"))}
 						/>
+						<HYCombobox
+							label={"Type"}
+							unSelectable={false}
+							options={typeFilterOptions}
+							defaultValue={boardInfo?.type_filter_value}
+							onValueChange={(value) => dispatch(setBoardData(value, "type_filter_value"))}
+						/>
+						<HYCombobox
+							label={"Points"}
+							unSelectable={false}
+							options={pointsFilterData}
+							defaultValue={boardInfo?.points_filter_value}
+							onValueChange={(value) => dispatch(setBoardData(value, "points_filter_value"))}
+						/>
 						<IssueCreationForm>
 							<div className="flex justify-center items-center border py-2 px-4 gap-1 rounded h-10 border-primary text-primary cursor-pointer text-sm whitespace-nowrap">
 								Add Task
@@ -109,7 +177,8 @@ const Board = () => {
 					</div>
 				</div>
 				<div className="px-6 flex my-5">
-					<div></div>
+					<div>
+					</div>
 				</div>
 				<EmptyBoardList show={issueListItems?.length < 0} />
 				<div className={cn("flex overflow-auto", boardWidth)}>

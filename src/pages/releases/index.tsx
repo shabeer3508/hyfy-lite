@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { HiViewBoards } from "react-icons/hi";
 import { BiDirections } from "react-icons/bi";
 import { useDispatch, useSelector } from "react-redux";
-
 import Urls from "@/redux/actions/Urls";
 import ReleaseCard from "./release-card";
 import { ReleaseTypes } from "@/interfaces";
@@ -21,7 +20,8 @@ import {
   setReleasePageData,
 } from "@/redux/actions/AppActions";
 import HistoryCard from "./history-card";
-import { HiOutlineClock } from "react-icons/hi";
+import { HiMiniClock } from "react-icons/hi2";
+import { CiClock2 } from "react-icons/ci";
 
 const Releases = () => {
   const dispatch = useDispatch();
@@ -85,12 +85,15 @@ const Releases = () => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="text-xl">Releases</div>
-            <TabsList className="">
-              <TabsTrigger value="history" className="flex gap-1">
-                <HiOutlineClock className="w-4 h-4" />
+            <TabsList className="dark:bg-[#16181D]">
+              <TabsTrigger
+                value="history"
+                className="flex gap-1  font-medium  "
+              >
+                <HiMiniClock className="w-5 h-5  fill-[#006EEF] " />
                 History
               </TabsTrigger>
-              <TabsTrigger value="board" className="flex gap-1">
+              <TabsTrigger value="board" className="flex gap-1 font-medium">
                 <HiViewBoards className="w-4 h-4" />
                 Board
               </TabsTrigger>
@@ -105,19 +108,6 @@ const Releases = () => {
           </ReleaseCreationForm>
         </div>
         <TabsContent value="history">
-          <div className="flex gap-2">
-            <HYCombobox
-              label={"Order"}
-              options={orderFilterOption}
-              defaultValue={releasePageinfo?.order_filter_value}
-            />
-            <HYCombobox label={"Released"} options={[]} />
-            <HYCombobox
-              options={pointsFilterOptions}
-              defaultValue={releasePageinfo?.points_filter_value}
-            />
-            <HYSearch />
-          </div>
           <HistoryCard />
         </TabsContent>
         <TabsContent value="board">

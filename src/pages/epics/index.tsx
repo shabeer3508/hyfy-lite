@@ -76,7 +76,6 @@ const EpicScreen = () => {
         }
     })
 
-    console.log("🚀 ~ epicFiltered ~ epicFiltered:", epicFiltered)
 
     const releaseOptions =
         releaseItems?.map((relse) => ({

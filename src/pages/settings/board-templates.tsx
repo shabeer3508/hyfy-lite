@@ -106,7 +106,7 @@ const BoardTemplates = () => {
                 {templateList?.map((template, i) => {
 
                     const stages = template?.stages?.
-                        map((template, i) => ({ color: template?.color, name: template?.name, order: template?.order }))?.
+                        map((template, i) => ({ _id: template?._id, color: template?.color, name: template?.name, order: template?.order }))?.
                         sort((a, b) => a?.order - b?.order);
 
                     return (
@@ -141,8 +141,8 @@ const BoardTemplates = () => {
                                 </HYAlertDialog>
                             </div>
                             <div className="text-xs capitalize py-0.5 px-2 rounded bg-white/50 dark:bg-[#16181D] max-w-min">Template</div>
-                            <div className="font-semibold capitalize text-white  line-clamp-2">{template?.title}</div>
-                            <div className=" capitalize text-xs text-white line-clamp-2">description dsfjhajskdflhakjsdhfkajdsflhdskjf sdkfjksdjf;s dsf;lasjf;akadssf dsfsdfsafdvdfvbd
+                            <div className="font-semibold capitalize text-white line-clamp-2 ">{template?.title}</div>
+                            <div className=" capitalize text-xs text-white line-clamp-2 w-3/4">description
                             </div>
                         </div>
                     )
@@ -205,7 +205,7 @@ const TemplateCreationForm: React.FC<TemplateCreationFormProps> = ({ defaultValu
     const handleTemplateUpdate = (values) => {
         const postData = {
             title: values.title,
-            // ...values, stages: values?.stages?.map((stage, i) => ({ ...stage, order: (i + 1).toString() }))
+            ...values, stages: values?.stages?.map((stage, i) => ({ ...stage, order: (i + 1).toString() }))
         };
 
         (dispatch(patchAction({ boardTemplates: Urls.board_templates }, postData, templateId)) as any).then((res) => {
