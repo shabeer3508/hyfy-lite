@@ -76,6 +76,7 @@
     "prettier": "^3.2.5",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.2.2",
+    "upgradeps": "^2.0.6",
     "vite": "^5.1.0"
   }
 }

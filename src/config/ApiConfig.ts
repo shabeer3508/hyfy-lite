@@ -30,6 +30,7 @@ const ApiConfig = {
     subTasks: Urls.sub_tasks,
 
     comments: Urls.comments,
+    history: Urls.history,
     sprintMembers: Urls.sprint_members,
 
     issueStatus: Urls.issue_status,

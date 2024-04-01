@@ -26,7 +26,10 @@ import HYAvatar, { getInitials } from "@/components/hy-components/HYAvatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import CommentCreation from "@/components/hy-components/forms/comment-creation";
 import { deleteAction, getAction, patchAction, postAction, reducerNameFromUrl } from "@/redux/actions/AppActions";
-import { CommentsTypes, StagesTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes } from "@/interfaces";
+import { CommentsTypes, StagesTypes, IssueTypes, ProjectType, SubTaskTypes, UsersTypes, HistoryTypes } from "@/interfaces";
+import { IoIosArrowRoundForward } from "react-icons/io";
+import { HiArrowRight } from "react-icons/hi";
+import dayjs from "dayjs";
 
 
 const IssueDetailView = ({ data }: { data: IssueTypes }) => {
@@ -39,6 +42,9 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	const commentsReducerName = reducerNameFromUrl("comments", "GET");
 	const commentsItems = useSelector((state: any) => state?.[commentsReducerName])?.data?.items as CommentsTypes[];
+
+	const historyReducerName = reducerNameFromUrl("history", "GET");
+	const histories = useSelector((state: any) => state?.[historyReducerName])?.data?.items as HistoryTypes[];
 
 	const subTasksReducerName = reducerNameFromUrl("subTasks", "GET");
 	const subTasks = useSelector((state: any) => state?.[subTasksReducerName])?.data?.items as SubTaskTypes[];
@@ -56,8 +62,15 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 	/*  ######################################################################################## */
 
 	const getComments = () => {
-		let query = `?expand=created_by&sort=-createdAt&filter=issue_id=${data?._id}`;
+		let query = `?perPage=300&expand=created_by&sort=-createdAt&filter=issue_id=${data?._id}`;
 		dispatch(getAction({ comments: Urls.comments + query }));
+	}
+
+	const getHistory = () => {
+		let query = `?perPage=300
+		&expand=new_status,old_status,user_id
+		&sort=-createdAt&issue_id=${data?._id}`;
+		dispatch(getAction({ history: Urls.history + query }));
 	}
 
 	const getSubTasks = () => {
@@ -170,6 +183,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 	useEffect(() => {
 		getComments();
+		getHistory();
 		getSubTasks();
 
 		if (data?.file_name) {
@@ -307,7 +321,7 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 
 								{subTasks?.map((subtask, i) => {
 									return (
-										<SubTaskCard key={subtask?._id} idx={i} subtask={subtask} getSubTasks={getSubTasks} />
+										<SubTaskCard key={subtask?._id} idx={i} subtask={subtask} getSubTasks={getSubTasks} getIssues={getIssues} />
 									)
 								})}
 
@@ -397,7 +411,9 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 			</div>
 
 			<Separator className="my-5 dark:bg-[#FFFFFF1A]" />
-			<Tabs defaultValue="comments" className="">
+			<Tabs defaultValue="comments" className="" onValueChange={(value) => {
+				// value === "history" && getHistory()
+			}}>
 				<TabsList className="rounded">
 					<TabsTrigger value="comments" className="flex gap-1 rounded">
 						Comments
@@ -419,8 +435,64 @@ const IssueDetailView = ({ data }: { data: IssueTypes }) => {
 				</TabsContent>
 
 				<TabsContent value={"history"}>
-					<div className="space-y-3 text-xs text-center">
+
+					{histories?.length === 0 && <div className="space-y-3 text-xs text-center">
 						History is currently not available
+					</div>
+					}
+					<div className="space-y-2 py-1 text-xs overflow-auto">
+
+						{histories?.length > 0 && <>
+
+							{histories?.map((history, i) => {
+
+								if (history?.type === "creation") {
+									return <div className="flex justify-between  p-2 py-2 items-center rounded" >
+										<div>
+											<div className="flex gap-2 items-center">
+												<HYAvatar
+													url="https://github.com/shadcn.png"
+													name={history?.user_id?.[0]?.user_name}
+												/>
+												<div>
+													<span className="text-gray-500 text-sm mr-2">{history?.user_id?.[0]?.user_name}</span> created the Issue
+												</div>
+											</div>
+										</div>
+										<div className="bg-primary text-white px-2 py-0.5 rounded-full text-[10px]">{dayjs(history.createdAt).format('D MMMM YYYY [at] hh:mm A')}</div>
+									</div>
+								}
+
+
+								if (history?.type === "statusChange") {
+									return <div className="flex justify-between  p-2 py-2 items-center rounded" >
+										<div>
+											<div className="flex gap-2 items-center">
+												<HYAvatar
+													url="https://github.com/shadcn.png"
+													name={history?.user_id?.[0]?.user_name}
+												/>
+												<div className="space-y-1">
+													<div><span className="text-gray-500 text-sm mr-2">{history?.user_id?.[0]?.user_name}</span> changed the Status</div>
+													<div className="flex items-center gap-2 text-xs">
+														<span className="bg-gray-300 text-black px-2 py-0.5">{history?.old_status?.[0]?.name}</span>
+														<HiArrowRight />
+														<span className="bg-orange-300 text-black px-2 py-0.5">{history?.new_status?.[0]?.name}</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div className="bg-primary text-white px-2 py-0.5 rounded-full text-[10px]">{dayjs(history.createdAt).format('D MMMM YYYY [at] hh:mm A')}</div>
+									</div>
+								}
+
+								return <></>
+
+							})}
+
+						</>
+						}
+
 					</div>
 				</TabsContent>
 			</Tabs>
@@ -504,7 +576,7 @@ const SubTaskCreationCard: React.FC<SubTaskCreationCardProps> = ({ show, close, 
 }
 
 
-const SubTaskCard = ({ subtask, getSubTasks, idx }: { subtask: SubTaskTypes, getSubTasks: () => void, idx?: number }) => {
+const SubTaskCard = ({ subtask, getSubTasks, getIssues, idx }: { subtask: SubTaskTypes, getSubTasks: () => void, getIssues: () => void, idx?: number }) => {
 
 	const dispatch = useDispatch();
 
@@ -521,12 +593,11 @@ const SubTaskCard = ({ subtask, getSubTasks, idx }: { subtask: SubTaskTypes, get
 
 	const handleTaskUpdate = (key: string, value: string | boolean) => {
 		(dispatch(patchAction({ subTasks: Urls.sub_tasks }, { [key]: value }, subtask?._id)) as any).then((res) => {
-			if (res.payload.status === 200) { getSubTasks() }
+			if (res.payload.status === 200) {
+				getSubTasks();
+				getIssues();
+			}
 		});
-	}
-
-	const handleSubTaskAssignee = () => {
-		// TODO:
 	}
 
 	/*  ######################################################################################## */

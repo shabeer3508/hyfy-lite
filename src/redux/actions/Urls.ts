@@ -38,6 +38,7 @@ const Urls = {
     sub_tasks: "/subTask",
 
     comments: "/comments",
+    history: "/history",
     issue_status: "/issueStatus",
     sprint_members: "/sprints/members",
     issue_attachment: "/issues/uploads",

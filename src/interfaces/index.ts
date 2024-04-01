@@ -178,6 +178,18 @@ export interface CommentsTypes {
     updatedAt?: Date;
 }
 
+export interface HistoryTypes {
+    _id: string;
+    issue_id: string;
+    new_status?: StagesTypes[];
+    old_status?: StagesTypes[];
+    user_id: UsersTypes[];
+    type: "statusChange" | "creation";
+    is_deleted: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 export interface SubTaskTypes {
     _id: string;
     title: string;
